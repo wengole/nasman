@@ -1,0 +1,9 @@
+bin/
+include/
+develop-eggs/
+lib/
+parts/
+*.egg-info/
+.installed.cfg
+db.sqlite3
+pip-selfcheck.json
