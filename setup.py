@@ -12,6 +12,9 @@ setup(
     description='A Django based ZFS management interface.',
     install_requires=[
         'Django',
+        'django-simple-menu',
+        'django-crispy-forms',
+        'django-debug-toolbar',
         'django-configurations',
         'dj_database_url',
         'django-baker',
