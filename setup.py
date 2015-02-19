@@ -14,5 +14,12 @@ setup(
         'Django',
         'django-configurations',
         'dj_database_url',
+        'cffi',
+        'pyzfscore',
+        'django-haystack',
+        'xapian-haystack',
+    ],
+    dependency_links=[
+        'https://github.com/akatrevorjay/pyzfscore/tarball/master#egg=pyzfscore-0.0.1'
     ]
 )
