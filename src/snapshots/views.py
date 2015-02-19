@@ -1,3 +1,6 @@
-from django.shortcuts import render
+from django.views.generic import ListView
+from snapshots.models import Snapshot
 
-# Create your views here.
+
+class SnapshotListView(ListView):
+    model = Snapshot
