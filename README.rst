@@ -16,6 +16,10 @@ directory
    python bootstrap.py
    bin/buildout
 
+Ensure you buildout from within the virtualenv. 
+Especially if your system python isn't python2, 
+otherwise Xapian Bindings will not compiles
+
 The traditional manage.py gets put into bin/
 
 .. code-block::
