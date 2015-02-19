@@ -17,6 +17,9 @@ class Snapshot(models.Model):
 
 
 class File(models.Model):
+    """
+    Model representing a file/directory/etc on the filesystem
+    """
     full_path = models.CharField('full path', max_length=255)
     snapshot = models.ForeignKey(
         Snapshot,
