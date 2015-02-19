@@ -1,12 +1,12 @@
 from django.conf.urls import patterns, url
 from snapshots.views import (FileListView, FileCreateView, FileDetailView,
-                     FileUpdateView, FileDeleteView)
+                             FileUpdateView, FileDeleteView)
 from django.contrib.auth.decorators import login_required
 
 
-urlpatterns = patterns('',
-
-    url(r'^create/$',  # NOQA
+urlpatterns = patterns(
+    '',
+    url(r'^create/$',
         login_required(FileCreateView.as_view()),
         name="file_create"),
 
