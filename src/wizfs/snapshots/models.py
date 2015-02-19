@@ -1,3 +1,8 @@
 from django.db import models
 
-# Create your models here.
+
+class Snapshot(models.Model):
+    """
+    Model representing s ZFS snapshot
+    """
+
