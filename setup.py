@@ -17,7 +17,6 @@ setup(
         'django-debug-toolbar',
         'django-configurations',
         'dj_database_url',
-        'django-baker',
         'pyzfscore',
         'django-haystack',
         'xapian-haystack',

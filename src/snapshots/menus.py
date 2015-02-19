@@ -13,12 +13,13 @@ def snapshots_menu(request):
             classes='dropdown-header'
         )
     )
-    menu.append(
-        MenuItem(
-            title='List Snapshots',
-            url=reverse('snapshots:snapshot_list'),
-        )
-    )
+    # TODO: Uncomment when implemented
+    # menu.append(
+    #     MenuItem(
+    #         title='List Snapshots',
+    #         url=reverse('snapshots:list'),
+    #     )
+    # )
     return menu
 
 

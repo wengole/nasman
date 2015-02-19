@@ -22,7 +22,6 @@ class Common(Configuration):
         'django.contrib.staticfiles',
     )
     THIRD_PARTY_APPS = (
-        'django_baker',
         'debug_toolbar',
         'crispy_forms',
         'menu',

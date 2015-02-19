@@ -1,9 +1,8 @@
 from django.contrib import admin
 from snapshots.models import Snapshot, File
-from django_baker.admin import ExtendedModelAdminMixin
 
 
-class SnapshotAdmin(ExtendedModelAdminMixin, admin.ModelAdmin):
+class SnapshotAdmin(admin.ModelAdmin):
     extra_list_display = []
     extra_list_filter = []
     extra_search_fields = []
@@ -18,7 +17,7 @@ class SnapshotAdmin(ExtendedModelAdminMixin, admin.ModelAdmin):
     readonly_fields = []
 
 
-class FileAdmin(ExtendedModelAdminMixin, admin.ModelAdmin):
+class FileAdmin(admin.ModelAdmin):
     extra_list_display = []
     extra_list_filter = []
     extra_search_fields = []
