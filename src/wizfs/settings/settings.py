@@ -26,6 +26,7 @@ class Common(Configuration):
         'django_baker',
     )
     WIZFS_APPS = (
+        'base',
         'snapshots',
     )
     INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + WIZFS_APPS
