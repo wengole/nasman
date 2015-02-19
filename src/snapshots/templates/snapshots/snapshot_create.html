@@ -1,0 +1,16 @@
+{% extends "snapshots/snapshot_base.html" %}
+
+{% block title %}
+    Create Snapshot
+{% endblock %}
+
+{% block content %}
+<h1><a href={% url "snapshot_list" %}>Snapshot</a></h1>
+<h2>Create Snapshot</h2>
+
+<form action="" method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Create" />
+</form>
+<a href={% url "snapshot_list" %}>Cancel</a>
+{% endblock %}

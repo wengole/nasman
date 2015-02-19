@@ -1,0 +1,19 @@
+{% extends "snapshots/file_base.html" %}
+
+{% block title %}
+    Files
+{% endblock %}
+
+{% block content %}
+    <h1>Files</h1>
+    <h2><a href={% url "file_create" %}>Create new File</h2>
+    <ul>
+    {% for file in file_list %}
+        <li><a href={% url "file_detail" file.pk %}>{{ file }}</a> | <a href={% url "file_update" file.pk %}>Update</a> | <form style="display:inline;" action={% url "file_delete" file.pk %} method="post" onsubmit="return confirm('Are you sure you want to delete {{ file }}?')">{% csrf_token %}
+    <input type="submit" value="Delete" />
+    </form></li>
+    {% empty %}
+        <li>No Files yet.</li>
+    {% endfor %}
+    </ul>
+{% endblock %}

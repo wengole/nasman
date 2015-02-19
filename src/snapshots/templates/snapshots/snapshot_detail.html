@@ -1,0 +1,14 @@
+{% extends "snapshots/snapshot_base.html" %}
+
+{% block title %}
+    {{ snapshot }}
+{% endblock %}
+
+{% block content %}
+    <h1><a href={% url "snapshot_list" %}>Snapshot</a></h1>
+    <h2>{{ snapshot }} | <a href={% url "snapshot_update" snapshot.pk %}>Update</a> | 
+    <form style="display:inline;" action={% url "snapshot_delete" snapshot.pk %} method="post" onsubmit="return confirm('Are you sure you want to delete {{ snapshot }}?')">{% csrf_token %}
+    <input type="submit" value="Delete" />
+    </form>
+    </h2>
+{% endblock %}

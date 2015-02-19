@@ -14,6 +14,7 @@ setup(
         'Django',
         'django-configurations',
         'dj_database_url',
+        'django-baker',
         'pyzfscore',
         'django-haystack',
         'xapian-haystack',
@@ -23,3 +24,4 @@ setup(
         'https://github.com/akatrevorjay/pyzfscore/tarball/master#egg=pyzfscore-0.0.1'
     ]
 )
+
