@@ -70,7 +70,7 @@ class Development(Common):
     pass
 
 
-class Productionk(Common):
+class Production(Common):
     """
     The in-production settings.
     """
