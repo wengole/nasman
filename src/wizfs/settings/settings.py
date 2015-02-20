@@ -51,7 +51,7 @@ class Common(Configuration):
     USE_L10N = True
     USE_TZ = True
     STATIC_URL = '/static/'
-    TEMPLATE_CONTEXT_PROCESSORS=(
+    TEMPLATE_CONTEXT_PROCESSORS = (
         'django.contrib.auth.context_processors.auth',
         'django.core.context_processors.debug',
         'django.core.context_processors.i18n',

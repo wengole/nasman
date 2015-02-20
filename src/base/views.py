@@ -6,4 +6,4 @@ class HomeView(TemplateView):
     View for the homepage
     """
     http_method_names = [u'get']
-    template_name = 'base.html'
+    template_name = 'dashboard.html'
