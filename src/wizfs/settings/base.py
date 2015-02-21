@@ -11,6 +11,7 @@ INTERNAL_IPS = ('127.0.0.1', '192.168.1.69',)
 TEMPLATE_DEBUG = True
 ALLOWED_HOSTS = []
 DJANGO_APPS = (
+    'suit',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

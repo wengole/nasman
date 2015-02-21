@@ -15,6 +15,7 @@ setup(
         'django-simple-menu',
         'django-crispy-forms',
         'django-debug-toolbar',
+        'django-suit',
         'dj_database_url',
         'pyzfscore',
         'django-haystack',
