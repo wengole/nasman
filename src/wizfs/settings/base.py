@@ -22,6 +22,7 @@ THIRD_PARTY_APPS = (
     'debug_toolbar',
     'crispy_forms',
     'menu',
+    'haystack',
 )
 WIZFS_APPS = (
     'base',
@@ -63,3 +64,10 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.messages.context_processors.messages',
     'django.core.context_processors.request',
 )
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'xapian_backend.XapianEngine',
+        'PATH': os.path.join(BASE_DIR, 'xapian_index'),
+    },
+}
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
