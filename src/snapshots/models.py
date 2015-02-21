@@ -32,7 +32,7 @@ class File(models.Model):
     extension = models.CharField('extension', blank=True, max_length=255)
     created = models.DateTimeField('created')
     modified = models.DateTimeField('modified')
-    size = models.IntegerField("size", blank=True, null=True)
+    size = models.IntegerField('size', blank=True, null=True)
 
     class Meta:
         unique_together = ()
