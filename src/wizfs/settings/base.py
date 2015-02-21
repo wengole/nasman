@@ -2,11 +2,20 @@
 Django settings for wizfs project.
 """
 import os
+from fnmatch import fnmatch
+
+
+class glob_list(list):
+    def __contains__(self, key):
+        for elt in self:
+            if fnmatch(key, elt): return True
+        return False
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = ('FftmF3EEwdCoJhqsCjpHUh2gPHXM83MhRTmnXDwyb8RbWxd5r4gXNwxM7eZ'
               'nhJQP')
 DEBUG = True
+INTERNAL_IPS = glob_list(['127.0.0.1', '192.168.1.*'])
 TEMPLATE_DEBUG = True
 ALLOWED_HOSTS = []
 DJANGO_APPS = (
@@ -48,7 +57,10 @@ TIME_ZONE = 'Europe/London'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'django.core.context_processors.debug',
