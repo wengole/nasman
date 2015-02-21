@@ -22,7 +22,8 @@ setup(
         'cffi',
     ],
     dependency_links=[
-        'https://github.com/akatrevorjay/pyzfscore/tarball/master#egg=pyzfscore-0.0.1'
+        'https://github.com/akatrevorjay/pyzfscore/tarball/master#egg=pyzfscore-0.0.1',
+        'https://github.com/notanumber/xapian-haystack/tarball/master#egg=xapian-haystack-1.1.6b0',
     ]
 )
 
