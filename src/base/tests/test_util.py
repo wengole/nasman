@@ -1,6 +1,10 @@
+import datetime
+
 from pyzfscore import ZPool, ZFilesystem, ZSnapshot
-from mock import patch
+from dateutil import tz
+import mock
 from django.test import TestCase
+from snapshots.models import Snapshot
 
 from ..util import ZFSHelper
 
@@ -23,4 +27,29 @@ class TestZFSHelper(TestCase):
         self.assertEqual(
             snapshots,
             ['pool@zfs-auto-snap_frequent-2015-01-15-1215']
+        )
+
+    @mock.patch.object(ZFSHelper, 'get_snapshots')
+    def test_create_snapshot_objects(self, mock_get_snaps):
+        mock_get_snaps.return_value = [
+            'pool@snap1',
+            'pool@zfs-auto-snap_frequent-2015-01-15-1215',
+            'pool@2015-02-15-0915'
+        ]
+        util = ZFSHelper()
+        util.create_snapshot_objects()
+        self.assertEqual(Snapshot.objects.all().count(), 3)
+        snap1 = Snapshot.objects.get(
+            name='pool@zfs-auto-snap_frequent-2015-01-15-1215'
+        )
+        self.assertEqual(
+            snap1.timestamp,
+            datetime.datetime(2015, 1, 15, 12, 15, tzinfo=tz.tzutc())
+        )
+        snap2 = Snapshot.objects.get(
+            name='pool@2015-02-15-0915'
+        )
+        self.assertEqual(
+            snap2.timestamp,
+            datetime.datetime(2015, 2, 15, 9, 15, tzinfo=tz.tzutc())
         )

@@ -1,4 +1,6 @@
 import pyzfscore as zfs
+from dateutil import parser
+from snapshots.models import Snapshot
 
 
 class ZFSHelper(object):
@@ -26,3 +28,18 @@ class ZFSHelper(object):
         fs = self._get_pool_as_filesystem()
         snapshots = fs.iter_snapshots_sorted()
         return [x.name for x in snapshots]
+
+    def create_snapshot_objects(self):
+        """
+        Create `Snapshot` model objects
+        """
+        snapshots = self.get_snapshots()
+        for snap in snapshots:
+            try:
+                ts = parser.parse(snap, fuzzy=True)
+            except ValueError:
+                ts = None
+            Snapshot.objects.get_or_create(
+                name=snap,
+                timestamp=ts
+            )
