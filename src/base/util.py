@@ -17,6 +17,12 @@ class ZFSHelper(object):
         return fs
 
     def get_snapshots(self):
+        """
+        Get a list of snapshot names from the first available pool
+
+        :return: Snapshot names
+        :rtype: `list`
+        """
         fs = self._get_pool_as_filesystem()
         snapshots = fs.iter_snapshots_sorted()
         return [x.name for x in snapshots]
