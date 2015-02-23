@@ -1,5 +1,5 @@
 from pyzfscore import ZPool, ZFilesystem, ZSnapshot
-from mock import patch, Mock, DEFAULT
+from mock import patch
 from django.test import TestCase
 
 from ..util import ZFSHelper
