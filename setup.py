@@ -22,6 +22,7 @@ setup(
         'xapian-haystack',
         'cffi',
         'mock',
+        'python-dateutil',
     ],
     dependency_links=[
         'https://github.com/akatrevorjay/pyzfscore/tarball/master#egg=pyzfscore-0.0.1',
