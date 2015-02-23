@@ -6,7 +6,7 @@ class Snapshot(models.Model):
     Model representing s ZFS snapshot
     """
     name = models.CharField('name', max_length=255)
-    timestamp = models.DateTimeField('timestamp')
+    timestamp = models.DateTimeField('timestamp', null=True, blank=True)
 
     class Meta:
         unique_together = ()
