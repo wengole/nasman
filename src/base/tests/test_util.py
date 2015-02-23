@@ -5,11 +5,11 @@ from django.test import TestCase
 from ..util import ZFSHelper
 
 
+@patch('base.util.zfs.ZPool', autospec=ZPool)
+@patch('base.util.zfs.ZFilesystem', autospec=ZFilesystem)
+@patch('base.util.zfs.ZSnapshot', autospec=ZSnapshot)
 class TestZFSHelper(TestCase):
 
-    @patch('base.util.zfs.ZPool', autospec=ZPool)
-    @patch('base.util.zfs.ZFilesystem', autospec=ZFilesystem)
-    @patch('base.util.zfs.ZSnapshot', autospec=ZSnapshot)
     def test_get_snapshots(self, MockZSnapshot, MockZFilesystem, MockZPool):
         zsnap_inst = MockZSnapshot.return_value
         zsnap_inst.name = 'pool@zfs-auto-snap_frequent-2015-01-15-1215'
