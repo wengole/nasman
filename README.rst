@@ -1,6 +1,9 @@
 wizfs
 =====
 
+.. image:: https://travis-ci.org/wengole/wizfs.svg?branch=master
+    :target: https://travis-ci.org/wengole/wizfs
+
 A Django based ZFS management interface.
 
 Installation
