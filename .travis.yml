@@ -6,7 +6,6 @@ install:
   - sudo add-apt-repository -y ppa:zfs-native/stable
   - sudo apt-get update
   - sudo apt-get install -qq libxapian22 xapian-tools python-xapian libzfs2
-  - sudo dkms status
   - ln -s /usr/lib/python2.7/dist-packages/xapian $VIRTUAL_ENV/lib/python2.7/site-packages/.
   - pip install cffi
   - python bootstrap.py -c travis.cfg
