@@ -3,7 +3,7 @@ python:
   - "2.7"
 install:
   - mkdir -p buildout-cache/downloads
-  - sudo apt-get install -qq libxapian22 xapian-tools python-xapian
+  - sudo apt-get install -qq libxapian22 xapian-tools python-xapian ubuntu-zfs
   - ln -s /usr/lib/python2.7/dist-packages/xapian $VIRTUAL_ENV/lib/python2.7/site-packages/.
   - pip install cffi
   - python bootstrap.py -c travis.cfg
