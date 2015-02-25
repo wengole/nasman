@@ -3,6 +3,8 @@ wizfs
 
 .. image:: https://travis-ci.org/wengole/wizfs.svg?branch=master
     :target: https://travis-ci.org/wengole/wizfs
+.. image:: https://coveralls.io/repos/wengole/wizfs/badge.svg?branch=develop
+  :target: https://coveralls.io/r/wengole/wizfs?branch=develop
 
 A Django based ZFS management interface.
 
