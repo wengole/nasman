@@ -31,15 +31,16 @@ class TestZFSHelper(TestCase):
 
     @mock.patch.object(ZFSHelper, 'get_snapshots')
     def test_create_snapshot_objects(self, mock_get_snaps):
-        mock_get_snaps.return_value = [
+        fake_snaps = [
             'pool@snap1',
             'pool@zfs-auto-snap_frequent-2015-01-15-1215',
             'pool@2015-02-15-0915',
             'pool@2015-13-99-0915',
         ]
+        mock_get_snaps.return_value = fake_snaps
         util = ZFSHelper()
         util.create_snapshot_objects()
-        self.assertEqual(Snapshot.objects.all().count(), 3)
+        self.assertEqual(Snapshot.objects.all().count(), len(fake_snaps))
         snap1 = Snapshot.objects.get(
             name='pool@zfs-auto-snap_frequent-2015-01-15-1215'
         )
