@@ -1,6 +1,8 @@
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 
 
+@python_2_unicode_compatible
 class Snapshot(models.Model):
     """
     Model representing s ZFS snapshot
@@ -12,10 +14,11 @@ class Snapshot(models.Model):
         unique_together = ()
         index_together = ()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
+@python_2_unicode_compatible
 class File(models.Model):
     """
     Model representing a file/directory/etc on the filesystem
@@ -38,5 +41,5 @@ class File(models.Model):
         unique_together = ()
         index_together = ()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.full_path
