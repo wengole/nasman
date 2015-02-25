@@ -13,5 +13,5 @@ install:
   - bin/buildout -c travis.cfg
 script:
   - bin/manage test src/
-  - bin/coverage run --source=src bin/manage test src
+  - coverage run --source=src bin/manage test src
 after_success: coveralls
