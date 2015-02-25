@@ -23,11 +23,11 @@ directory
 
 Ensure you buildout from within the virtualenv. 
 Especially if your system python isn't python2, 
-otherwise Xapian Bindings will not compiles
+otherwise Xapian Bindings will not compile
 
 As this makes use of a ZFS library,
 it either needs to be run as root (dangerous) or
-you need to allow ``/dev/zfs`` to be run as non-root
+you need to allow ``/dev/zfs`` to be accessed by non-root users
 See `this issue on github <https://github.com/zfsonlinux/zfs/issues/362>`_.
 
 The traditional manage.py gets put into bin/
