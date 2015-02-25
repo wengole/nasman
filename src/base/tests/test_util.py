@@ -34,7 +34,8 @@ class TestZFSHelper(TestCase):
         mock_get_snaps.return_value = [
             'pool@snap1',
             'pool@zfs-auto-snap_frequent-2015-01-15-1215',
-            'pool@2015-02-15-0915'
+            'pool@2015-02-15-0915',
+            'pool@2015-13-99-0915',
         ]
         util = ZFSHelper()
         util.create_snapshot_objects()
