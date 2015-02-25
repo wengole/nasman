@@ -8,14 +8,15 @@ class BaseTestCase(TestCase):
     def setUp(self):
         self.client = Client()
 
-    def setup_view(view, request, *args, **kwargs):
-        """Mimic as_view() returned callable, but returns view instance.
-
-        args and kwargs are the same you would pass to ``reverse()``
-
-        """
-        view.request = request
-        view.args = args
-        view.kwargs = kwargs
-        return view
+    # TODO: For reference. This might be useful later
+    # def setup_view(view, request, *args, **kwargs):
+    #     """Mimic as_view() returned callable, but returns view instance.
+    #
+    #     args and kwargs are the same you would pass to ``reverse()``
+    #
+    #     """
+    #     view.request = request
+    #     view.args = args
+    #     view.kwargs = kwargs
+    #     return view
 
