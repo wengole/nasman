@@ -1,3 +1,5 @@
+from django.utils.timezone import get_default_timezone_name
+import pytz
 import pyzfscore as zfs
 from dateutil import parser
 from snapshots.models import Snapshot
@@ -7,6 +9,8 @@ class ZFSHelper(object):
     """
     Helper utility for accessing ZFS features
     """
+    timezone_name = get_default_timezone_name()
+
     def _get_pool_as_filesystem(self):
         """
         Get the first available `ZPool` object and return it as a `ZFilesystem`
@@ -37,6 +41,7 @@ class ZFSHelper(object):
         for snap in snapshots:
             try:
                 ts = parser.parse(snap, fuzzy=True)
+                pytz.timezone(self.timezone_name).localize(ts)
             except ValueError:
                 ts = None
             Snapshot.objects.get_or_create(
