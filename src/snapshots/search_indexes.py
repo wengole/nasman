@@ -9,7 +9,7 @@ class SnapshotIndex(indexes.SearchIndex, indexes.Indexable):
     """
     text = indexes.CharField(document=True, use_template=True)
     name = indexes.CharField(model_attr='name')
-    timestamp = indexes.DateTimeField(model_attr='timestamp')
+    timestamp = indexes.DateTimeField(model_attr='timestamp', null=True)
 
     def get_model(self):
         return Snapshot
