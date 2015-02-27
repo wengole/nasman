@@ -38,8 +38,9 @@ class Snapshot(models.Model):
 
         :returns: An `os.walk` instance starting from the snapshot
         """
+        # TODO: Need Filesystem object with mountpoint
         return os.walk(
-            u'/%s/.zfs/snapshot/%s' % (
+            u'%s/.zfs/snapshot/%s' % (
                 self.parent_name,
                 self.base_name
             )

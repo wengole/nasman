@@ -1,9 +1,18 @@
+import shutil
+import os
+
 from django.test import TestCase
 from django.utils import timezone
 from snapshots.models import Snapshot, File
 
+test_pool = 'test-pool'
+
 
 class TestSnapshotModel(TestCase):
+
+    def tearDown(self):
+        if os._exists(test_pool):
+            shutil.rmtree(test_pool)
 
     def test_str_method(self):
         snapshot = Snapshot.objects.create(
@@ -19,10 +28,18 @@ class TestSnapshotModel(TestCase):
 
     def test_name_methods(self):
         snapshot = Snapshot.objects.create(
-            name='pool@foo-bar'
+            name='%s@foo-bar' % test_pool
         )
         self.assertEqual(snapshot.base_name, 'foo-bar')
-        self.assertEqual(snapshot.parent_name, 'pool')
+        self.assertEqual(snapshot.parent_name, test_pool)
+
+    def test_walk_snapshot(self):
+        snapshot = Snapshot.objects.create(
+            name='%s@foo-bar' % test_pool
+        )
+        os.makedirs('%s/.zfs/snapshot/foo-bar/test-dir' % test_pool)
+        x = snapshot.walk_snapshot()
+        self.assertIn('test-dir', dirnames)
 
 
 class TestFileModel(TestCase):
