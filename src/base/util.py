@@ -50,6 +50,14 @@ class ZFSHelper(object):
             )
 
     def get_all_filesystems(self, filesystem=None):
+        """
+        Recursively get all filesystems in the ZFS hierarchy
+
+        :param filesystem: starting filesystem, if `None` then start from pool
+        :type filesystem: `ZFilesystem`
+        :return: a list of all filesystems
+        :rtype: `list`
+        """
         if filesystem is None:
             filesystem = self._get_pool_as_filesystem()
         filesystems = [filesystem]
