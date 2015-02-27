@@ -2,7 +2,7 @@ from django.utils.timezone import get_default_timezone_name
 import pytz
 import pyzfscore as zfs
 from dateutil import parser
-from snapshots.models import Snapshot
+from snapshots.models import Snapshot, Filesystem
 
 
 class ZFSHelper(object):
@@ -64,3 +64,30 @@ class ZFSHelper(object):
         for f in filesystem.iter_filesystems():
             filesystems.extend(self.get_all_filesystems(f))
         return filesystems
+
+    def create_filesystem_object(self, fs_name):
+        """
+        Given a `ZFilesystem` object, create a Django `Filesystem` model object
+
+        :param filesystem: filesystem to create object from
+        :type filesystem: `ZFilesystem`
+        :return: the created Django object
+        :rtype: `Filesystem`
+        """
+        parent = None
+        parent_name = '/'.join(fs_name.split('/')[:-1])
+        if parent_name != '':
+            parent = self.create_filesystem_object(parent_name)
+        fs, _ = Filesystem.objects.get_or_create(
+            name=fs_name,
+            parent=parent,
+        )
+        return fs
+
+    def create_filesystem_objects(self):
+        """
+        Convenience method to create Django objects for each filesystem
+        """
+        filesystems = self.get_all_filesystems()
+        for fs in filesystems:
+            self.create_filesystem_object(fs.name)

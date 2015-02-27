@@ -4,7 +4,7 @@ from pyzfscore import ZPool, ZFilesystem, ZSnapshot
 from dateutil import tz
 import mock
 from django.test import TestCase
-from snapshots.models import Snapshot
+from snapshots.models import Snapshot, Filesystem
 
 from ..util import ZFSHelper
 
@@ -79,3 +79,22 @@ class TestZFSHelper(TestCase):
         self.assertIn('pool/fs1', filesystem_names)
         self.assertIn('pool/fs2', filesystem_names)
         self.assertIn('pool/fs2/fs3', filesystem_names)
+
+    @mock.patch.object(ZFSHelper, 'get_all_filesystems')
+    def test_create_filesystem_objects(self, mock_get_fs):
+        mock_get_fs.return_value = [self.pool_fs, self.fs1, self.fs2, self.fs3]
+
+        util = ZFSHelper()
+        util.create_filesystem_objects()
+        pool_fs = Filesystem.objects.get(
+            name='pool',
+        )
+        self.assertIsNone(pool_fs.parent)
+        fs2 = Filesystem.objects.get(
+            name='pool/fs2'
+        )
+        self.assertEqual(fs2.parent, pool_fs)
+        fs3 = Filesystem.objects.get(
+            name='pool/fs2/fs3'
+        )
+        self.assertEqual(fs3.parent, fs2)
