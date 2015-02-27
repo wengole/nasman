@@ -11,7 +11,7 @@ test_pool = 'test-pool'
 class TestSnapshotModel(TestCase):
 
     def tearDown(self):
-        if os._exists(test_pool):
+        if os.path.exists(test_pool):
             shutil.rmtree(test_pool)
 
     def test_str_method(self):
@@ -39,7 +39,8 @@ class TestSnapshotModel(TestCase):
         )
         os.makedirs('%s/.zfs/snapshot/foo-bar/test-dir' % test_pool)
         x = snapshot.walk_snapshot()
-        self.assertIn('test-dir', dirnames)
+        dirname, subdirs, filenames = next(x)
+        self.assertIn(u'test-dir', subdirs)
 
 
 class TestFileModel(TestCase):
