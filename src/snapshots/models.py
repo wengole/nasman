@@ -8,8 +8,8 @@ class Snapshot(models.Model):
     """
     Model representing a ZFS snapshot
     """
-    name = models.CharField('name', max_length=255)
-    timestamp = models.DateTimeField('timestamp', null=True, blank=True)
+    name = models.CharField(u'name', max_length=255)
+    timestamp = models.DateTimeField(u'timestamp', null=True, blank=True)
 
     class Meta:
         unique_together = ()
@@ -23,14 +23,14 @@ class Snapshot(models.Model):
         """
         The base name of the snapshot, less the parent filesystem name
         """
-        return u'%s' % self.name.split('@')[1]
+        return u'%s' % self.name.split(u'@')[1]
 
     @property
     def parent_name(self):
         """
         The parent filesystem name of the snapshot
         """
-        return u'%s' % self.name.split('@')[0]
+        return u'%s' % self.name.split(u'@')[0]
 
     def walk_snapshot(self):
         """
@@ -52,19 +52,19 @@ class File(models.Model):
     """
     Model representing a file/directory/etc on the filesystem
     """
-    full_path = models.CharField('full path', max_length=255)
+    full_path = models.CharField(u'full path', max_length=255)
     snapshot = models.ForeignKey(
         Snapshot,
-        verbose_name='snapshot',
+        verbose_name=u'snapshot',
         blank=True,
         null=True,
         on_delete=models.CASCADE
     )
-    mime_type = models.CharField('mime type', blank=True, max_length=255)
-    extension = models.CharField('extension', blank=True, max_length=255)
-    created = models.DateTimeField('created')
-    modified = models.DateTimeField('modified')
-    size = models.IntegerField('size', blank=True, null=True)
+    mime_type = models.CharField(u'mime type', blank=True, max_length=255)
+    extension = models.CharField(u'extension', blank=True, max_length=255)
+    created = models.DateTimeField(u'created')
+    modified = models.DateTimeField(u'modified')
+    size = models.IntegerField(u'size', blank=True, null=True)
 
     class Meta:
         unique_together = ()
