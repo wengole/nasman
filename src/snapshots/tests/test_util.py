@@ -15,21 +15,33 @@ class TestZFSHelper(TestCase):
         self.snap.name = 'pool@zfs-auto-snap_frequent-2015-01-15-1215'
         self.pool_fs = mock.MagicMock()
         self.pool_fs.name = 'pool'
+        self.pool_fs.parent_name = None
+        self.pool_fs.parent = None
+        self.pool_fs.is_mounted.return_value = '/pool'
         self.pool_fs.iter_snapshots_sorted.return_value = [self.snap]
         self.pool = mock.MagicMock()
         self.pool.to_filesystem.return_value = self.pool_fs
         self.fs1 = mock.MagicMock()
         self.fs1.name = 'pool/fs1'
+        self.fs1.parent_name = 'pool'
+        self.fs1.parent = self.pool_fs
+        self.fs1.is_mounted.return_value = '/pool/fs1'
         self.fs2 = mock.MagicMock()
         self.fs2.name = 'pool/fs2'
+        self.fs2.is_mounted.return_value = '/pool/fs2'
+        self.fs2.parent_name = 'pool'
+        self.fs2.parent = self.pool_fs
         self.fs3 = mock.MagicMock()
         self.fs3.name = 'pool/fs2/fs3'
+        self.fs3.is_mounted.return_value = '/pool/fs2/fs3'
+        self.fs3.parent_name = 'pool/fs2'
+        self.fs3.parent = self.fs2
         self.fs3.iter_filesystems.return_value = []
         self.fs2.iter_filesystems.return_value = [self.fs3]
         self.fs1.iter_filesystems.return_value = []
         self.pool_fs.iter_filesystems.return_value = [self.fs1, self.fs2]
 
-    @mock.patch('base.util.zfs.ZPool')
+    @mock.patch('snapshots.util.zfs.ZPool')
     def test_get_snapshots(self, MockZPool):
         MockZPool.list.return_value = [self.pool]
         util = ZFSHelper()
@@ -89,11 +101,14 @@ class TestZFSHelper(TestCase):
             name='pool',
         )
         self.assertIsNone(pool_fs.parent)
+        self.assertEqual(pool_fs.mountpoint, '/pool')
         fs2 = Filesystem.objects.get(
             name='pool/fs2'
         )
         self.assertEqual(fs2.parent, pool_fs)
+        self.assertEqual(fs2.mountpoint, '/pool/fs2')
         fs3 = Filesystem.objects.get(
             name='pool/fs2/fs3'
         )
+        self.assertEqual(fs3.mountpoint, '/pool/fs2/fs3')
         self.assertEqual(fs3.parent, fs2)

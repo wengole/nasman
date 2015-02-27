@@ -66,7 +66,7 @@ class ZFSHelper(object):
             filesystems.extend(self.get_all_filesystems(f))
         return filesystems
 
-    def create_filesystem_object(self, fs_name):
+    def create_filesystem_object(self, filesystem):
         """
         Given a `ZFilesystem` object, create a Django `Filesystem` model object
 
@@ -76,12 +76,13 @@ class ZFSHelper(object):
         :rtype: `Filesystem`
         """
         parent = None
-        parent_name = '/'.join(fs_name.split('/')[:-1])
-        if parent_name != '':
-            parent = self.create_filesystem_object(parent_name)
+        if filesystem.parent_name is not None:
+            parentfs = filesystem.parent
+            parent = self.create_filesystem_object(parentfs)
         fs, _ = Filesystem.objects.get_or_create(
-            name=fs_name,
+            name=filesystem.name,
             parent=parent,
+            mountpoint=filesystem.is_mounted(),
         )
         return fs
 
@@ -91,4 +92,4 @@ class ZFSHelper(object):
         """
         filesystems = self.get_all_filesystems()
         for fs in filesystems:
-            self.create_filesystem_object(fs.name)
+            self.create_filesystem_object(fs)

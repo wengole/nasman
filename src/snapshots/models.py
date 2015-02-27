@@ -10,6 +10,7 @@ class Filesystem(models.Model):
     """
     name = models.CharField(u'name', max_length=255)
     parent = models.ForeignKey('self', null=True, blank=True)
+    mountpoint = models.CharField(u'mountpoint', max_length=255, blank=True)
 
     def __str__(self):
         return self.name
