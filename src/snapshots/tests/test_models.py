@@ -1,6 +1,5 @@
 from django.test import TestCase
 from django.utils import timezone
-import pytz
 from snapshots.models import Snapshot, File
 
 
@@ -17,6 +16,13 @@ class TestSnapshotModel(TestCase):
         self.assertIsInstance(unic, unicode)
         self.assertEqual(string, 'a test')
         self.assertEqual(unic, u'a test')
+
+    def test_name_methods(self):
+        snapshot = Snapshot.objects.create(
+            name='pool@foo-bar'
+        )
+        self.assertEqual(snapshot.base_name, 'foo-bar')
+        self.assertEqual(snapshot.parent_name, 'pool')
 
 
 class TestFileModel(TestCase):
