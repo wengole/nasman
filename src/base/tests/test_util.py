@@ -9,11 +9,11 @@ from snapshots.models import Snapshot
 from ..util import ZFSHelper
 
 
+@mock.patch('base.util.zfs.ZPool', autospec=ZPool)
+@mock.patch('base.util.zfs.ZFilesystem', autospec=ZFilesystem)
+@mock.patch('base.util.zfs.ZSnapshot', autospec=ZSnapshot)
 class TestZFSHelper(TestCase):
 
-    @mock.patch('base.util.zfs.ZPool', autospec=ZPool)
-    @mock.patch('base.util.zfs.ZFilesystem', autospec=ZFilesystem)
-    @mock.patch('base.util.zfs.ZSnapshot', autospec=ZSnapshot)
     def test_get_snapshots(self, MockZSnapshot, MockZFilesystem, MockZPool):
         zsnap_inst = MockZSnapshot.return_value
         zsnap_inst.name = 'pool@zfs-auto-snap_frequent-2015-01-15-1215'
@@ -30,7 +30,7 @@ class TestZFSHelper(TestCase):
         )
 
     @mock.patch.object(ZFSHelper, 'get_snapshots')
-    def test_create_snapshot_objects(self, mock_get_snaps):
+    def test_create_snapshot_objects(self, mock_get_snaps, *args):
         fake_snaps = [
             'pool@snap1',
             'pool@zfs-auto-snap_frequent-2015-01-15-1215',
@@ -55,3 +55,31 @@ class TestZFSHelper(TestCase):
             snap2.timestamp,
             datetime.datetime(2015, 2, 15, 9, 15, tzinfo=tz.tzutc())
         )
+
+    @mock.patch.object(ZFSHelper, '_get_pool_as_filesystem')
+    def test_get_all_filesystems(self,
+                                 mock_get_pool,
+                                 MockZSnapshot,
+                                 MockZFilesystem,
+                                 MockZPool):
+        pool_fs = MockZFilesystem.return_value
+        pool_fs.name = 'pool'
+        fs1 = mock.MagicMock()
+        fs1.name = 'pool/fs1'
+        fs2 = mock.MagicMock()
+        fs2.name = 'pool/fs2'
+        fs3 = mock.MagicMock()
+        fs3.name = 'pool/fs2/fs3'
+        fs3.iter_filesystems.return_value = []
+        fs2.iter_filesystems.return_value = [fs3]
+        fs1.iter_filesystems.return_value = []
+        pool_fs.iter_filesystems.return_value = [fs1, fs2]
+        mock_get_pool.return_value = pool_fs
+        util = ZFSHelper()
+        filesystems = util.get_all_filesystems()
+        self.assertEqual(len(filesystems), 4)
+        filesystem_names = [x.name for x in filesystems]
+        self.assertIn('pool', filesystem_names)
+        self.assertIn('pool/fs1', filesystem_names)
+        self.assertIn('pool/fs2', filesystem_names)
+        self.assertIn('pool/fs2/fs3', filesystem_names)

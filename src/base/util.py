@@ -48,3 +48,11 @@ class ZFSHelper(object):
                 name=snap,
                 timestamp=ts
             )
+
+    def get_all_filesystems(self, filesystem=None):
+        if filesystem is None:
+            filesystem = self._get_pool_as_filesystem()
+        filesystems = [filesystem]
+        for f in filesystem.iter_filesystems():
+            filesystems.extend(self.get_all_filesystems(f))
+        return filesystems
