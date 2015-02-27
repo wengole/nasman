@@ -4,6 +4,18 @@ from django.utils.encoding import python_2_unicode_compatible
 
 
 @python_2_unicode_compatible
+class Filesystem(models.Model):
+    """
+    Model representing ZFS Filesystem
+    """
+    name = models.CharField(u'name', max_length=255)
+    parent = models.ForeignKey('self', null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+
+@python_2_unicode_compatible
 class Snapshot(models.Model):
     """
     Model representing a ZFS snapshot
