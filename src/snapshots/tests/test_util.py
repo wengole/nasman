@@ -1,11 +1,10 @@
 import datetime
 
-from pyzfscore import ZPool, ZFilesystem, ZSnapshot
 from dateutil import tz
 import mock
 from django.test import TestCase
-from snapshots.models import Snapshot, Filesystem
 
+from ..models import Snapshot, Filesystem
 from ..util import ZFSHelper
 
 

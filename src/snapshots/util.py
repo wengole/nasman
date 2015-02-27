@@ -2,7 +2,8 @@ from django.utils.timezone import get_default_timezone_name
 import pytz
 import pyzfscore as zfs
 from dateutil import parser
-from snapshots.models import Snapshot, Filesystem
+
+from .models import Snapshot, Filesystem
 
 
 class ZFSHelper(object):
