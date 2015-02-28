@@ -79,7 +79,7 @@ class File(models.Model):
         on_delete=models.CASCADE
     )
     mime_type = models.CharField(u'mime type', blank=True, max_length=255)
-    created = models.DateTimeField(u'created')
+    magic = models.CharField(u'magic', blank=True, max_length=255)
     modified = models.DateTimeField(u'modified')
     size = models.IntegerField(u'size', blank=True, null=True)
 
