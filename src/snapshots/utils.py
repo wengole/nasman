@@ -105,14 +105,34 @@ class FileHelper(object):
     Utility to help walk file trees and process the results for creating File
     objects
     """
-    def create_file_object(self, full_path, snapshot=None):
+    def create_file_object(self, full_path, snapshot=None, directory=False):
         statinfo = os.stat(full_path)
         magic_info = magic.from_file(full_path)
         mime_type = magic.from_file(full_path, mime=True)
         File.objects.create(
             full_path=full_path,
             snapshot=snapshot,
+            directory=directory,
             mime_type=mime_type,
             magic=magic_info,
-            modified=statinfo.st_mtime
+            modified=statinfo.st_mtime,
+            size=statinfo.st_size,
         )
+
+    def walk_fs_and_create_files(self, fs_name):
+        try:
+            fs = Filesystem.objects.get(
+                name=fs_name
+            )
+        except Filesystem.DoesNotExist:
+            return
+        for dirname, subdirs, files in fs.walk_fs():
+            for s in subdirs:
+                self.create_file_object(
+                    full_path=u'%s/%s' % (dirname, s),
+                    directory=True
+                )
+            for f in files:
+                self.create_file_object(
+                    full_path=u'%s/%s' % (dirname, f)
+                )
