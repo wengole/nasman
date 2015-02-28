@@ -55,7 +55,6 @@ class TestFileModel(TestCase):
     def test_str_method(self):
         file_obj = File.objects.create(
             full_path=u'/foo/bar',
-            created=timezone.now(),
             modified=timezone.now()
         )
         string = str(file_obj)
