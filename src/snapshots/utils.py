@@ -133,11 +133,14 @@ class FileHelper(object):
             return
         for dirname, subdirs, files in fs.walk_fs():
             for s in subdirs:
+                # TODO: Proper loggin
+                print "Creating %s/%s" % (dirname, s)
                 self.create_file_object(
                     full_path=u'%s/%s' % (dirname, s),
                     directory=True
                 )
             for f in files:
+                print "Creating %s/%s" % (dirname, f)
                 self.create_file_object(
                     full_path=u'%s/%s' % (dirname, f)
                 )
