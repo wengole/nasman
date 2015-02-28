@@ -5,7 +5,7 @@ import mock
 from django.test import TestCase
 
 from ..models import Snapshot, Filesystem
-from ..util import ZFSHelper
+from ..utils import ZFSHelper
 
 
 class TestZFSHelper(TestCase):
