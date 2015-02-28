@@ -1,3 +1,4 @@
+from datetime import datetime
 import magic
 import os
 from django.utils.timezone import get_default_timezone_name
@@ -105,8 +106,12 @@ class FileHelper(object):
     Utility to help walk file trees and process the results for creating File
     objects
     """
+    timezone_name = get_default_timezone_name()
+
     def create_file_object(self, full_path, snapshot=None, directory=False):
         statinfo = os.stat(full_path)
+        mtime = datetime.fromtimestamp(statinfo.st_mtime)
+        mtime = pytz.timezone(self.timezone_name).localize(mtime)
         magic_info = magic.from_file(full_path)
         mime_type = magic.from_file(full_path, mime=True)
         File.objects.create(
@@ -115,7 +120,7 @@ class FileHelper(object):
             directory=directory,
             mime_type=mime_type,
             magic=magic_info,
-            modified=statinfo.st_mtime,
+            modified=mtime,
             size=statinfo.st_size,
         )
 
