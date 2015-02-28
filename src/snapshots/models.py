@@ -20,6 +20,18 @@ class Filesystem(models.Model):
     def __str__(self):
         return self.name
 
+    def walk_fs(self):
+        """
+        os.walk from the filesystem mountpoint
+
+        :returns: An `os.walk` instance starting from the snapshot
+        """
+        return os.walk(
+            u'%s/' % (
+                self.mountpoint,
+            )
+        )
+
 
 @python_2_unicode_compatible
 class Snapshot(models.Model):
