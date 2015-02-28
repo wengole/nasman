@@ -9,7 +9,12 @@ class Filesystem(models.Model):
     Model representing ZFS Filesystem
     """
     name = models.CharField(u'name', max_length=255)
-    parent = models.ForeignKey('self', null=True, blank=True)
+    parent = models.ForeignKey(
+        u'self',
+        related_name=u'children',
+        null=True,
+        blank=True
+    )
     mountpoint = models.CharField(u'mountpoint', max_length=255, blank=True)
 
     def __str__(self):
@@ -23,6 +28,7 @@ class Snapshot(models.Model):
     """
     name = models.CharField(u'name', max_length=255)
     timestamp = models.DateTimeField(u'timestamp', null=True, blank=True)
+    filesystem = models.ForeignKey(u'Filesystem', related_name=u'snapshots')
 
     class Meta:
         unique_together = ()
