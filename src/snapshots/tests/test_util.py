@@ -11,14 +11,25 @@ from ..util import ZFSHelper
 class TestZFSHelper(TestCase):
 
     def setUp(self):
-        self.snap = mock.MagicMock()
-        self.snap.name = 'pool@zfs-auto-snap_frequent-2015-01-15-1215'
+        self.snap1 = mock.MagicMock()
+        self.snap1.name = 'pool@zfs-auto-snap_frequent-2015-01-15-1215'
+        self.snap2 = mock.MagicMock()
+        self.snap2.name = 'pool/fs1@snap2'
+        self.snap3 = mock.MagicMock()
+        self.snap3.name = 'pool/fs2/fs3@2015-02-15-0915'
+        self.snap4 = mock.MagicMock()
+        self.snap4.name = 'pool@2015-13-99-0915'
         self.pool_fs = mock.MagicMock()
+        self.snap1.parent = self.pool_fs
+        self.snap4.parent = self.pool_fs
         self.pool_fs.name = 'pool'
         self.pool_fs.parent_name = None
         self.pool_fs.parent = None
         self.pool_fs.is_mounted.return_value = '/pool'
-        self.pool_fs.iter_snapshots_sorted.return_value = [self.snap]
+        self.pool_fs.iter_snapshots_sorted.return_value = [
+            self.snap1,
+            self.snap4
+        ]
         self.pool = mock.MagicMock()
         self.pool.to_filesystem.return_value = self.pool_fs
         self.fs1 = mock.MagicMock()
@@ -26,6 +37,7 @@ class TestZFSHelper(TestCase):
         self.fs1.parent_name = 'pool'
         self.fs1.parent = self.pool_fs
         self.fs1.is_mounted.return_value = '/pool/fs1'
+        self.snap2.parent = self.fs1
         self.fs2 = mock.MagicMock()
         self.fs2.name = 'pool/fs2'
         self.fs2.is_mounted.return_value = '/pool/fs2'
@@ -37,6 +49,7 @@ class TestZFSHelper(TestCase):
         self.fs3.parent_name = 'pool/fs2'
         self.fs3.parent = self.fs2
         self.fs3.iter_filesystems.return_value = []
+        self.snap3.parent = self.fs3
         self.fs2.iter_filesystems.return_value = [self.fs3]
         self.fs1.iter_filesystems.return_value = []
         self.pool_fs.iter_filesystems.return_value = [self.fs1, self.fs2]
@@ -46,36 +59,31 @@ class TestZFSHelper(TestCase):
         MockZPool.list.return_value = [self.pool]
         util = ZFSHelper()
         snapshots = util.get_snapshots()
+        snapshots = [x['name'] for x in snapshots]
         self.assertEqual(
             snapshots,
-            ['pool@zfs-auto-snap_frequent-2015-01-15-1215']
+            ['pool@zfs-auto-snap_frequent-2015-01-15-1215',
+             'pool@2015-13-99-0915']
         )
 
-    @mock.patch.object(ZFSHelper, 'get_snapshots')
-    def test_create_snapshot_objects(self, mock_get_snaps):
-        fake_snaps = [
-            'pool@snap1',
-            'pool@zfs-auto-snap_frequent-2015-01-15-1215',
-            'pool@2015-02-15-0915',
-            'pool@2015-13-99-0915',
-        ]
-        mock_get_snaps.return_value = fake_snaps
+    @mock.patch('snapshots.util.zfs.ZPool')
+    def test_create_snapshot_objects(self, MockZPool):
+        MockZPool.list.return_value = [self.pool]
         util = ZFSHelper()
         util.create_snapshot_objects()
-        self.assertEqual(Snapshot.objects.all().count(), len(fake_snaps))
+        self.assertEqual(Snapshot.objects.all().count(), 2)
         snap1 = Snapshot.objects.get(
-            name='pool@zfs-auto-snap_frequent-2015-01-15-1215'
+            name=u'pool@zfs-auto-snap_frequent-2015-01-15-1215'
         )
         self.assertEqual(
             snap1.timestamp,
             datetime.datetime(2015, 1, 15, 12, 15, tzinfo=tz.tzutc())
         )
         snap2 = Snapshot.objects.get(
-            name='pool@2015-02-15-0915'
+            name=u'pool@2015-13-99-0915'
         )
-        self.assertEqual(
-            snap2.timestamp,
-            datetime.datetime(2015, 2, 15, 9, 15, tzinfo=tz.tzutc())
+        self.assertIsNone(
+            snap2.timestamp
         )
 
     @mock.patch.object(ZFSHelper, '_get_pool_as_filesystem')

@@ -3,21 +3,26 @@ import os
 
 from django.test import TestCase
 from django.utils import timezone
-from snapshots.models import Snapshot, File
-
-test_pool = u'test-pool'
+from snapshots.models import Snapshot, File, Filesystem
 
 
 class TestSnapshotModel(TestCase):
 
+    def setUp(self):
+        self.test_pool = u'test-pool'
+        self.test_fs = Filesystem.objects.create(
+            name=self.test_pool,
+            mountpoint=self.test_pool
+        )
+
     def tearDown(self):
-        if os.path.exists(test_pool):
-            shutil.rmtree(test_pool)
+        if os.path.exists(self.test_pool):
+            shutil.rmtree(self.test_pool)
 
     def test_str_method(self):
         snapshot = Snapshot.objects.create(
             name=u'a test',
-            timestamp=None
+            filesystem=self.test_fs
         )
         string = str(snapshot)
         unic = unicode(snapshot)
@@ -28,16 +33,18 @@ class TestSnapshotModel(TestCase):
 
     def test_name_methods(self):
         snapshot = Snapshot.objects.create(
-            name=u'%s@foo-bar' % test_pool
+            name=u'%s@foo-bar' % self.test_pool,
+            filesystem=self.test_fs
         )
         self.assertEqual(snapshot.base_name, u'foo-bar')
-        self.assertEqual(snapshot.parent_name, test_pool)
+        self.assertEqual(snapshot.parent_name, self.test_pool)
 
     def test_walk_snapshot(self):
         snapshot = Snapshot.objects.create(
-            name=u'%s@foo-bar' % test_pool
+            name=u'%s@foo-bar' % self.test_pool,
+            filesystem=self.test_fs
         )
-        os.makedirs(u'%s/.zfs/snapshot/foo-bar/test-dir' % test_pool)
+        os.makedirs(u'%s/.zfs/snapshot/foo-bar/test-dir' % self.test_pool)
         x = snapshot.walk_snapshot()
         dirname, subdirs, filenames = next(x)
         self.assertIn(u'test-dir', subdirs)

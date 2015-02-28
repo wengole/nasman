@@ -6,7 +6,7 @@ from django.test import override_settings, TestCase
 import haystack
 from haystack.query import SearchQuerySet
 
-from ..models import Snapshot
+from ..models import Snapshot, Filesystem
 from snapshots.search_indexes import SnapshotIndex
 
 
@@ -20,7 +20,6 @@ TEST_INDEX = {
 
 @override_settings(HAYSTACK_CONNECTIONS=TEST_INDEX)
 class SearchQuerySetTestCase(TestCase):
-    # fixtures = ['bulk_data.json']
 
     def setUp(self):
         super(SearchQuerySetTestCase, self).setUp()
@@ -49,9 +48,15 @@ class SearchQuerySetTestCase(TestCase):
     def test_snapshot_is_indexed(self):
         sqs = SearchQuerySet().all()
         self.assertEqual(sqs.count(), 0)
+        fs = Filesystem.objects.create(
+            name='foo',
+            parent=None,
+            mountpoint='/foo'
+        )
         Snapshot.objects.create(
             name='test_snap_1',
-            timestamp=datetime.now()
+            timestamp=datetime.now(),
+            filesystem=fs
         )
         sqs = SearchQuerySet().all()
         self.assertEqual(sqs.count(), 1)

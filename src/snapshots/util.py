@@ -32,7 +32,8 @@ class ZFSHelper(object):
         """
         fs = self._get_pool_as_filesystem()
         snapshots = fs.iter_snapshots_sorted()
-        return [x.name for x in snapshots]
+        return [{'name': x.name,
+                'parent': x.parent} for x in snapshots]
 
     def create_snapshot_objects(self):
         """
@@ -41,13 +42,15 @@ class ZFSHelper(object):
         snapshots = self.get_snapshots()
         for snap in snapshots:
             try:
-                ts = parser.parse(snap, fuzzy=True)
+                ts = parser.parse(snap['name'], fuzzy=True)
                 pytz.timezone(self.timezone_name).localize(ts)
             except ValueError:
                 ts = None
+            fs = self.create_filesystem_object(snap['parent'])
             Snapshot.objects.get_or_create(
-                name=snap,
-                timestamp=ts
+                name=snap['name'],
+                timestamp=ts,
+                filesystem=fs,
             )
 
     def get_all_filesystems(self, filesystem=None):
