@@ -79,7 +79,6 @@ class File(models.Model):
         on_delete=models.CASCADE
     )
     mime_type = models.CharField(u'mime type', blank=True, max_length=255)
-    extension = models.CharField(u'extension', blank=True, max_length=255)
     created = models.DateTimeField(u'created')
     modified = models.DateTimeField(u'modified')
     size = models.IntegerField(u'size', blank=True, null=True)
@@ -90,3 +89,28 @@ class File(models.Model):
 
     def __str__(self):
         return self.full_path
+
+    @property
+    def extension(self):
+        """
+        The file extension of this file
+        :rtype: str
+        """
+        _, extension = os.path.splitext(self.full_path)
+        return extension
+
+    @property
+    def dirname(self):
+        """
+        The directory containing this file
+        :rtype: str
+        """
+        return os.path.dirname(self.full_path)
+
+    @property
+    def name(self):
+        """
+        The filename of this file
+        :rtype: str
+        """
+        return os.path.basename(self.full_path)
