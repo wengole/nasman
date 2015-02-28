@@ -78,6 +78,7 @@ class File(models.Model):
         null=True,
         on_delete=models.CASCADE
     )
+    directory = models.BooleanField(default=False)
     mime_type = models.CharField(u'mime type', blank=True, max_length=255)
     magic = models.CharField(u'magic', blank=True, max_length=255)
     modified = models.DateTimeField(u'modified')
