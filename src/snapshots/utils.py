@@ -112,9 +112,12 @@ class FileHelper(object):
         statinfo = os.stat(full_path)
         mtime = datetime.fromtimestamp(statinfo.st_mtime)
         mtime = pytz.timezone(self.timezone_name).localize(mtime)
-        magic_info = magic.from_file(full_path)
+        try:
+            magic_info = magic.from_file(full_path)
+        except magic.MagicException:
+            magic_info = None
         mime_type = magic.from_file(full_path, mime=True)
-        File.objects.create(
+        File.objects.get_or_create(
             full_path=full_path,
             snapshot=snapshot,
             directory=directory,
