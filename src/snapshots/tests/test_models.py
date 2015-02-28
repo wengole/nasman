@@ -64,3 +64,18 @@ class TestFileModel(TestCase):
         self.assertIsInstance(unic, unicode)
         self.assertEqual(string, b'/foo/bar')
         self.assertEqual(unic, u'/foo/bar')
+
+
+class TestFilesystemModel(TestCase):
+
+    def test_str_method(self):
+        fs = Filesystem.objects.create(
+            name=u'foo',
+            mountpoint=u'/foo'
+        )
+        string = str(fs)
+        unic = unicode(fs)
+        self.assertIsInstance(string, basestring)
+        self.assertIsInstance(unic, unicode)
+        self.assertEqual(string, b'foo')
+        self.assertEqual(unic, u'foo')
