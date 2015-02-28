@@ -115,7 +115,7 @@ class FileHelper(object):
         try:
             magic_info = magic.from_file(full_path)
         except magic.MagicException:
-            magic_info = None
+            magic_info = ''
         mime_type = magic.from_file(full_path, mime=True)
         File.objects.get_or_create(
             full_path=full_path,
