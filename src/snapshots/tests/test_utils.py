@@ -54,7 +54,7 @@ class TestZFSHelper(TestCase):
         self.fs1.iter_filesystems.return_value = []
         self.pool_fs.iter_filesystems.return_value = [self.fs1, self.fs2]
 
-    @mock.patch('snapshots.util.zfs.ZPool')
+    @mock.patch('snapshots.utils.zfs.ZPool')
     def test_get_snapshots(self, MockZPool):
         MockZPool.list.return_value = [self.pool]
         util = ZFSHelper()
@@ -66,7 +66,7 @@ class TestZFSHelper(TestCase):
              'pool@2015-13-99-0915']
         )
 
-    @mock.patch('snapshots.util.zfs.ZPool')
+    @mock.patch('snapshots.utils.zfs.ZPool')
     def test_create_snapshot_objects(self, MockZPool):
         MockZPool.list.return_value = [self.pool]
         util = ZFSHelper()
