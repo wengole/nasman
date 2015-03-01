@@ -31,6 +31,7 @@ setup(
         'Celery[redis]',
         'eventlet',
         'flower',
+        'pyinotify',
     ],
     dependency_links=[
         'https://github.com/akatrevorjay/pyzfscore/tarball/master#egg=pyzfscore-0.0.1',
