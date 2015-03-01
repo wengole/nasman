@@ -1,12 +1,10 @@
-from datetime import datetime
-import magic
-import os
 from django.utils.timezone import get_default_timezone_name
 import pytz
 import pyzfscore as zfs
 from dateutil import parser
 
 from .models import Snapshot, Filesystem, File
+from .tasks import create_file_object
 
 
 class ZFSHelper(object):
@@ -106,27 +104,6 @@ class FileHelper(object):
     Utility to help walk file trees and process the results for creating File
     objects
     """
-    timezone_name = get_default_timezone_name()
-
-    def create_file_object(self, full_path, snapshot=None, directory=False):
-        statinfo = os.stat(full_path)
-        mtime = datetime.fromtimestamp(statinfo.st_mtime)
-        mtime = pytz.timezone(self.timezone_name).localize(mtime)
-        try:
-            magic_info = magic.from_file(full_path)
-        except magic.MagicException:
-            magic_info = ''
-        mime_type = magic.from_file(full_path, mime=True)
-        File.objects.get_or_create(
-            full_path=full_path,
-            snapshot=snapshot,
-            directory=directory,
-            mime_type=mime_type,
-            magic=magic_info,
-            modified=mtime,
-            size=statinfo.st_size,
-        )
-
     def walk_fs_and_create_files(self, fs_name):
         try:
             fs = Filesystem.objects.get(
@@ -138,12 +115,12 @@ class FileHelper(object):
             for s in subdirs:
                 # TODO: Proper loggin
                 print "Creating %s/%s" % (dirname, s)
-                self.create_file_object(
+                create_file_object.delay(
                     full_path=u'%s/%s' % (dirname, s),
                     directory=True
                 )
             for f in files:
                 print "Creating %s/%s" % (dirname, f)
-                self.create_file_object(
+                create_file_object.delay(
                     full_path=u'%s/%s' % (dirname, f)
                 )
