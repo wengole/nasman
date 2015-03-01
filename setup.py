@@ -27,6 +27,7 @@ setup(
         'pytz',
         'python-magic',
         'Celery[redis]',
+        'eventlet',
         'flower',
     ],
     dependency_links=[
