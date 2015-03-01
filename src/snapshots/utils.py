@@ -104,8 +104,6 @@ class FileHelper(object):
     Utility to help walk file trees and process the results for creating File
     objects
     """
-    timezone_name = get_default_timezone_name()
-
     def walk_fs_and_create_files(self, fs_name):
         try:
             fs = Filesystem.objects.get(

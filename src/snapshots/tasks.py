@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 from datetime import datetime
+from django.utils.timezone import get_default_timezone_name
 import os
 
 from celery import task
@@ -10,10 +11,10 @@ from .models import File
 
 
 @task
-def create_file_object(self, full_path, snapshot=None, directory=False):
+def create_file_object(full_path, snapshot=None, directory=False):
     statinfo = os.stat(full_path)
     mtime = datetime.fromtimestamp(statinfo.st_mtime)
-    mtime = pytz.timezone(self.timezone_name).localize(mtime)
+    mtime = pytz.timezone(get_default_timezone_name()).localize(mtime)
     try:
         magic_info = magic.from_file(full_path)
     except magic.MagicException:
