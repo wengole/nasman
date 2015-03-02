@@ -5,33 +5,26 @@ from menu import Menu
 
 
 def snapshots_menu(request):
-    menu = []
-    menu.append(
+    menu = [
         MenuItem(
             title='Snapshots',
             url='#',
             classes='dropdown-header'
-        )
-    )
-    menu.append(
+        ),
         MenuItem(
             title='List Snapshots',
             url=reverse('snapshots:list'),
-        )
-    )
-    menu.append(
+        ),
         MenuItem(
             title='divider',
             url='',
             classes='divider'
-        )
-    )
-    menu.append(
+        ),
         MenuItem(
             title='Reindex Filesystem',
             url=reverse('snapshots:reindex_fs')
         )
-    )
+    ]
     return menu
 
 
