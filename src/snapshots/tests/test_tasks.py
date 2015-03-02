@@ -23,7 +23,7 @@ class TestCeleryTasks(TestCase):
         statinfo = os.stat(file_path)
         mtime = datetime.fromtimestamp(statinfo.st_mtime)
         mtime = pytz.timezone(get_default_timezone_name()).localize(mtime)
-        create_file_object(file_path).delay().get()
+        create_file_object.delay(file_path).get()
 
         file_obj = File.objects.get(
             full_path=file_path

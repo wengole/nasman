@@ -99,6 +99,7 @@ class Common(Configuration):
 
 
 class Local(Common):
+    SECRET_KEY = values.SecretValue()
     INSTALLED_APPS = Common.INSTALLED_APPS
     INSTALLED_APPS += ('debug_toolbar',)
     EMAIL_HOST = "localhost"
