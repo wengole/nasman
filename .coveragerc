@@ -1,0 +1,4 @@
+[report]
+omit =
+    */migrations/*
+    pycharm_settings.py
