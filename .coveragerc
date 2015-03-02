@@ -1,4 +1,4 @@
 [report]
 omit =
     */migrations/*
-    pycharm_settings.py
+    */pycharm_settings.py
