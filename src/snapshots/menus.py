@@ -19,6 +19,19 @@ def snapshots_menu(request):
             url=reverse('snapshots:list'),
         )
     )
+    menu.append(
+        MenuItem(
+            title='divider',
+            url='',
+            classes='divider'
+        )
+    )
+    menu.append(
+        MenuItem(
+            title='Reindex Filesystem',
+            url=reverse('snapshots:reindex_fs')
+        )
+    )
     return menu
 
 
