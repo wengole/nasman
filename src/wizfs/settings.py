@@ -84,7 +84,7 @@ class Common(Configuration):
                 'level': 'INFO',
                 'class': 'cloghandler.ConcurrentRotatingFileHandler',
                 'filename': os.path.join(BASE_DIR, 'wizfs.log'),
-                'maxBytes': 10*1024*104,  #10MB
+                'maxBytes': 10*1024*104,  # 10MB
                 'backupCount': 5
             }
         },
