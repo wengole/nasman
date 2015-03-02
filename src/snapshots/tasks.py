@@ -19,7 +19,10 @@ def create_file_object(full_path, snapshot=None, directory=False):
         magic_info = magic.from_file(full_path)
     except magic.MagicException:
         magic_info = ''
-    mime_type = magic.from_file(full_path, mime=True)
+    try:
+        mime_type = magic.from_file(full_path, mime=True)
+    except magic.MagicException:
+        mime_type = ''
     File.objects.get_or_create(
         full_path=full_path,
         snapshot=snapshot,
