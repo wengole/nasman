@@ -8,8 +8,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 class Common(Configuration):
     BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-    SECRET_KEY = ('FftmF3EEwdCoJhqsCjpHUh2gPHXM83MhRTmnXDwyb8RbWxd5r4gXNwxM7eZ'
-                  'nhJQP')
+    SECRET_KEY = values.SecretValue()
     DEBUG = True
     INTERNAL_IPS = ('127.0.0.1', '192.168.1.69',)
     TEMPLATE_DEBUG = True
