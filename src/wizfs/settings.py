@@ -8,7 +8,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 class Common(Configuration):
     BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-    SECRET_KEY = values.SecretValue()
+    SECRET_KEY = ('FftmF3EEwdCoJhqsCjpHUh2gPHXM83MhRTmnXDwyb8RbWxd5r4gXNwxM7eZ'
+                  'nhJQP')
     DEBUG = True
     INTERNAL_IPS = ('127.0.0.1', '192.168.1.69',)
     TEMPLATE_DEBUG = True
@@ -115,10 +116,11 @@ class Local(Common):
     }
 
 
-class ServerDebug(Local):
+class ServerDebug(Common):
     """
     Development config to be run on server
     """
+    SECRET_KEY = values.SecretValue()
     DEFAULT_FROM_EMAIL = values.Value(
         'WiZFS <wengole@wengole.plus.com>'
     )
