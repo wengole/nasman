@@ -1,36 +1,29 @@
 from django.contrib import admin
-from snapshots.models import Snapshot, File
+
+from .models import Snapshot, File, Filesystem
+from .tasks import ReindexFilesystem
 
 
+def walk_fs_action(modeladmin, request, queryset):
+    for fs in queryset:
+        res=ReindexFilesystem.delay(fs_name=fs.name)
+    return res
+walk_fs_action.short_description = "Reindex selected filesystem(s)"
+
+
+@admin.register(Snapshot)
 class SnapshotAdmin(admin.ModelAdmin):
-    extra_list_display = []
-    extra_list_filter = []
-    extra_search_fields = []
-    list_editable = []
-    raw_id_fields = []
-    inlines = []
-    filter_vertical = []
-    filter_horizontal = []
-    radio_fields = {}
-    prepopulated_fields = {}
-    formfield_overrides = {}
-    readonly_fields = []
+    list_display = ('name', 'timestamp', 'filesystem',)
+    readonly_fields = ['timestamp']
 
-
+@admin.register(File)
 class FileAdmin(admin.ModelAdmin):
-    extra_list_display = []
-    extra_list_filter = []
-    extra_search_fields = []
-    list_editable = []
-    raw_id_fields = []
-    inlines = []
-    filter_vertical = []
-    filter_horizontal = []
-    radio_fields = {}
-    prepopulated_fields = {}
-    formfield_overrides = {}
+    list_display = ('name', 'dirname', 'mime_type', 'modified', 'size',)
     readonly_fields = []
 
 
-admin.site.register(Snapshot, SnapshotAdmin)
-admin.site.register(File, FileAdmin)
+@admin.register(Filesystem)
+class FilesystemAdmin(admin.ModelAdmin):
+    list_display = ('name', 'mountpoint', 'parent',)
+    list_editable = ['mountpoint', ]
+    actions = [walk_fs_action]
