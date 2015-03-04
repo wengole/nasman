@@ -6,7 +6,7 @@ from celery import Celery
 from django.conf import settings
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'wizfs.settings')
-os.environ.setdefault('DJANGO_CONFIGURATION', 'ServerDebug')
+os.environ.setdefault('DJANGO_CONFIGURATION', 'Local')
 
 import configurations
 
