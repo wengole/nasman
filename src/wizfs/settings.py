@@ -126,6 +126,6 @@ class ServerDebug(Common):
     )
     EMAIL_HOST = values.Value('localhost')
     EMAIL_PORT = values.IntegerValue(25)
-    EMAIL_HOST_USER = values.SecretValue()
-    EMAIL_HOST_PASSWORD = values.SecretValue()
+    EMAIL_HOST_USER = values.Value('')
+    EMAIL_HOST_PASSWORD = values.Value('')
     EMAIL_SUBJECT_PREFIX = values.Value('[WiZFS] ')
