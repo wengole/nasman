@@ -75,6 +75,7 @@ class Common(Configuration):
     BROKER_URL = 'redis://localhost:6379/0'
     CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
     CELERY_ACCEPT_CONTENT = ['pickle', ]
+    CELERYD_PREFETCH_MULTIPLIER = 1
     CRISPY_TEMPLATE_PACK = 'bootstrap3'
     LOGGING = {
         'version': 1,
