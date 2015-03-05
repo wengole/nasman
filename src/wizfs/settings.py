@@ -107,6 +107,9 @@ class Local(Common):
     EMAIL_BACKEND = values.Value(
         'django.core.mail.backends.console.EmailBackend'
     )
+    DEFAULT_FROM_EMAIL = values.Value(
+        'WiZFS <admin@exam.com>'
+    )
     MIDDLEWARE_CLASSES = Common.MIDDLEWARE_CLASSES + (
         'debug_toolbar.middleware.DebugToolbarMiddleware',
     )
@@ -122,9 +125,6 @@ class ServerDebug(Common):
     Development config to be run on server
     """
     SECRET_KEY = values.SecretValue()
-    DEFAULT_FROM_EMAIL = values.Value(
-        'WiZFS <wengole@wengole.plus.com>'
-    )
     EMAIL_HOST = values.Value('localhost')
     EMAIL_PORT = values.IntegerValue(25)
     EMAIL_HOST_USER = values.Value('')
