@@ -25,6 +25,9 @@ class TestCeleryTasks(TestCase):
         mtime = datetime.fromtimestamp(self.statinfo.st_mtime)
         self.mtime = pytz.timezone(get_default_timezone_name()).localize(mtime)
 
+    def tearDown(self):
+        os.remove(self.file_path)
+
     @override_settings(CELERY_ALWAYS_EAGER=True)
     def test_create_file_object(self):
         create_file_object.delay(self.file_path).get()
