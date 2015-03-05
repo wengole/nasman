@@ -15,15 +15,6 @@ def snapshots_menu(request):
             title='List Snapshots',
             url=reverse('snapshots:list'),
         ),
-        MenuItem(
-            title='divider',
-            url='',
-            classes='divider'
-        ),
-        MenuItem(
-            title='Reindex Filesystem',
-            url=reverse('snapshots:reindex_fs')
-        )
     ]
     return menu
 
