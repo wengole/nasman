@@ -1,14 +1,14 @@
 from django.contrib import admin
 
 from .models import Snapshot, File, Filesystem
-from .tasks import ReindexFilesystem
+# from .tasks import ReindexFilesystem
 
 
-def walk_fs_action(modeladmin, request, queryset):
-    for fs in queryset:
-        res=ReindexFilesystem.delay(fs_name=fs.name)
-    return res
-walk_fs_action.short_description = "Reindex selected filesystem(s)"
+# def walk_fs_action(modeladmin, request, queryset):
+#     for fs in queryset:
+#         res=ReindexFilesystem.delay(fs_name=fs.name)
+#     return res
+# walk_fs_action.short_description = "Reindex selected filesystem(s)"
 
 
 @admin.register(Snapshot)
@@ -26,4 +26,4 @@ class FileAdmin(admin.ModelAdmin):
 class FilesystemAdmin(admin.ModelAdmin):
     list_display = ('name', 'mountpoint', 'parent',)
     list_editable = ['mountpoint', ]
-    actions = [walk_fs_action]
+    # actions = [walk_fs_action]
