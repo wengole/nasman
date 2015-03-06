@@ -4,7 +4,7 @@ import logging
 from time import sleep
 import os
 
-from celery import task, group, Task
+from celery import task, group
 from django.utils.timezone import get_default_timezone_name
 import magic
 import pytz
@@ -15,8 +15,8 @@ from .models import File, Filesystem
 logger = logging.getLogger(__name__)
 
 
-@task(bind=True)
-def create_file_object(self, full_path, snapshot=None, directory=False):
+@task()
+def create_file_object(full_path, snapshot=None, directory=False):
     logger.info('Adding %s: %s',
                 ('directory' if directory else 'file'), full_path)
     statinfo = os.stat(full_path)
@@ -41,34 +41,49 @@ def create_file_object(self, full_path, snapshot=None, directory=False):
     )
 
 
-@task
-def reindex_filesystem(fs_name):
+@task(bind=True)
+def reindex_filesystem(self, fs_name):
     """
     Task to walk a given filesystem (which may be a snapshot) and index all
     files and directories within it
     """
-    total_files = 0
-    groups = []
+    self.total_files = 0
+    self.groups = []
+    self.update_count = 0
+    self.update_rate = 10
 
-    @property
     def jobs(self):
         """
         The individual jobs in all groups currently queued
         """
         return [job for group in self.groups for job in group.children]
 
-    @property
     def done_files(self):
         """
         The number of files that have been indexed so far
         """
-        done = sum([int(x.ready()) for x in self.jobs])
+        done = sum([int(x.ready()) for x in jobs(self)])
         return done
 
-    @property
     def work_to_do(self):
+        """
+        Are there any outstanding jobs to complete?
+        """
         to_do = any([not job.ready() for job in self.groups])
         return to_do
+
+    def update_progress(self):
+        if self.update_count < self.update_rate:
+            self.update_count += 1
+            return
+        self.update_state(
+            state='PROGRESS',
+            meta={
+                'percentage': done_files(self) / self.total_files * 100,
+                'done': done_files(self),
+                'total': self.total_files
+            }
+        )
 
     try:
         fs = Filesystem.objects.get(
@@ -79,93 +94,26 @@ def reindex_filesystem(fs_name):
         return
     for dirname, subdirs, files in fs.walk_fs():
         logger.info('Adding subdirs for %s', dirname)
-        total_files += len(subdirs)
+        self.total_files += len(subdirs)
         subdirs_job = group([create_file_object.s(
             full_path=u'%s/%s' % (dirname, s),
             directory=True
         ) for s in subdirs])
-        groups.append(subdirs_job.apply_async())
+        self.groups.append(subdirs_job.apply_async())
 
         logger.info('Adding files for %s', dirname)
-        total_files += len(files)
+        self.total_files += len(files)
         files_job = group([create_file_object.s(
             full_path=u'%s/%s' % (dirname, f)
         ) for f in files])
-        groups.append(files_job.apply_async())
-        update_progress(done_files, total_files, 10)
+        self.groups.append(files_job.apply_async())
+    update_progress(self)
     logger.info('All files and directories queued')
-    if any([not job.ready() for job in groups]):
+    if work_to_do(self):
         logger.info('Still waiting on %d jobs',
-                    total_files - done_files)
-    while self.work_to_do:
+                    self.total_files - done_files(self))
+    while work_to_do(self):
+        update_progress(self)
         sleep(5)
         logger.info('Still waiting on %d jobs',
-                    self.total_files - self.done_files)
-
-
-class ReindexFilesystem(Task):
-    """
-    Task to walk a given filesystem (which may be a snapshot) and index all
-    files and directories within it
-    """
-    significant_kwargs = [
-        ('fs_name', str)
-    ]
-    cache_duration = 0
-    # Shouldn't take longer than about 20 minutes
-    herd_avoidance_timeout = 1200
-    total_files = 0
-    groups = []
-
-    @property
-    def jobs(self):
-        """
-        The individual jobs in all groups currently queued
-        """
-        return [job for group in self.groups for job in group.children]
-
-    @property
-    def done_files(self):
-        """
-        The number of files that have been indexed so far
-        """
-        done = sum([int(x.ready()) for x in self.jobs])
-        return done
-
-    @property
-    def work_to_do(self):
-        to_do = any([not job.ready() for job in self.groups])
-        return to_do
-
-    def run(self, fs_name):
-        try:
-            fs = Filesystem.objects.get(
-                name=fs_name
-            )
-        except Filesystem.DoesNotExist:
-            logger.error('Filesystem "%s" does not exist', fs_name)
-            return
-        for dirname, subdirs, files in fs.walk_fs():
-            logger.info('Adding subdirs for %s', dirname)
-            self.total_files += len(subdirs)
-            subdirs_job = group([create_file_object.s(
-                full_path=u'%s/%s' % (dirname, s),
-                directory=True
-            ) for s in subdirs])
-            self.groups.append(subdirs_job.apply_async())
-
-            logger.info('Adding files for %s', dirname)
-            self.total_files += len(files)
-            files_job = group([create_file_object.s(
-                full_path=u'%s/%s' % (dirname, f)
-            ) for f in files])
-            self.groups.append(files_job.apply_async())
-            self.update_progress(self.done_files, self.total_files, 10)
-        logger.info('All files and directories queued')
-        if self.work_to_do:
-            logger.info('Still waiting on %d jobs',
-                        self.total_files - self.done_files)
-        while self.work_to_do:
-            sleep(5)
-            logger.info('Still waiting on %d jobs',
-                        self.total_files - self.done_files)
+                    self.total_files - done_files(self))
