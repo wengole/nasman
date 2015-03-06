@@ -2,6 +2,7 @@ from __future__ import absolute_import
 from datetime import datetime
 import logging
 from time import sleep
+from decimal import Decimal
 import os
 
 from celery import task, group
@@ -39,6 +40,7 @@ def create_file_object(full_path, snapshot=None, directory=False):
         modified=mtime,
         size=statinfo.st_size,
     )
+    sleep(.1)
 
 
 @task(bind=True)
@@ -73,13 +75,20 @@ def reindex_filesystem(self, fs_name):
         return to_do
 
     def update_progress(self):
+        """
+        Set the task state to PROGRESS and add metadata about the progress of
+        the task
+        """
         if self.update_count < self.update_rate:
             self.update_count += 1
             return
+        self.update_count = 0
+        done = Decimal(done_files(self))
+        total = Decimal(self.total_files)
         self.update_state(
             state='PROGRESS',
             meta={
-                'percentage': done_files(self) / self.total_files * 100,
+                'percentage': done / total * 100,
                 'done': done_files(self),
                 'total': self.total_files
             }
@@ -91,6 +100,7 @@ def reindex_filesystem(self, fs_name):
         )
     except Filesystem.DoesNotExist:
         logger.error('Filesystem "%s" does not exist', fs_name)
+        # TODO: Raise an error so Celery knows the task failed and why
         return
     for dirname, subdirs, files in fs.walk_fs():
         logger.info('Adding subdirs for %s', dirname)
@@ -100,6 +110,7 @@ def reindex_filesystem(self, fs_name):
             directory=True
         ) for s in subdirs])
         self.groups.append(subdirs_job.apply_async())
+        update_progress(self)
 
         logger.info('Adding files for %s', dirname)
         self.total_files += len(files)
@@ -107,13 +118,15 @@ def reindex_filesystem(self, fs_name):
             full_path=u'%s/%s' % (dirname, f)
         ) for f in files])
         self.groups.append(files_job.apply_async())
+        update_progress(self)
+
     update_progress(self)
     logger.info('All files and directories queued')
     if work_to_do(self):
-        logger.info('Still waiting on %d jobs',
+        logger.debug('Still waiting on %d jobs',
                     self.total_files - done_files(self))
+
     while work_to_do(self):
         update_progress(self)
-        sleep(5)
-        logger.info('Still waiting on %d jobs',
+        logger.debug('Still waiting on %d jobs',
                     self.total_files - done_files(self))
