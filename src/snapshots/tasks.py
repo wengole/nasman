@@ -98,6 +98,14 @@ def reindex_filesystem(self, fs_name):
             }
         )
 
+    try:
+        fs = Filesystem.objects.get(
+            name=fs_name
+        )
+    except Filesystem.DoesNotExist as exc:
+        logger.error('Filesystem "%s" does not exist', fs_name)
+        raise exc
+
     inspector = self.app.control.inspect()
     task_runs = sum(
         [1 for y in inspector.active().values() for x in y
@@ -107,14 +115,7 @@ def reindex_filesystem(self, fs_name):
         message = 'Already running a reindex! Aborting!'
         logger.warn(message)
         raise AlreadyRunning(message)
-    try:
-        fs = Filesystem.objects.get(
-            name=fs_name
-        )
-    except Filesystem.DoesNotExist as exc:
-        message = 'Filesystem "%s" does not exist' % fs_name
-        logger.error(message)
-        raise exc
+
     for dirname, subdirs, files in fs.walk_fs():
         logger.info('Adding subdirs for %s', dirname)
         self.total_files += len(subdirs)
