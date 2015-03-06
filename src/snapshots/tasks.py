@@ -16,6 +16,10 @@ from .models import File, Filesystem
 logger = logging.getLogger(__name__)
 
 
+class AlreadyRunning(Exception):
+    pass
+
+
 @task()
 def create_file_object(full_path, snapshot=None, directory=False):
     logger.info('Adding %s: %s',
@@ -94,14 +98,23 @@ def reindex_filesystem(self, fs_name):
             }
         )
 
+    inspector = self.app.control.inspect()
+    task_runs = sum(
+        [1 for y in inspector.active().values() for x in y
+         if x['name'] == self.name]
+    )
+    if task_runs > 1:
+        message = 'Already running a reindex! Aborting!'
+        logger.warn(message)
+        raise AlreadyRunning(message)
     try:
         fs = Filesystem.objects.get(
             name=fs_name
         )
-    except Filesystem.DoesNotExist:
-        logger.error('Filesystem "%s" does not exist', fs_name)
-        # TODO: Raise an error so Celery knows the task failed and why
-        return
+    except Filesystem.DoesNotExist as exc:
+        message = 'Filesystem "%s" does not exist' % fs_name
+        logger.error(message)
+        raise exc
     for dirname, subdirs, files in fs.walk_fs():
         logger.info('Adding subdirs for %s', dirname)
         self.total_files += len(subdirs)
