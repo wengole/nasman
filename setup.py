@@ -38,6 +38,7 @@ setup(
         'https://github.com/notanumber/xapian-haystack/tarball/master#egg=xapian-haystack-1.1.6b0',
         'https://github.com/mher/flower/tarball/master#egg=flower-0.7.4',
         'https://github.com/jezdez/django-configurations/tarball/master#egg=django-configurations-0.9.0',
+        'https://github.com/django-haystack/django-haystack/tarball/v2.4.0#egg=django-haystack-2.4.0',
     ]
 )
 
