@@ -26,10 +26,10 @@ THIRD_PARTY_APPS = (
     'haystack',
 )
 WIZFS_APPS = (
-    'base',
+    # 'base',
     'snapshots',
 )
-INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + WIZFS_APPS
+INSTALLED_APPS = WIZFS_APPS + DJANGO_APPS + THIRD_PARTY_APPS
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
