@@ -1,20 +1,19 @@
+import logging
+from django.conf import settings
 from django.contrib import admin
 
 from .models import Snapshot, File, Filesystem
-# from .tasks import ReindexFilesystem
+from .tasks import reindex_filesystem
 
 
-# def walk_fs_action(modeladmin, request, queryset):
-#     for fs in queryset:
-#         res=ReindexFilesystem.delay(fs_name=fs.name)
-#     return res
-# walk_fs_action.short_description = "Reindex selected filesystem(s)"
+logger = logging.getLogger(__name__)
 
 
 @admin.register(Snapshot)
 class SnapshotAdmin(admin.ModelAdmin):
     list_display = ('name', 'timestamp', 'filesystem',)
     readonly_fields = ['timestamp']
+
 
 @admin.register(File)
 class FileAdmin(admin.ModelAdmin):
@@ -26,4 +25,12 @@ class FileAdmin(admin.ModelAdmin):
 class FilesystemAdmin(admin.ModelAdmin):
     list_display = ('name', 'mountpoint', 'parent',)
     list_editable = ['mountpoint', ]
-    # actions = [walk_fs_action]
+    actions = ['walk_fs_action']
+
+    def walk_fs_action(self, request, queryset):
+        logger.info(settings)
+        for fs in queryset:
+            res = reindex_filesystem.delay(fs_name=fs.name)
+
+    walk_fs_action.short_description = "Reindex selected filesystem(s)"
+
