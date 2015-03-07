@@ -5,7 +5,7 @@ from time import sleep
 from decimal import Decimal
 import os
 
-from celery import task, group
+from celery import task, group, shared_task
 from django.utils.timezone import get_default_timezone_name
 import magic
 import pytz
@@ -20,7 +20,7 @@ class AlreadyRunning(Exception):
     pass
 
 
-@task()
+@shared_task
 def create_file_object(full_path, snapshot=None, directory=False):
     logger.info('Adding %s: %s',
                 ('directory' if directory else 'file'), full_path)
@@ -47,7 +47,7 @@ def create_file_object(full_path, snapshot=None, directory=False):
     sleep(.1)
 
 
-@task(bind=True)
+@shared_task(bind=True)
 def reindex_filesystem(self, fs_name):
     """
     Task to walk a given filesystem (which may be a snapshot) and index all
