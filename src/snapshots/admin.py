@@ -1,4 +1,5 @@
 import logging
+from haystack.admin import SearchModelAdmin
 from django.conf import settings
 from django.contrib import admin
 
@@ -16,7 +17,7 @@ class SnapshotAdmin(admin.ModelAdmin):
 
 
 @admin.register(File)
-class FileAdmin(admin.ModelAdmin):
+class FileAdmin(SearchModelAdmin):
     list_display = ('name', 'dirname', 'mime_type', 'modified', 'size',)
     readonly_fields = []
 
