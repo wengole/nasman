@@ -15,14 +15,14 @@
         <div class="pagination">
             <ul>
                 {% for i in paginator.page_range %}
-                    <li>{{ i }}</li>
+                    <li><a href="">{{ i }}</a></li>
                 {% endfor %}
             </ul>
         </div>
     {% endif %}
 
     <div class="pagination-info muted">
-{#        {% paginator_info cl %}#}
+        {{ item_numbers }}
         &nbsp; / &nbsp;
         {{ paginator.count }}
         {% ifequal cl.result_count 1 %}{{ cl.opts.verbose_name }}{% else %}

@@ -19,7 +19,7 @@ class SnapshotAdmin(admin.ModelAdmin):
 @admin.register(File)
 class FileAdmin(SearchModelAdmin):
     list_display = ('name', 'dirname', 'mime_type', 'modified', 'size',)
-    readonly_fields = []
+    search_fields = ['full_path', ]
 
 
 @admin.register(Filesystem)
@@ -27,6 +27,7 @@ class FilesystemAdmin(admin.ModelAdmin):
     list_display = ('name', 'mountpoint', 'parent',)
     list_editable = ['mountpoint', ]
     actions = ['walk_fs_action']
+    search_fields = ['name', ]
 
     def walk_fs_action(self, request, queryset):
         logger.info(settings)
