@@ -61,9 +61,7 @@
                 <ul class="nav nav-sidebar">
                     <li class="active"><a href="#">Dashboard <span
                             class="sr-only">(current)</span></a></li>
-                    <li><a href="{% url "file-browser" %}">File Browser</a></li>
-                    <li><a href="#">Analytics</a></li>
-                    <li><a href="#">Export</a></li>
+                    <li><a href="{% url "wizfs:file-browser" %}">File Browser</a></li>
                 </ul>
             {% endblock %}
         </div>
@@ -80,16 +78,16 @@
 
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             {% block main-content %}
-                <h1 class="page-header">{% block page-title %}
+                {% block top-section %}
+                    <h1 class="page-header">{% block page-title %}
                     WiZFS Home{% endblock %}</h1>
 
-                {% block top-section %}
                 {% endblock %}
 
 
-                <h2 class="sub-header">{% block sub-section-title %}Section
-                    title{% endblock %}</h2>
                 {% block sub-section %}
+                    <h2 class="sub-header">{% block sub-section-title %}Section
+                    title{% endblock %}</h2>
 
                 {% endblock %}
             {% endblock %}
