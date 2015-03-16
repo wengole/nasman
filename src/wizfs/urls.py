@@ -7,5 +7,5 @@ from django.views.generic import RedirectView
 urlpatterns = patterns(
     '',
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^$', RedirectView.as_view(url=reverse_lazy('admin:index'))),
+    url(r'^$', include('base.urls', namespace='base')),
 )

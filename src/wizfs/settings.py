@@ -29,7 +29,7 @@ class Common(Configuration):
         'haystack',
     )
     WIZFS_APPS = (
-        # 'base',
+        'base',
         'snapshots',
     )
     INSTALLED_APPS = WIZFS_APPS + DJANGO_APPS + THIRD_PARTY_APPS

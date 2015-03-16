@@ -24,7 +24,7 @@ Menu.add_item(
     MenuItem(
         title='Snapshots',
         url='#',
-        children=snapshots_menu,
+        children=[],
         classes='dropdown',
         #TODO: Restrict showing menu
         # check=lambda x: True
