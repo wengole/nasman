@@ -98,7 +98,6 @@ class Common(Configuration):
         }
     }
     SUIT_CONFIG = {
-        'SEARCH_URL': 'search',
         'ADMIN_NAME': 'WiZFS',
     }
 
