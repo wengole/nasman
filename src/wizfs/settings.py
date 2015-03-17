@@ -27,6 +27,7 @@ class Common(Configuration):
         'crispy_forms',
         'menu',
         'haystack',
+        'ws4redis',
     )
     WIZFS_APPS = (
         # 'base',
@@ -42,7 +43,7 @@ class Common(Configuration):
         'django.middleware.clickjacking.XFrameOptionsMiddleware',
     )
     ROOT_URLCONF = 'wizfs.urls'
-    WSGI_APPLICATION = 'wizfs.wsgi.application'
+    # WSGI_APPLICATION = 'wizfs.wsgi.application'
     DATABASES = values.DatabaseURLValue(
         'sqlite:///%s' % os.path.join(BASE_DIR, 'db.sqlite3')
     )
@@ -64,6 +65,7 @@ class Common(Configuration):
         'django.core.context_processors.tz',
         'django.contrib.messages.context_processors.messages',
         'django.core.context_processors.request',
+        'ws4redis.context_processors.default',
     )
     HAYSTACK_CONNECTIONS = {
         'default': {
@@ -100,6 +102,9 @@ class Common(Configuration):
     SUIT_CONFIG = {
         'ADMIN_NAME': 'WiZFS',
     }
+    WEBSOCKET_URL = '/ws/'
+    WS4REDIS_PREFIX = 'ws'
+    WSGI_APPLICATION = 'ws4redis.django_runserver.application'
 
 
 class Local(Common):
