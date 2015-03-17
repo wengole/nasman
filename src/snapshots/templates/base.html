@@ -23,6 +23,8 @@
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet"
               href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.2/sandstone/bootstrap.min.css">
+        <link rel="stylesheet"
+              href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 
         <!-- This file store project specific CSS -->
         <link href="{% static "base/css/project.css" %}" rel="stylesheet">
@@ -46,7 +48,8 @@
         </div>
 
         <div class="collapse navbar-collapse" id="navbar-collapse">
-            {% include "nav/top-nav.html" %}
+              {# TODO: Add this back once we have some navigation  #}
+{#            {% include "nav/top-nav.html" %}#}
         </div>
     </div>
 </nav>
@@ -56,23 +59,9 @@
         <div class="col-sm-3 col-md-2 sidebar">
             {% block sidebar %}
                 <ul class="nav nav-sidebar">
-                    <li class="active"><a href="#">Overview <span
+                    <li class="active"><a href="#">Dashboard <span
                             class="sr-only">(current)</span></a></li>
-                    <li><a href="#">Reports</a></li>
-                    <li><a href="#">Analytics</a></li>
-                    <li><a href="#">Export</a></li>
-                </ul>
-                <ul class="nav nav-sidebar">
-                    <li><a href="">Nav item</a></li>
-                    <li><a href="">Nav item again</a></li>
-                    <li><a href="">One more nav</a></li>
-                    <li><a href="">Another nav item</a></li>
-                    <li><a href="">More navigation</a></li>
-                </ul>
-                <ul class="nav nav-sidebar">
-                    <li><a href="">Nav item again</a></li>
-                    <li><a href="">One more nav</a></li>
-                    <li><a href="">Another nav item</a></li>
+                    <li><a href="{% url "wizfs:file-browser" %}">File Browser</a></li>
                 </ul>
             {% endblock %}
         </div>
@@ -89,16 +78,16 @@
 
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             {% block main-content %}
-                <h1 class="page-header">{% block page-title %}
+                {% block top-section %}
+                    <h1 class="page-header">{% block page-title %}
                     WiZFS Home{% endblock %}</h1>
 
-                {% block top-section %}
                 {% endblock %}
 
 
-                <h2 class="sub-header">{% block sub-section-title %}Section
-                    title{% endblock %}</h2>
                 {% block sub-section %}
+                    <h2 class="sub-header">{% block sub-section-title %}Section
+                    title{% endblock %}</h2>
 
                 {% endblock %}
             {% endblock %}
