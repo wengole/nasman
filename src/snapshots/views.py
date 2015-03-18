@@ -2,7 +2,7 @@
 Snapshot app views
 """
 from vanilla import TemplateView, ListView
-from snapshots.models import File
+from snapshots.models import File, Filesystem
 
 
 class DashboardView(TemplateView):
@@ -15,3 +15,7 @@ class DashboardView(TemplateView):
 
 class FileBrowser(ListView):
     model = File
+
+
+class FilesystemList(ListView):
+    model = Filesystem
