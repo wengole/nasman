@@ -24,7 +24,7 @@ class Filesystem(models.Model):
         """
         os.walk from the filesystem mountpoint
 
-        :returns: An `os.walk` instance starting from the snapshot
+        :returns: An `os.walk` instance starting from the mountpoint
         """
         return os.walk(
             u'%s/' % (
