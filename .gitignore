@@ -40,3 +40,4 @@ target/
 xapian_index
 share
 .floo**.lock
+/src/wizfs.lock
