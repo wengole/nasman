@@ -97,30 +97,3 @@ class ZFSHelper(object):
         filesystems = self.get_all_filesystems()
         for fs in filesystems:
             self.create_filesystem_object(fs)
-
-
-class FileHelper(object):
-    """
-    Utility to help walk file trees and process the results for creating File
-    objects
-    """
-    def walk_fs_and_create_files(self, fs_name):
-        try:
-            fs = Filesystem.objects.get(
-                name=fs_name
-            )
-        except Filesystem.DoesNotExist:
-            return
-        for dirname, subdirs, files in fs.walk_fs():
-            for s in subdirs:
-                # TODO: Proper loggin
-                print "Creating %s/%s" % (dirname, s)
-                create_file_object.delay(
-                    full_path=u'%s/%s' % (dirname, s),
-                    directory=True
-                )
-            for f in files:
-                print "Creating %s/%s" % (dirname, f)
-                create_file_object.delay(
-                    full_path=u'%s/%s' % (dirname, f)
-                )
