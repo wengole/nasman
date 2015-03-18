@@ -1,7 +1,7 @@
 """
 Snapshot app views
 """
-from django.views.generic import TemplateView, ListView
+from vanilla import TemplateView, ListView
 from snapshots.models import File
 
 
