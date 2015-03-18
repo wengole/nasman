@@ -7,14 +7,13 @@ from menu import Menu
 def snapshots_menu(request):
     menu = [
         MenuItem(
-            title='Snapshots',
-            url='#',
-            classes='dropdown-header'
+            title='File Browser',
+            url=reverse('wizfs:file-browser'),
         ),
         MenuItem(
-            title='List Snapshots',
-            url=reverse('snapshots:list'),
-        ),
+            title='Filesystems',
+            url=reverse('wizfs:filesystems')
+        )
     ]
     return menu
 
@@ -22,9 +21,9 @@ def snapshots_menu(request):
 Menu.add_item(
     'top_nav_left',
     MenuItem(
-        title='Snapshots',
+        title='File',
         url='#',
-        children=[],
+        children=snapshots_menu,
         classes='dropdown',
         #TODO: Restrict showing menu
         # check=lambda x: True

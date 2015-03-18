@@ -1,6 +1,6 @@
 {% for child in item.children %}
   {% if child.visible %}
-    <li class="{{ child.classes }}">
+    <li class="{{ child.classes }}{% if child.selected %} active{% endif %}">
       {% if not "divider" in child.classes and not "dropdown-header" in child.classes %}
         <a href="{{ child.url }}">
           {{ child.title }}
