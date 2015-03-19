@@ -1,3 +1,4 @@
+from django.core.urlresolvers import reverse
 import os
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
@@ -8,7 +9,7 @@ class Filesystem(models.Model):
     """
     Model representing ZFS Filesystem
     """
-    name = models.CharField(u'name', max_length=255)
+    name = models.CharField(u'name', max_length=255, unique=True)
     parent = models.ForeignKey(
         u'self',
         related_name=u'children',
@@ -19,6 +20,9 @@ class Filesystem(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('wizfs:filesystem', kwargs={'pk': self.pk})
 
     def walk_fs(self):
         """
