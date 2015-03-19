@@ -1,21 +1,28 @@
 """
 Snapshot app views
 """
-from braces.views import SetHeadlineMixin, MessageMixin
+from braces.views import SetHeadlineMixin, MessageMixin, AjaxResponseMixin, \
+    JSONResponseMixin
 from django.shortcuts import redirect
 from vanilla import TemplateView, ListView, DetailView, CreateView
 
 from .models import File, Filesystem
 from .tasks import reindex_filesystem
+from wizfs.celery import app
 
 
-class DashboardView(SetHeadlineMixin, TemplateView):
+class DashboardView(JSONResponseMixin, AjaxResponseMixin, SetHeadlineMixin, TemplateView):
     """
     View for the homepage
     """
     http_method_names = [u'get']
     template_name = u'dashboard.html'
     headline = u'WiZFS Dashboard'
+
+    def get_ajax(self, request, *args, **kwargs):
+        inspector = app.control.inspect()
+        tasks = inspector.active()
+        return self.render_json_response({'tasks': tasks})
 
 
 class FileBrowser(SetHeadlineMixin, ListView):
