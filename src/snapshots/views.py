@@ -1,42 +1,45 @@
 """
 Snapshot app views
 """
-from django.contrib import messages
+from braces.views import SetHeadlineMixin, MessageMixin
+from django.shortcuts import redirect
 from vanilla import TemplateView, ListView, DetailView, CreateView
 
 from .models import File, Filesystem
 from .tasks import reindex_filesystem
 
 
-class DashboardView(TemplateView):
+class DashboardView(SetHeadlineMixin, TemplateView):
     """
     View for the homepage
     """
     http_method_names = [u'get']
-    template_name = 'dashboard.html'
+    template_name = u'dashboard.html'
+    headline = u'WiZFS Dashboard'
 
 
-class FileBrowser(ListView):
+class FileBrowser(SetHeadlineMixin, ListView):
     model = File
+    headline = u'File Browser'
 
 
-class FilesystemList(ListView):
+class FilesystemList(SetHeadlineMixin, ListView):
+    model = Filesystem
+    headline = u'ZFS Filesystems'
+
+
+class FilesystemDetail(MessageMixin, SetHeadlineMixin, DetailView):
     model = Filesystem
 
-
-class FilesystemDetail(DetailView):
-    model = Filesystem
+    def get_headline(self):
+        return u'%s Filesystem Details' % self.get_object().name
 
     def get(self, request, *args, **kwargs):
-        if request.GET.get('reindex'):
-            self.object = self.get_object()
-            context = self.get_context_data()
+        if request.GET.get(u'reindex'):
             fs = self.get_object()
-            result = reindex_filesystem.delay(fs.name)
-            messages.add_message(request,
-                                 messages.INFO,
-                                 'Reindex of %s started' % fs.name)
-            return self.render_to_response(context)
+            reindex_filesystem.delay(fs.name)
+            self.messages.info(u'Reindex of %s started' % fs.name)
+            return redirect(u'wizfs:dashboard')
         return super(FilesystemDetail, self).get(request, *args, **kwargs)
 
 

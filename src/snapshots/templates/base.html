@@ -10,8 +10,10 @@
           content="Django ZFS Management Interface">
     <meta name="author" content="Ben Cole">
 
-    <title>WiZFS - {% block title %}A ZFS Management
-        Interface{% endblock title %}</title>
+    <title>WiZFS -
+      {% block title %}
+      {{ headline|default:"A ZFS Management Interface" }}
+      {% endblock title %}</title>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -69,7 +71,7 @@
             {% block main-content %}
                 {% block top-section %}
                     <h1 class="page-header">{% block page-title %}
-                    WiZFS Home{% endblock %}</h1>
+                    {{ headline|default:"WiZFS" }}{% endblock %}</h1>
 
                 {% endblock %}
 
