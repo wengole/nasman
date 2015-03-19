@@ -6,8 +6,34 @@
 {% block page-title %}ZFS Filesystems{% endblock %}
 
 {% block top-section %}
-    {{ block.super }}
+  {{ block.super }}
 {% endblock top-section %}
 {% block sub-section %}
-<div class="table-responsive"></div>
+  <a href="{% url "wizfs:add-fs" %}"
+     class="btn btn-success">Add filesystem</a>
+  <a href="{% url "wizfs:add-fs" %}?auto=1"
+     class="btn btn-success">Auto add filesystems</a>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+      <tr>
+        <th>Name</th>
+        <th>Parent</th>
+        <th>Mountpoint</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for fs in object_list %}
+        <tr>
+        <td>{{ fs.name }}</td>
+        <td>{{ fs.parent|default:"-" }}</td>
+        <td>{{ fs.mountpoint }}</td>
+        <td><a class="btn btn-primary btn-xs"
+               href="{% url "wizfs:filesystem" pk=fs.pk %}?reindex=1">Reindex</a></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
 {% endblock sub-section %}

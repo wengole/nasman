@@ -3,8 +3,7 @@ import pytz
 import pyzfscore as zfs
 from dateutil import parser
 
-from .models import Snapshot, Filesystem, File
-from .tasks import create_file_object
+from .models import Snapshot, Filesystem
 
 
 class ZFSHelper(object):
