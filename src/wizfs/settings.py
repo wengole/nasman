@@ -27,7 +27,6 @@ class Common(Configuration):
         'crispy_forms',
         'menu',
         'haystack',
-        'ws4redis',
     )
     WIZFS_APPS = (
         'snapshots',
@@ -100,9 +99,6 @@ class Common(Configuration):
     SUIT_CONFIG = {
         'ADMIN_NAME': 'WiZFS',
     }
-    WEBSOCKET_URL = '/ws/'
-    WS4REDIS_PREFIX = 'ws'
-    WSGI_APPLICATION = 'ws4redis.django_runserver.application'
 
 
 class Local(Common):
