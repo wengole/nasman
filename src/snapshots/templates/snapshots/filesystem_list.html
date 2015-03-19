@@ -26,7 +26,10 @@
         <td>{{ fs.parent|default:"-" }}</td>
         <td>{{ fs.mountpoint }}</td>
         <td><a class="btn btn-primary btn-xs"
-               href="{% url "wizfs:filesystem" pk=fs.pk %}?reindex=1">Reindex</a></td>
+               href="{% url "wizfs:filesystem" pk=fs.pk %}?reindex=1">Reindex</a>
+            <a class="btn btn-warning btn-xs"
+               href="{% url "wizfs:delete-fs" pk=fs.pk %}">Delete</a>
+        </td>
         </tr>
       {% endfor %}
       </tbody>

@@ -3,12 +3,19 @@ Snapshot app views
 """
 from braces.views import SetHeadlineMixin, MessageMixin, AjaxResponseMixin, \
     JSONResponseMixin
+from celery import Celery
+from django.conf import settings
+from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import redirect
-from vanilla import TemplateView, ListView, DetailView, CreateView
+from vanilla import TemplateView, ListView, DetailView, CreateView, DeleteView
 
+from .forms import FilesystemForm
 from .models import File, Filesystem
 from .tasks import reindex_filesystem
-from wizfs.celery import app
+
+app = Celery('wizfs')
+app.config_from_object('django.conf:settings')
+app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 
 
 class DashboardView(JSONResponseMixin, AjaxResponseMixin, SetHeadlineMixin, TemplateView):
@@ -54,3 +61,12 @@ class FilesystemCreate(SetHeadlineMixin, CreateView):
     model = Filesystem
     fields = [u'name', u'mountpoint', u'parent']
     headline = u'Add New Filesystem'
+    form_class = FilesystemForm
+
+
+class FilesystemDelete(SetHeadlineMixin, DeleteView):
+    model = Filesystem
+    success_url = reverse_lazy('wizfs:filesystems')
+
+    def get_headline(self):
+        return u'Delete %s filesystem?' % self.get_object().name
