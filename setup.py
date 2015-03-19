@@ -24,6 +24,7 @@ setup(
         'django-suit',
         'django-vanilla-views',
         'django-websocket-redis',
+        'django-braces',
         'eventlet',
         'flower',
         'ipython',
