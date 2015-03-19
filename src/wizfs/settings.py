@@ -64,7 +64,6 @@ class Common(Configuration):
         'django.core.context_processors.tz',
         'django.contrib.messages.context_processors.messages',
         'django.core.context_processors.request',
-        'ws4redis.context_processors.default',
     )
     HAYSTACK_CONNECTIONS = {
         'default': {
