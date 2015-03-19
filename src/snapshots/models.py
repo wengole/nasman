@@ -1,5 +1,5 @@
-from django.core.urlresolvers import reverse
 import os
+from django.core.urlresolvers import reverse_lazy
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 
@@ -22,7 +22,7 @@ class Filesystem(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('wizfs:filesystem', kwargs={'pk': self.pk})
+        return reverse_lazy('wizfs:filesystem', kwargs={'pk': self.pk})
 
     def walk_fs(self):
         """
