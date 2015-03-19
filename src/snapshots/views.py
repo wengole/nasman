@@ -43,5 +43,7 @@ class FilesystemDetail(MessageMixin, SetHeadlineMixin, DetailView):
         return super(FilesystemDetail, self).get(request, *args, **kwargs)
 
 
-class FilesystemCreate(CreateView):
+class FilesystemCreate(SetHeadlineMixin, CreateView):
     model = Filesystem
+    fields = [u'name', u'mountpoint', u'parent']
+    headline = u'Add New Filesystem'
