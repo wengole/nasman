@@ -31,6 +31,8 @@
         <!-- This file store project specific CSS -->
         <link href="{% static "base/css/project.css" %}" rel="stylesheet">
         <link href="{% static "base/css/pnotify.custom.min.css" %}">
+        <link rel="stylesheet"
+              href="{% static "base/css/pnotify.custom.min.css" %}">
     {% endblock %}
 
 </head>
@@ -98,6 +100,7 @@
     <script src="{% static "base/js/ie10-viewport-bug-workaround.js" %}"></script>
     <script src="{% static "base/js/pnotify.custom.min.js" %}"></script>
     {% include "js/project.js.html" %}
+    <script src="{% static "base/js/bootstrap-progressbar.min.js" %}"></script>
 {% endblock javascript %}
 </body>
 </html>
