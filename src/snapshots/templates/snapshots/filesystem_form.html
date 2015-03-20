@@ -1,9 +1,6 @@
-{% extends "base.html" %}
+{% extends "base_form.html" %}
 {% load staticfiles i18n crispy_forms_tags %}
 
-{% block top-section %}
+{% block content %}
   {{ block.super }}
-{% endblock top-section %}
-{% block sub-section %}
-{% crispy form %}
-{% endblock %}
+{% endblock content %}

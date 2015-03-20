@@ -5,10 +5,8 @@
 
 {% block page-title %}File Browser{% endblock %}
 
-{% block top-section %}
+{% block content %}
   {{ block.super }}
-{% endblock top-section %}
-{% block sub-section %}
   <div class="table-responsive">
     {% with '/pool/backup' as dirname %}
       <table class="table table-striped">
@@ -91,4 +89,4 @@
       </table>
     {% endwith %}
   </div>
-{% endblock sub-section %}
+{% endblock content %}

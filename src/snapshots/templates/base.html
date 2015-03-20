@@ -64,20 +64,13 @@
         {% endif %}
 
         <div class="col-sm-12 col-md-12 main">
-            {% block main-content %}
-                {% block top-section %}
-                    <h1 class="page-header">{% block page-title %}
-                    {{ headline|default:"WiZFS" }}{% endblock %}</h1>
-
-                {% endblock %}
-
-
-                {% block sub-section %}
-                    <h2 class="sub-header">{% block sub-section-title %}Section
-                    title{% endblock %}</h2>
-
-                {% endblock %}
-            {% endblock %}
+          {% block page-header %}
+            <div class="page-header">
+              <h1>{{ headline|default:"WiZFS" }}</h1>
+            </div>
+          {% endblock page-header %}
+          {% block content %}
+          {% endblock %}
         </div>
     </div>
 </div>

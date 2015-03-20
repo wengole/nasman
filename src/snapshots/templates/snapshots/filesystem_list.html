@@ -1,10 +1,8 @@
 {% extends "base.html" %}
 {% load staticfiles i18n %}
 
-{% block top-section %}
+{% block content %}
   {{ block.super }}
-{% endblock top-section %}
-{% block sub-section %}
   <a href="{% url "wizfs:add-fs" %}"
      class="btn btn-success">Add filesystem</a>
   <a href="{% url "wizfs:add-fs" %}?auto=1"
@@ -35,4 +33,4 @@
       </tbody>
     </table>
   </div>
-{% endblock sub-section %}
+{% endblock content %}

@@ -1,12 +1,10 @@
 {% extends "base.html" %}
 {% load staticfiles i18n crispy_forms_tags %}
 
-{% block top-section %}
+{% block content %}
   {{ block.super }}
-{% endblock top-section %}
-{% block sub-section %}
 <form action="" method="post">{% csrf_token %}
     <p>Are you sure you want to delete "{{ object }}"?</p>
     <input type="submit" value="Confirm" />
 </form>
-{% endblock %}
+{% endblock content %}
