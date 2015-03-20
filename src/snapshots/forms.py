@@ -13,3 +13,4 @@ class FilesystemForm(ModelForm):
 
     class Meta:
         model = Filesystem
+        fields = ['name', 'mountpoint', 'parent']
