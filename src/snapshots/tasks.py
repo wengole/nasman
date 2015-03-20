@@ -44,7 +44,6 @@ def create_file_object(full_path, snapshot=None, directory=False):
         modified=mtime,
         size=statinfo.st_size,
     )
-    sleep(.1)
 
 
 @shared_task(bind=True)
