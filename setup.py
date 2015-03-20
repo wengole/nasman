@@ -20,6 +20,7 @@ setup(
         'django-crispy-forms',
         'django-debug-toolbar',
         'django-haystack',
+        'django-redis',
         'django-simple-menu',
         'django-suit',
         'django-vanilla-views',
