@@ -7,6 +7,8 @@ from celery import Celery
 from django.conf import settings
 from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import redirect
+from django.core.cache import cache
+from snapshots.utils import ZFSHelper
 from vanilla import TemplateView, ListView, DetailView, CreateView, DeleteView
 
 from .forms import FilesystemForm
@@ -27,9 +29,26 @@ class DashboardView(JSONResponseMixin, AjaxResponseMixin, SetHeadlineMixin, Temp
     headline = u'WiZFS Dashboard'
 
     def get_ajax(self, request, *args, **kwargs):
-        inspector = app.control.inspect()
-        tasks = inspector.active()
-        return self.render_json_response({'tasks': tasks})
+        """
+        AJAX call to get reindex task status
+
+        :return: JSON list of tasks
+        """
+        result = cache.get(u'reindex_result')
+        json_dict = {'state': 'NOTFOUND',
+                     'progress': 0.0,
+                     'total': 0,
+                     'done': 0}
+        if result is None:
+            return self.render_json_response(json_dict)
+        json_dict['state'] = result.state
+        if result.state == 'PROGRESS':
+            json_dict['progress'] = result.info['percentage']
+            json_dict['total'] = result.info['total']
+            json_dict['done'] = result.info['done']
+        elif result.state == 'SUCCESS':
+            json_dict['progress'] = 100.0
+        return self.render_json_response(json_dict)
 
 
 class FileBrowser(SetHeadlineMixin, ListView):
@@ -49,9 +68,13 @@ class FilesystemDetail(MessageMixin, SetHeadlineMixin, DetailView):
         return u'%s Filesystem Details' % self.get_object().name
 
     def get(self, request, *args, **kwargs):
+        """
+        If "reindex" query parameter passed, then reindex the chosen filesystem
+        """
         if request.GET.get(u'reindex'):
             fs = self.get_object()
-            reindex_filesystem.delay(fs.name)
+            reindex_result = reindex_filesystem.delay(fs.name)
+            cache.set(u'reindex_result', reindex_result, None)
             self.messages.info(u'Reindex of %s started' % fs.name)
             return redirect(u'wizfs:dashboard')
         return super(FilesystemDetail, self).get(request, *args, **kwargs)
