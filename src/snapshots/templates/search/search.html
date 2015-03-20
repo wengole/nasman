@@ -2,18 +2,18 @@
 {% load suit_list %}
 
 {% block content_title %}
-    <h2 class="content-title">Search</h2>
+  <h2 class="content-title">Search</h2>
 {% endblock %}
 {% block content %}
-    {{ block.super }}
-    <h3>Results</h3>
-    {% for result in object_list %}
-        <p>
-            <a href="{{ result.object.get_absolute_url }}">{{ result.object.name }}</a>
-        </p>
-    {% empty %}
-        <p>No results found.</p>
-    {% endfor %}
+  {{ block.super }}
+  <h3>Results</h3>
+  {% for result in object_list %}
+    <p>
+      <a href="{{ result.object.get_absolute_url }}">{{ result.object.name }}</a>
+    </p>
+  {% empty %}
+    <p>No results found.</p>
+  {% endfor %}
 
-    {% include "search/pagination.html" %}
+  {% include "search/pagination.html" %}
 {% endblock %}
