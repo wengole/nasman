@@ -1,11 +1,11 @@
 from __future__ import absolute_import
 from datetime import datetime
-import logging
-from time import sleep
 from decimal import Decimal
+import logging
 import os
 
-from celery import task, group, shared_task
+from celery import group, shared_task
+from django.core.cache import cache
 from django.utils.timezone import get_default_timezone_name
 import magic
 import pytz
