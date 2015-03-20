@@ -22,8 +22,8 @@ class AlreadyRunning(Exception):
 
 @shared_task
 def create_file_object(full_path, snapshot=None, directory=False):
-    logger.info('Adding %s: %s',
-                ('directory' if directory else 'file'), full_path)
+    logger.info(u'Adding %s: %s',
+                (u'directory' if directory else u'file'), full_path)
     statinfo = os.stat(full_path)
     mtime = datetime.fromtimestamp(statinfo.st_mtime)
     mtime = pytz.timezone(get_default_timezone_name()).localize(mtime)
@@ -89,11 +89,11 @@ def reindex_filesystem(self, fs_name):
         done = Decimal(done_files(self))
         total = Decimal(self.total_files)
         self.update_state(
-            state='PROGRESS',
+            state=u'PROGRESS',
             meta={
-                'percentage': done / total * 100,
-                'done': done_files(self),
-                'total': self.total_files
+                u'percentage': done / total * 100,
+                u'done': done_files(self),
+                u'total': self.total_files
             }
         )
 
@@ -102,7 +102,7 @@ def reindex_filesystem(self, fs_name):
             name=fs_name
         )
     except Filesystem.DoesNotExist as exc:
-        logger.error('Filesystem "%s" does not exist', fs_name)
+        logger.error(u'Filesystem "%s" does not exist', fs_name)
         raise exc
 
     inspector = self.app.control.inspect()
@@ -116,7 +116,7 @@ def reindex_filesystem(self, fs_name):
         raise AlreadyRunning(message)
 
     for dirname, subdirs, files in fs.walk_fs():
-        logger.info('Adding subdirs for %s', dirname)
+        logger.info(u'Adding subdirs for %s', dirname)
         self.total_files += len(subdirs)
         subdirs_job = group([create_file_object.s(
             full_path=u'%s/%s' % (dirname, s),
@@ -125,7 +125,7 @@ def reindex_filesystem(self, fs_name):
         self.groups.append(subdirs_job.apply_async())
         update_progress(self)
 
-        logger.info('Adding files for %s', dirname)
+        logger.info(u'Adding files for %s', dirname)
         self.total_files += len(files)
         files_job = group([create_file_object.s(
             full_path=u'%s/%s' % (dirname, f)
@@ -134,12 +134,12 @@ def reindex_filesystem(self, fs_name):
         update_progress(self)
 
     update_progress(self)
-    logger.info('All files and directories queued')
+    logger.info(u'All files and directories queued')
     if work_to_do(self):
-        logger.debug('Still waiting on %d jobs',
-                    self.total_files - done_files(self))
+        logger.debug(u'Still waiting on %d jobs',
+                     self.total_files - done_files(self))
 
     while work_to_do(self):
         update_progress(self)
-        logger.debug('Still waiting on %d jobs',
-                    self.total_files - done_files(self))
+        logger.debug(u'Still waiting on %d jobs',
+                     self.total_files - done_files(self))
