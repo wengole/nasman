@@ -1,3 +1,4 @@
+from django.core.cache import cache
 import os
 from django.core.urlresolvers import reverse_lazy
 from django.db import models
@@ -35,6 +36,13 @@ class Filesystem(models.Model):
                 self.mountpoint,
             )
         )
+
+    def reindex_status(self):
+        """
+        Gets the cached `AsyncResult` of a reindex job
+        """
+        status = cache.get(u'reindex_%s_status' % self.id)
+        return status
 
 
 @python_2_unicode_compatible
