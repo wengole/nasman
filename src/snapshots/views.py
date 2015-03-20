@@ -80,11 +80,23 @@ class FilesystemDetail(MessageMixin, SetHeadlineMixin, DetailView):
         return super(FilesystemDetail, self).get(request, *args, **kwargs)
 
 
-class FilesystemCreate(SetHeadlineMixin, CreateView):
+class FilesystemCreate(MessageMixin, SetHeadlineMixin, CreateView):
     model = Filesystem
     fields = [u'name', u'mountpoint', u'parent']
     headline = u'Add New Filesystem'
     form_class = FilesystemForm
+
+    def get(self, request, *args, **kwargs):
+        """
+        If "auto" query parameter is passed then use utility to add all found
+        filesystems
+        """
+        if request.GET.get(u'auto'):
+            util = ZFSHelper()
+            util.create_filesystem_objects()
+            self.messages.info(u'Added all filesystems automatically')
+            return redirect(u'wizfs:filesystems')
+        return super(FilesystemCreate, self).get(request, *args, **kwargs)
 
 
 class FilesystemDelete(SetHeadlineMixin, DeleteView):
