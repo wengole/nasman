@@ -23,7 +23,7 @@
               display_text: 'fill'
             });
           }
-          if (result.state == "SUCCESS") {
+          if (result.state == "SUCCESS" || result.state == "NOTFOUND") {
             clearInterval(update_interval);
           }
         }
