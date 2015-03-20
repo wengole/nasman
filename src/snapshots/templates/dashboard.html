@@ -19,11 +19,12 @@
         success: function (result) {
           var pb = $('.progress .progress-bar');
           if (result.state == "PROGRESS" || result.state == "SUCCESS") {
-            $(pb).attr('data-transitiongoal', result.progress).progressbar({
+            pb.attr('data-transitiongoal', result.progress).progressbar({
               display_text: 'fill'
             });
           }
           if (result.state == "SUCCESS" || result.state == "NOTFOUND") {
+            pb.parent().hide();
             clearInterval(update_interval);
           }
         }
