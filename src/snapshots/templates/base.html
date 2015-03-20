@@ -10,10 +10,7 @@
           content="Django ZFS Management Interface">
     <meta name="author" content="Ben Cole">
 
-    <title>WiZFS -
-      {% block title %}
-      {{ headline|default:"A ZFS Management Interface" }}
-      {% endblock title %}</title>
+    <title>WiZFS - {{ headline|default:"A ZFS Management Interface" }}</title>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -22,15 +19,12 @@
   <![endif]-->
 
     {% block css %}
-        <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet"
               href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.2/sandstone/bootstrap.min.css">
         <link rel="stylesheet"
               href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-
-        <!-- This file store project specific CSS -->
-        <link href="{% static "base/css/project.css" %}" rel="stylesheet">
-        <link href="{% static "base/css/pnotify.custom.min.css" %}">
+        <link rel="stylesheet"
+              href="{% static "base/css/project.css" %}">
         <link rel="stylesheet"
               href="{% static "base/css/pnotify.custom.min.css" %}">
     {% endblock %}
@@ -61,7 +55,7 @@
     <div class="row">
         {% if messages %}
             {% for message in messages %}
-                <div class="alert {% if message.tags %}alert-{{ message.tags }}"{% endif %}>
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
                     <button type="button" class="close" data-dismiss="alert">×
                     </button>
                     {{ message }}
@@ -99,8 +93,8 @@
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
     <script src="{% static "base/js/ie10-viewport-bug-workaround.js" %}"></script>
     <script src="{% static "base/js/pnotify.custom.min.js" %}"></script>
-    {% include "js/project.js.html" %}
     <script src="{% static "base/js/bootstrap-progressbar.min.js" %}"></script>
+    {% include "js/project.js.html" %}
 {% endblock javascript %}
 </body>
 </html>
