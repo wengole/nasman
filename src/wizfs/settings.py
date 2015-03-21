@@ -43,7 +43,7 @@ class Common(Configuration):
     ROOT_URLCONF = 'wizfs.urls'
     # WSGI_APPLICATION = 'wizfs.wsgi.application'
     DATABASES = values.DatabaseURLValue(
-        'sqlite:///%s' % os.path.join(BASE_DIR, 'db.sqlite3')
+        'postgres://wizfs:wizfs@127.0.0.1:5432/wizfs'
     )
     LANGUAGE_CODE = 'en-gb'
     TIME_ZONE = 'Europe/London'
@@ -109,7 +109,7 @@ class Common(Configuration):
         }
     }
     SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-SESSION_CACHE_ALIAS = "default"
+    SESSION_CACHE_ALIAS = "default"
 
 
 class Local(Common):

@@ -29,6 +29,7 @@ setup(
         'flower',
         'ipython',
         'mock',
+        'psycopg2',
         'pyinotify',
         'python-dateutil',
         'python-magic',
