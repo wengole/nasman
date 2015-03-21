@@ -1,19 +1,21 @@
 """
 Snapshot app views
 """
-from braces.views import SetHeadlineMixin, MessageMixin, AjaxResponseMixin, \
-    JSONResponseMixin
+from braces.views import (SetHeadlineMixin, MessageMixin, AjaxResponseMixin,
+                          JSONResponseMixin)
 from celery import Celery
+from celery import states
 from django.conf import settings
 from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import redirect
 from django.core.cache import cache
-from snapshots.utils import ZFSHelper
 from vanilla import TemplateView, ListView, DetailView, CreateView, DeleteView
 
+from .utils import ZFSHelper
 from .forms import FilesystemForm
 from .models import File, Filesystem
 from .tasks import reindex_filesystem
+
 
 app = Celery('wizfs')
 app.config_from_object('django.conf:settings')
@@ -61,7 +63,8 @@ class FilesystemList(SetHeadlineMixin, ListView):
     headline = u'ZFS Filesystems'
 
 
-class FilesystemDetail(MessageMixin, SetHeadlineMixin, DetailView):
+class FilesystemDetail(JSONResponseMixin, AjaxResponseMixin, MessageMixin,
+                       SetHeadlineMixin, DetailView):
     model = Filesystem
 
     def get_headline(self):
@@ -73,17 +76,33 @@ class FilesystemDetail(MessageMixin, SetHeadlineMixin, DetailView):
         """
         if request.GET.get(u'reindex'):
             fs = self.get_object()
-            cache_key = u'reindex_%s_status' % fs.name
-            cached = cache.get(cache_key)
-            if cached is not None and cached.state == 'RUNNING':
-                self.messages.warning(
-                    u'Reindex of %s already in progress' % fs.name)
+            status = fs.reindex_status
+            if status is None or status.state in states.READY_STATES:
+                fs.reindex_status = reindex_filesystem.delay(fs.name)
+                self.messages.info(u'Reindex of %s started' % fs.name)
                 return redirect(u'wizfs:filesystems')
-            reindex_result = reindex_filesystem.delay(fs.name)
-            cache.set(cache_key, reindex_result, None)
-            self.messages.info(u'Reindex of %s started' % fs.name)
+            self.messages.warning(
+                u'Reindex of %s already in progress' % fs.name)
             return redirect(u'wizfs:filesystems')
         return super(FilesystemDetail, self).get(request, *args, **kwargs)
+
+    def get_ajax(self, request, *args, **kwargs):
+        fs = self.get_object()
+        status = fs.reindex_status
+        json_dict = {'state': 'NOTFOUND',
+                     'progress': 0.0,
+                     'total': 0,
+                     'done': 0}
+        if status is None:
+            return self.render_json_response(json_dict)
+        json_dict['state'] = status.state
+        if status.state == 'PROGRESS':
+            json_dict['progress'] = status.info['percentage']
+            json_dict['total'] = status.info['total']
+            json_dict['done'] = status.info['done']
+        elif status.state in states.READY_STATES:
+            json_dict['progress'] = 100.0
+        return self.render_json_response(json_dict)
 
 
 class FilesystemCreate(MessageMixin, SetHeadlineMixin, CreateView):

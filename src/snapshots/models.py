@@ -37,12 +37,27 @@ class Filesystem(models.Model):
             )
         )
 
+    @property
+    def reindex_cache_key(self):
+        """
+        Cache key for reindex job
+        """
+        return u'reindex_%s_status' % self.name
+
+    @property
     def reindex_status(self):
         """
         Gets the cached `AsyncResult` of a reindex job
         """
-        status = cache.get(u'reindex_%s_status' % self.id)
+        status = cache.get(self.reindex_cache_key)
         return status
+
+    @reindex_status.setter
+    def reindex_status(self, status):
+        """
+        Sets the cached `AsyncResult` of a reindex job
+        """
+        cache.set(self.reindex_cache_key, status, None)
 
 
 @python_2_unicode_compatible
