@@ -35,15 +35,23 @@ def create_file_object(full_path, snapshot=None, directory=False):
         mime_type = magic.from_file(full_path, mime=True)
     except magic.MagicException:
         mime_type = ''
-    File.objects.get_or_create(
+    obj, created = File.objects.get_or_create(
         full_path=full_path,
         snapshot=snapshot,
         directory=directory,
-        mime_type=mime_type,
-        magic=magic_info,
-        modified=mtime,
-        size=statinfo.st_size,
+        defaults={
+            'mime_type': mime_type,
+            'magic': magic_info,
+            'modified': mtime,
+            'size': statinfo.st_size,
+        }
     )
+    if not created:
+        obj.mime_type = mime_type
+        obj.magic = magic_info
+        obj.modified = mtime
+        obj.size = statinfo.st_size
+        obj.save()
 
 
 @shared_task(bind=True)
