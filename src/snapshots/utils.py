@@ -19,8 +19,10 @@ class ZFSHelper(object):
         :return: The first available pool as a filesystem
         :rtype: `ZFilesystem`
         """
-        pool = zfs.ZPool.list()[0]
-        fs = pool.to_filesystem()
+        pools = zfs.ZPool.list()
+        if not pools:
+            return
+        fs = pools[0].to_filesystem()
         return fs
 
     def get_snapshots(self):
@@ -64,6 +66,8 @@ class ZFSHelper(object):
         """
         if filesystem is None:
             filesystem = self._get_pool_as_filesystem()
+            if filesystem is None:
+                return
         filesystems = [filesystem]
         for f in filesystem.iter_filesystems():
             filesystems.extend(self.get_all_filesystems(f))
@@ -94,5 +98,7 @@ class ZFSHelper(object):
         Convenience method to create Django objects for each filesystem
         """
         filesystems = self.get_all_filesystems()
+        if filesystems is None:
+            return
         for fs in filesystems:
             self.create_filesystem_object(fs)
