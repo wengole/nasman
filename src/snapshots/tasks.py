@@ -105,6 +105,14 @@ def reindex_filesystem(self, fs_name):
             }
         )
 
+    # Don't reindex this filesystem if there's a reindex in progress
+    cache_key = u'reindex_%s_status' % fs_name
+    cached = cache.get(cache_key)
+    if cached is not None and cached.state == 'RUNNING':
+        message = u'Already reindexing %s' % fs_name
+        logger.warn(message)
+        raise AlreadyRunning(message)
+
     try:
         fs = Filesystem.objects.get(
             name=fs_name
@@ -112,16 +120,6 @@ def reindex_filesystem(self, fs_name):
     except Filesystem.DoesNotExist as exc:
         logger.error(u'Filesystem "%s" does not exist', fs_name)
         raise exc
-
-    inspector = self.app.control.inspect()
-    task_runs = sum(
-        [1 for y in inspector.active().values() for x in y
-         if x['name'] == self.name]
-    )
-    if task_runs > 1:
-        message = 'Already running a reindex! Aborting!'
-        logger.warn(message)
-        raise AlreadyRunning(message)
 
     for dirname, subdirs, files in fs.walk_fs():
         logger.info(u'Adding subdirs for %s', dirname)
