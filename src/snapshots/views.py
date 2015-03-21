@@ -73,10 +73,16 @@ class FilesystemDetail(MessageMixin, SetHeadlineMixin, DetailView):
         """
         if request.GET.get(u'reindex'):
             fs = self.get_object()
+            cache_key = u'reindex_%s_status' % fs.name
+            cached = cache.get(cache_key)
+            if cached is not None and cached.state == 'RUNNING':
+                self.messages.warning(
+                    u'Reindex of %s already in progress' % fs.name)
+                return redirect(u'wizfs:filesystems')
             reindex_result = reindex_filesystem.delay(fs.name)
-            cache.set(u'reindex_result', reindex_result, None)
+            cache.set(cache_key, reindex_result, None)
             self.messages.info(u'Reindex of %s started' % fs.name)
-            return redirect(u'wizfs:dashboard')
+            return redirect(u'wizfs:filesystems')
         return super(FilesystemDetail, self).get(request, *args, **kwargs)
 
 
