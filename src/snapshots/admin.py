@@ -1,5 +1,6 @@
 import logging
-from haystack.admin import SearchModelAdmin, SearchChangeList
+
+from haystack.admin import SearchChangeList
 from django.conf import settings
 from django.contrib import admin
 from haystack.query import SearchQuerySet
