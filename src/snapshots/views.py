@@ -143,7 +143,7 @@ class FilesystemCreate(MessageMixin, SetHeadlineMixin, CreateView):
 
 class FilesystemDelete(SetHeadlineMixin, DeleteView):
     model = Filesystem
-    success_url = reverse_lazy('wizfs:filesystems')
+    success_url = reverse_lazy(u'wizfs:filesystems')
 
     def get_headline(self):
         return u'Delete %s filesystem?' % self.get_object().name
