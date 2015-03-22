@@ -12,10 +12,12 @@ setup(
     description='A Django based ZFS management interface.',
     install_requires=[
         'Celery[redis]',
+        'celery-haystack',
         'cffi',
         'ConcurrentLogHandler',
         'dj_database_url',
         'Django',
+        'django-celery-transactions<0.2',
         'django-configurations',
         'django-crispy-forms',
         'django-debug-toolbar',
