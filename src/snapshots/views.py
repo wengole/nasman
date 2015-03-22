@@ -9,7 +9,8 @@ from django.conf import settings
 from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import redirect
 from django.core.cache import cache
-from vanilla import TemplateView, ListView, DetailView, CreateView, DeleteView
+from vanilla import TemplateView, ListView, DetailView, CreateView, DeleteView, \
+    UpdateView
 
 from .utils import ZFSHelper
 from .forms import FilesystemForm
@@ -130,3 +131,12 @@ class FilesystemDelete(SetHeadlineMixin, DeleteView):
 
     def get_headline(self):
         return u'Delete %s filesystem?' % self.get_object().name
+
+
+class FilesystemUpdate(SetHeadlineMixin, UpdateView):
+    model = Filesystem
+    success_url = reverse_lazy(u'wizfs:filesystems')
+    form_class = FilesystemForm
+
+    def get_headline(self):
+        return u'Edit %s filesystem' % self.get_object().name
