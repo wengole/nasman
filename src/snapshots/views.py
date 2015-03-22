@@ -23,7 +23,25 @@ app.config_from_object('django.conf:settings')
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 
 
-class DashboardView(JSONResponseMixin, AjaxResponseMixin, SetHeadlineMixin, TemplateView):
+def get_status_dict(fs):
+    status = fs.reindex_status
+    json_dict = {'state': 'NOTFOUND',
+                 'progress': 0.0,
+                 'total': 0,
+                 'done': 0}
+    if status is None:
+        return json_dict
+    json_dict['state'] = status.state
+    if status.state == states.FAILURE:
+        return json_dict
+    json_dict['progress'] = status.info.get('percentage', 0)
+    json_dict['total'] = status.info.get('total', 0)
+    json_dict['done'] = status.info.get('done', 0)
+    return json_dict
+
+
+class DashboardView(JSONResponseMixin, AjaxResponseMixin, SetHeadlineMixin,
+                    TemplateView):
     """
     View for the homepage
     """
@@ -59,9 +77,20 @@ class FileBrowser(SetHeadlineMixin, ListView):
     headline = u'File Browser'
 
 
-class FilesystemList(SetHeadlineMixin, ListView):
+class FilesystemList(JSONResponseMixin, AjaxResponseMixin, SetHeadlineMixin,
+                     ListView):
     model = Filesystem
     headline = u'ZFS Filesystems'
+
+    def get_ajax(self, request, *args, **kwargs):
+        filesystems = []
+        for fs in self.get_queryset().all():
+            json_dict = get_status_dict(fs)
+            json_dict['id'] = fs.id
+            filesystems.append(json_dict)
+        return self.render_json_response({
+            'filesystems': filesystems
+        })
 
 
 class FilesystemDetail(JSONResponseMixin, AjaxResponseMixin, MessageMixin,
@@ -89,20 +118,7 @@ class FilesystemDetail(JSONResponseMixin, AjaxResponseMixin, MessageMixin,
 
     def get_ajax(self, request, *args, **kwargs):
         fs = self.get_object()
-        status = fs.reindex_status
-        json_dict = {'state': 'NOTFOUND',
-                     'progress': 0.0,
-                     'total': 0,
-                     'done': 0}
-        if status is None:
-            return self.render_json_response(json_dict)
-        json_dict['state'] = status.state
-        if status.state == 'PROGRESS':
-            json_dict['progress'] = status.info['percentage']
-            json_dict['total'] = status.info['total']
-            json_dict['done'] = status.info['done']
-        elif status.state in states.READY_STATES:
-            json_dict['progress'] = 100.0
+        json_dict = get_status_dict(fs)
         return self.render_json_response(json_dict)
 
 
