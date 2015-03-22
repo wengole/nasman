@@ -11,7 +11,7 @@ urlpatterns = patterns(
         name='filesystem'),
     url(r'^filesystem/add$', views.FilesystemCreate.as_view(),
         name='add-fs'),
-    url(r'^filesystem/delete/(?P<pk>\d+)$', views.FilesystemDelete.as_view(),
+    url(r'^filesystem/(?P<pk>\d+)/delete$', views.FilesystemDelete.as_view(),
         name='delete-fs'),
     url(r'^filesystem/(?P<pk>\d+)/edit$', views.FilesystemUpdate.as_view(),
         name='edit-fs'),
