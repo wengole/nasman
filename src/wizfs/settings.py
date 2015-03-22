@@ -136,10 +136,8 @@ class Local(Common):
     }
 
 
-class ServerDebug(Common):
-    """
-    Development config to be run on server
-    """
+class Server(Common):
+    DEBUG = False
     SECRET_KEY = values.SecretValue()
     EMAIL_HOST = values.Value('localhost')
     EMAIL_PORT = values.IntegerValue(25)
