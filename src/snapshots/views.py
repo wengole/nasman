@@ -32,7 +32,7 @@ def get_status_dict(fs):
     if status is None:
         return json_dict
     json_dict['state'] = status.state
-    if status.state == states.FAILURE:
+    if status.state in [states.FAILURE, states.PENDING]:
         return json_dict
     json_dict['progress'] = status.info.get('percentage', 0)
     json_dict['total'] = status.info.get('total', 0)
