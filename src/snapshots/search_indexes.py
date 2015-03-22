@@ -1,9 +1,10 @@
+from celery_haystack.indexes import CelerySearchIndex
 from haystack import indexes
 
 from .models import Snapshot, File
 
 
-class SnapshotIndex(indexes.SearchIndex, indexes.Indexable):
+class SnapshotIndex(CelerySearchIndex, indexes.Indexable):
     """
     Indexer for ``Snapshot`` objects
     """
@@ -15,7 +16,7 @@ class SnapshotIndex(indexes.SearchIndex, indexes.Indexable):
         return Snapshot
 
 
-class FileIndex(indexes.SearchIndex, indexes.Indexable):
+class FileIndex(CelerySearchIndex, indexes.Indexable):
     """
     Indexer for ``File`` objects
     """
