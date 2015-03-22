@@ -27,6 +27,7 @@ class Common(Configuration):
         'crispy_forms',
         'menu',
         'haystack',
+        'celery_haystack',
     )
     WIZFS_APPS = (
         'snapshots',
@@ -70,7 +71,9 @@ class Common(Configuration):
             'PATH': os.path.join(BASE_DIR, 'xapian_index'),
         },
     }
-    HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+    HAYSTACK_SIGNAL_PROCESSOR = 'celery_haystack.signals.CelerySignalProcessor'
+    CELERY_HAYSTACK_MAX_RETRIES = 20
+    CELERY_HAYSTACK_RETRY_DELAY = 2
     BROKER_URL = 'redis://localhost:6379/0'
     CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
     CELERY_ACCEPT_CONTENT = ['pickle', ]
