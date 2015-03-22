@@ -8,29 +8,3 @@
     </div>
   </div>
 {% endblock %}
-{% block javascript %}
-  {{ block.super }}
-  <script type="text/javascript">
-    function update_progress_bar() {
-      $.ajax({
-        dataType: 'json',
-        url: '/',
-        method: 'GET',
-        success: function (result) {
-          var pb = $('.progress .progress-bar');
-          if (result.state == "PROGRESS" || result.state == "SUCCESS") {
-            pb.attr('data-transitiongoal', result.progress).progressbar({
-              display_text: 'fill'
-            });
-          }
-          if (result.state == "SUCCESS" || result.state == "NOTFOUND") {
-            pb.parent().hide();
-            clearInterval(update_interval);
-          }
-        }
-      });
-    }
-    var update_interval = setInterval(update_progress_bar, 5000);
-    update_progress_bar();
-  </script>
-{% endblock javascript %}
