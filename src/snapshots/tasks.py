@@ -4,7 +4,7 @@ from decimal import Decimal
 import logging
 import os
 
-from celery import group, shared_task
+from celery import group, shared_task, states
 from django.core.cache import cache
 from django.utils.timezone import get_default_timezone_name
 import magic
@@ -54,7 +54,7 @@ def create_file_object(full_path, snapshot=None, directory=False):
         obj.save()
 
 
-@shared_task(bind=True)
+@shared_task(bind=True, track_started=True)
 def reindex_filesystem(self, fs_name):
     """
     Task to walk a given filesystem (which may be a snapshot) and index all
@@ -97,9 +97,9 @@ def reindex_filesystem(self, fs_name):
         done = Decimal(done_files(self))
         total = Decimal(self.total_files)
         self.update_state(
-            state=u'PROGRESS',
+            state=states.STARTED,
             meta={
-                u'percentage': done / total * 100,
+                u'percentage': done / total * 100 if total > 0 else 100,
                 u'done': done_files(self),
                 u'total': self.total_files
             }
@@ -149,3 +149,10 @@ def reindex_filesystem(self, fs_name):
         update_progress(self)
         logger.debug(u'Still waiting on %d jobs',
                      self.total_files - done_files(self))
+    done = Decimal(done_files(self))
+    total = Decimal(self.total_files)
+    return {
+        u'percentage': done / total * 100 if total > 0 else 100,
+        u'done': done_files(self),
+        u'total': self.total_files
+    }
