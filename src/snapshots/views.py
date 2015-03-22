@@ -107,7 +107,7 @@ class FilesystemDetail(JSONResponseMixin, AjaxResponseMixin, MessageMixin,
         if request.GET.get(u'reindex'):
             fs = self.get_object()
             status = fs.reindex_status
-            if status is None or status.state in states.READY_STATES:
+            if status is None or status.state in states.READY_STATES or status.state is None:
                 fs.reindex_status = reindex_filesystem.delay(fs.name)
                 self.messages.info(u'Reindex of %s started' % fs.name)
                 return redirect(u'wizfs:filesystems')
