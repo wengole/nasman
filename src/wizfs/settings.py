@@ -42,7 +42,6 @@ class Common(Configuration):
         'django.middleware.clickjacking.XFrameOptionsMiddleware',
     )
     ROOT_URLCONF = 'wizfs.urls'
-    # WSGI_APPLICATION = 'wizfs.wsgi.application'
     DATABASES = values.DatabaseURLValue(
         'postgres://wizfs:wizfs@127.0.0.1:5432/wizfs'
     )

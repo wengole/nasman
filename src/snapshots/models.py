@@ -31,11 +31,7 @@ class Filesystem(models.Model):
 
         :returns: An `os.walk` instance starting from the mountpoint
         """
-        return os.walk(
-            '%s/' % (
-                self.mountpoint,
-            )
-        )
+        return os.walk(self.mountpoint.encode('utf-8'))
 
     @property
     def reindex_cache_key(self):
