@@ -89,7 +89,7 @@ class Common(Configuration):
                 'filename': os.path.join(BASE_DIR, 'wizfs.log'),
                 'maxBytes': 10*1024*104,  # 10MB
                 'backupCount': 5,
-                'formatter': 'deafult',
+                'formatter': 'default',
             }
         },
         'formatters': {
