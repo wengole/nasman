@@ -125,7 +125,7 @@ def reindex_filesystem(self, fs_name):
         logger.info(u'Adding subdirs for %s', dirname)
         self.total_files += len(subdirs)
         subdirs_job = group([create_file_object.s(
-            full_path=u'%s/%s' % (dirname, s),
+            full_path='%s/%s' % (dirname, s),
             directory=True
         ) for s in subdirs])
         self.groups.append(subdirs_job.apply_async())
@@ -134,7 +134,7 @@ def reindex_filesystem(self, fs_name):
         logger.info(u'Adding files for %s', dirname)
         self.total_files += len(files)
         files_job = group([create_file_object.s(
-            full_path=u'%s/%s' % (dirname, f)
+            full_path='%s/%s' % (dirname, f)
         ) for f in files])
         self.groups.append(files_job.apply_async())
         update_progress(self)
