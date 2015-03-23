@@ -32,7 +32,7 @@ class Filesystem(models.Model):
         :returns: An `os.walk` instance starting from the mountpoint
         """
         return os.walk(
-            u'%s/' % (
+            '%s/' % (
                 self.mountpoint,
             )
         )
