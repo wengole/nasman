@@ -51,7 +51,7 @@
 {% block javascript %}
   {{ block.super }}
   <script type="text/javascript">
-    var ready_states = ['SUCCESS', 'NOTFOUND', 'FAILED'];
+    var ready_states = ['SUCCESS', 'NOTFOUND', 'FAILURE'];
     function update_progress_bar() {
       $.ajax({
         dataType: 'json',
