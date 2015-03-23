@@ -154,3 +154,9 @@ class Server(Common):
     EMAIL_HOST_USER = values.Value('')
     EMAIL_HOST_PASSWORD = values.Value('')
     EMAIL_SUBJECT_PREFIX = values.Value('[WiZFS] ')
+
+
+class Travis(Common):
+    DATABASES = values.DatabaseURLValue(
+        'sqlite:///%s' % os.path.join(BASE_DIR, 'db.sqlite3')
+    )

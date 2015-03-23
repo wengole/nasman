@@ -12,6 +12,5 @@ install:
   - python bootstrap.py -c travis.cfg
   - bin/buildout -c travis.cfg
 script:
-#  - bin/manage test src/
   - coverage run --source=src bin/manage test src
 after_success: coveralls
