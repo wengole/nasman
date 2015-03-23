@@ -88,8 +88,14 @@ class Common(Configuration):
                 'class': 'cloghandler.ConcurrentRotatingFileHandler',
                 'filename': os.path.join(BASE_DIR, 'wizfs.log'),
                 'maxBytes': 10*1024*104,  # 10MB
-                'backupCount': 5
+                'backupCount': 5,
+                'formatter': 'deafult',
             }
+        },
+        'formatters': {
+            'default': {
+                'format': '%(levelname)s %(asctime)s %(module)s %(message)s',
+            },
         },
         'loggers': {
             'django.request': {
@@ -97,6 +103,10 @@ class Common(Configuration):
                 'level': 'WARNING',
                 'propagate': True,
             },
+            'django': {
+                'handlers': ['logfile'],
+                'level': 'INFO',
+            }
         }
     }
     SUIT_CONFIG = {
