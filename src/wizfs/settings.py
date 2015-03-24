@@ -160,3 +160,8 @@ class Travis(Common):
         'sqlite:///%s' % os.path.join(BASE_DIR, 'db.sqlite3')
     )
     CELERY_HAYSTACK_DEFAULT_TASK = 'celery_haystack.tasks.CeleryHaystackSignalHandler'
+    CELERY_ALWAYS_EAGER = True
+    CELERY_HAYSTACK_TRANSACTION_SAFE = False
+    CELERY_HAYSTACK_DEFAULT_ALIAS = None
+    CELERY_HAYSTACK_MAX_RETRIES = 1
+    CELERY_HAYSTACK_RETRY_DELAY = 1
