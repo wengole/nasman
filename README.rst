@@ -2,9 +2,12 @@ wizfs
 =====
 
 .. image:: https://travis-ci.org/wengole/wizfs.svg?branch=master
-    :target: https://travis-ci.org/wengole/wizfs
+   :target: https://travis-ci.org/wengole/wizfs
 .. image:: https://coveralls.io/repos/wengole/wizfs/badge.svg?branch=develop
-  :target: https://coveralls.io/r/wengole/wizfs?branch=develop
+   :target: https://coveralls.io/r/wengole/wizfs?branch=develop
+.. image:: https://badge.waffle.io/wengole/wizfs.svg?label=ready&title=Ready 
+   :target: https://waffle.io/wengole/wizfs 
+   :alt: 'Stories in Ready'
 
 A Django based ZFS management interface.
 
