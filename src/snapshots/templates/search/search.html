@@ -1,19 +1,6 @@
-{% extends 'admin/base_site.html' %}
-{% load suit_list %}
+{% extends 'base.html' %}
+{% load staticfiles i18n %}
 
-{% block content_title %}
-  <h2 class="content-title">Search</h2>
-{% endblock %}
 {% block content %}
   {{ block.super }}
-  <h3>Results</h3>
-  {% for result in object_list %}
-    <p>
-      <a href="{{ result.object.get_absolute_url }}">{{ result.object.name }}</a>
-    </p>
-  {% empty %}
-    <p>No results found.</p>
-  {% endfor %}
-
-  {% include "search/pagination.html" %}
 {% endblock %}

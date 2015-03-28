@@ -1,16 +1,22 @@
 """
 Snapshot app views
 """
-from braces.views import (SetHeadlineMixin, MessageMixin, AjaxResponseMixin,
-                          JSONResponseMixin)
 from celery import Celery
 from celery import states
+
+from braces.views import (SetHeadlineMixin, MessageMixin, AjaxResponseMixin,
+                          JSONResponseMixin)
 from django.conf import settings
 from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import redirect
 from django.core.cache import cache
-from vanilla import TemplateView, ListView, DetailView, CreateView, DeleteView, \
-    UpdateView
+from haystack.generic_views import FacetedSearchMixin
+from vanilla import (TemplateView,
+                     ListView,
+                     DetailView,
+                     CreateView,
+                     DeleteView,
+                     UpdateView, FormView)
 
 from .utils import ZFSHelper
 from .forms import FilesystemForm
@@ -156,3 +162,15 @@ class FilesystemUpdate(SetHeadlineMixin, UpdateView):
 
     def get_headline(self):
         return u'Edit %s filesystem' % self.get_object().name
+
+
+class SnapshotSearchView(SetHeadlineMixin, FacetedSearchMixin, FormView):
+    template = u'search.html'
+
+    def get_headline(self):
+        if self.search_field in self.request.GET:
+            return u'Search results'
+        return u'Search'
+
+    def get_form(self, form_class):
+        pass

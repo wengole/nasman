@@ -45,6 +45,7 @@ setup(
         'https://github.com/mher/flower/tarball/master#egg=flower-0.7.4',
         'https://github.com/jezdez/django-configurations/tarball/master#egg=django-configurations-0.9.0',
         'https://github.com/fatbox/django-simple-menu/tarball/master#egg=django-simple-menu-1.0.9',
+        'https://github.com/django-haystack/django-haystack/tarball/master#egg=django-haystack-2.4.0',
     ]
 )
 
