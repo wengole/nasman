@@ -1,5 +1,5 @@
-{% load i18n %}
-{% load menu %}{% generate_menu %}
+{% load i18n menu crispy_forms_tags %}
+{% generate_menu %}
 <ul class="nav navbar-nav">
   {% with menu=menus.top_nav_left %}
     {% include "nav/top-nav-items.html" %}
@@ -10,6 +10,7 @@
     {% include "nav/top-nav-items.html" %}
   {% endwith %}
 </ul>
+{% crispy search_form %}
 {% comment %}
 TODO: Reimplement this later
 {% if not user.is_authenticated %}

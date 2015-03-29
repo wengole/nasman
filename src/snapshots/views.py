@@ -1,16 +1,15 @@
 """
 Snapshot app views
 """
+from braces.views import (JSONResponseMixin,
+                          AjaxResponseMixin,
+                          SetHeadlineMixin, MessageMixin)
 from celery import Celery
 from celery import states
-
-from braces.views import (SetHeadlineMixin, MessageMixin, AjaxResponseMixin,
-                          JSONResponseMixin)
 from django.conf import settings
 from django.core.urlresolvers import reverse_lazy
-from django.shortcuts import redirect
 from django.core.cache import cache
-from haystack.forms import FacetedSearchForm
+from django.shortcuts import redirect
 from haystack.generic_views import FacetedSearchMixin
 from haystack.query import EmptySearchQuerySet
 from vanilla import (TemplateView,
@@ -18,10 +17,12 @@ from vanilla import (TemplateView,
                      DetailView,
                      CreateView,
                      DeleteView,
-                     UpdateView, FormView)
+                     UpdateView,
+                     FormView)
 
+from .mixins import SearchFormMixin
 from .utils import ZFSHelper
-from .forms import FilesystemForm
+from .forms import FilesystemForm, CrispyFacetedSearchForm
 from .models import File, Filesystem
 from .tasks import reindex_filesystem
 
@@ -48,8 +49,12 @@ def get_status_dict(fs):
     return json_dict
 
 
-class DashboardView(JSONResponseMixin, AjaxResponseMixin, SetHeadlineMixin,
-                    TemplateView):
+class BaseView(SetHeadlineMixin, SearchFormMixin):
+    pass
+
+
+class DashboardView(JSONResponseMixin, AjaxResponseMixin,
+                    BaseView, TemplateView):
     """
     View for the homepage
     """
@@ -80,12 +85,12 @@ class DashboardView(JSONResponseMixin, AjaxResponseMixin, SetHeadlineMixin,
         return self.render_json_response(json_dict)
 
 
-class FileBrowser(SetHeadlineMixin, ListView):
+class FileBrowser(BaseView, ListView):
     model = File
     headline = u'File Browser'
 
 
-class FilesystemList(JSONResponseMixin, AjaxResponseMixin, SetHeadlineMixin,
+class FilesystemList(JSONResponseMixin, AjaxResponseMixin, BaseView,
                      ListView):
     model = Filesystem
     headline = u'ZFS Filesystems'
@@ -102,7 +107,7 @@ class FilesystemList(JSONResponseMixin, AjaxResponseMixin, SetHeadlineMixin,
 
 
 class FilesystemDetail(JSONResponseMixin, AjaxResponseMixin, MessageMixin,
-                       SetHeadlineMixin, DetailView):
+                       BaseView, DetailView):
     model = Filesystem
 
     def get_headline(self):
@@ -130,7 +135,7 @@ class FilesystemDetail(JSONResponseMixin, AjaxResponseMixin, MessageMixin,
         return self.render_json_response(json_dict)
 
 
-class FilesystemCreate(MessageMixin, SetHeadlineMixin, CreateView):
+class FilesystemCreate(MessageMixin, BaseView, CreateView):
     model = Filesystem
     fields = [u'name', u'mountpoint', u'parent']
     headline = u'Add New Filesystem'
@@ -149,7 +154,7 @@ class FilesystemCreate(MessageMixin, SetHeadlineMixin, CreateView):
         return super(FilesystemCreate, self).get(request, *args, **kwargs)
 
 
-class FilesystemDelete(SetHeadlineMixin, DeleteView):
+class FilesystemDelete(BaseView, DeleteView):
     model = Filesystem
     success_url = reverse_lazy(u'wizfs:filesystems')
 
@@ -157,7 +162,7 @@ class FilesystemDelete(SetHeadlineMixin, DeleteView):
         return u'Delete %s filesystem?' % self.get_object().name
 
 
-class FilesystemUpdate(SetHeadlineMixin, UpdateView):
+class FilesystemUpdate(BaseView, UpdateView):
     model = Filesystem
     success_url = reverse_lazy(u'wizfs:filesystems')
     form_class = FilesystemForm
@@ -166,10 +171,10 @@ class FilesystemUpdate(SetHeadlineMixin, UpdateView):
         return u'Edit %s filesystem' % self.get_object().name
 
 
-class SnapshotSearchView(SetHeadlineMixin, FacetedSearchMixin, FormView):
+class SnapshotSearchView(BaseView, FacetedSearchMixin, FormView):
     template = u'search.html'
     results = EmptySearchQuerySet()
-    form_class = FacetedSearchForm
+    form_class = CrispyFacetedSearchForm
 
     def get_headline(self):
         if self.search_field in self.request.GET:
@@ -180,7 +185,5 @@ class SnapshotSearchView(SetHeadlineMixin, FacetedSearchMixin, FormView):
         return self.form_class(data, files, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        form = self.form_class()
-        self.results = form.search()
-        context = self.get_context_data(form=form, object_list=self.queryset)
+        context = self.get_context_data(object_list=self.queryset)
         return self.render_to_response(context)
