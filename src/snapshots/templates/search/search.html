@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load staticfiles i18n bootstrap_pagination %}
+
+{% block content %}
+    {{ block.super }}
+    {% include "base_form.html" %}
+    <h3>Results</h3>
+    {% for result in object_list %}
+        <p>
+            <a href="{{ result.object.get_absolute_url }}">{{ result.name }}</a>
+        </p>
+    {% empty %}
+        <p>No results found.</p>
+    {% endfor %}
+    {% bootstrap_paginate page_obj %}
+{% endblock %}
