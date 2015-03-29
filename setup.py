@@ -17,6 +17,7 @@ setup(
         'ConcurrentLogHandler',
         'dj_database_url',
         'Django',
+        'django-bootstrap-pagination',
         'django-celery-transactions<0.2',
         'django-configurations',
         'django-crispy-forms',
