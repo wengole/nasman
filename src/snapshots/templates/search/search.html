@@ -12,5 +12,5 @@
     {% empty %}
         <p>No results found.</p>
     {% endfor %}
-    {% bootstrap_paginate page_obj %}
+    {% bootstrap_paginate page_obj range=10 %}
 {% endblock %}
