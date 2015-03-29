@@ -15,4 +15,6 @@ urlpatterns = patterns(
         name='delete-fs'),
     url(r'^filesystem/(?P<pk>\d+)/edit$', views.FilesystemUpdate.as_view(),
         name='edit-fs'),
+    url(r'^search$', views.SnapshotSearchView.as_view(),
+        name='search'),
 )

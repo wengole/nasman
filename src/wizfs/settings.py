@@ -28,6 +28,7 @@ class Common(Configuration):
         'menu',
         'haystack',
         'celery_haystack',
+        'bootstrap_pagination',
     )
     WIZFS_APPS = (
         'snapshots',

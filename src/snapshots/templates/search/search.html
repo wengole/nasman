@@ -1,19 +1,16 @@
-{% extends 'admin/base_site.html' %}
-{% load suit_list %}
+{% extends 'base.html' %}
+{% load staticfiles i18n bootstrap_pagination %}
 
-{% block content_title %}
-  <h2 class="content-title">Search</h2>
-{% endblock %}
 {% block content %}
-  {{ block.super }}
-  <h3>Results</h3>
-  {% for result in object_list %}
-    <p>
-      <a href="{{ result.object.get_absolute_url }}">{{ result.object.name }}</a>
-    </p>
-  {% empty %}
-    <p>No results found.</p>
-  {% endfor %}
-
-  {% include "search/pagination.html" %}
+    {{ block.super }}
+    {% include "base_form.html" %}
+    <h3>Results</h3>
+    {% for result in object_list %}
+        <p>
+            <a href="{{ result.object.get_absolute_url }}">{{ result.name }}</a>
+        </p>
+    {% empty %}
+        <p>No results found.</p>
+    {% endfor %}
+    {% bootstrap_paginate page_obj %}
 {% endblock %}
