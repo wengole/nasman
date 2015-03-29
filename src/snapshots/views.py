@@ -10,7 +10,9 @@ from django.conf import settings
 from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import redirect
 from django.core.cache import cache
+from haystack.forms import FacetedSearchForm
 from haystack.generic_views import FacetedSearchMixin
+from haystack.query import EmptySearchQuerySet
 from vanilla import (TemplateView,
                      ListView,
                      DetailView,
@@ -166,14 +168,19 @@ class FilesystemUpdate(SetHeadlineMixin, UpdateView):
 
 class SnapshotSearchView(SetHeadlineMixin, FacetedSearchMixin, FormView):
     template = u'search.html'
+    results = EmptySearchQuerySet()
+    form_class = FacetedSearchForm
 
     def get_headline(self):
         if self.search_field in self.request.GET:
             return u'Search results'
         return u'Search'
 
+    def get_form(self, data, files, **kwargs):
+        return self.form_class(data, files, **kwargs)
+
     def get(self, request, *args, **kwargs):
-        form_class = self.get_form_class()
-        form = self.get_form(form_class)
+        form = self.form_class()
+        self.results = form.search()
         context = self.get_context_data(form=form, object_list=self.queryset)
         return self.render_to_response(context)
