@@ -120,7 +120,12 @@ class File(models.Model):
         on_delete=models.CASCADE
     )
     directory = models.BooleanField(default=False)
-    mime_type = models.CharField(u'mime type', blank=True, max_length=255)
+    mime_type = models.ForeignKey(
+        u'IconMapping',
+        verbose_name=u'mime-type',
+        on_delete=models.SET_NULL,
+        null=True
+    )
     magic = models.CharField(u'magic', blank=True, max_length=255)
     modified = models.DateTimeField(u'modified')
     size = models.IntegerField(u'size', blank=True, null=True)
@@ -140,3 +145,38 @@ class File(models.Model):
         """
         _, extension = os.path.splitext(self.full_path)
         return extension
+
+
+@python_2_unicode_compatible
+class IconMapping(models.Model):
+    """
+    Model to manage icon mapping to mimetypes
+    """
+    ICON_CHOICES = (
+        ('fa-file-o', 'default'),
+        ('fa-file-archive-o', 'archive'),
+        ('fa-file-audio-o', 'audio'),
+        ('fa-file-code-o', 'code'),
+        ('fa-file-excel-o', 'excel'),
+        ('fa-file-image-o', 'image'),
+        ('fa-file-pdf-o', 'pdf'),
+        ('fa-file-powerpoint-o', 'powerpoint'),
+        ('fa-file-text-o', 'text'),
+        ('fa-file-video-o', 'video'),
+        ('fa-file-word-o', 'word'),
+    )
+    icon = models.CharField(
+        u'icon',
+        max_length=25,
+        choices=ICON_CHOICES,
+        default='fa-file-o'
+    )
+    mime_type = models.CharField(
+        u'mime-type',
+        max_length=255,
+        primary_key=True,
+        db_index=True
+    )
+
+    def __str__(self):
+        return self.mime_type

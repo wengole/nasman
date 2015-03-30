@@ -10,7 +10,7 @@ from django.utils.timezone import get_default_timezone_name
 import magic
 import pytz
 
-from .models import File, Filesystem
+from .models import File, Filesystem, IconMapping
 
 
 logger = logging.getLogger(__name__)
@@ -34,7 +34,11 @@ def create_file_object(full_path, snapshot=None, directory=False):
     try:
         mime_type = magic.from_file(full_path, mime=True)
     except magic.MagicException:
-        mime_type = ''
+        icon = None
+    else:
+        icon, _ = IconMapping.objects.get_or_create(
+            mime_type=mime_type
+        )
     obj, created = File.objects.get_or_create(
         full_path=full_path,
         snapshot=snapshot,
@@ -42,14 +46,14 @@ def create_file_object(full_path, snapshot=None, directory=False):
         defaults={
             'name': os.path.basename(full_path),
             'dirname': os.path.dirname(full_path),
-            'mime_type': mime_type,
+            'mime_type': icon,
             'magic': magic_info,
             'modified': mtime,
             'size': statinfo.st_size,
         }
     )
     if not created:
-        obj.mime_type = mime_type
+        obj.mime_type = icon
         obj.magic = magic_info
         obj.modified = mtime
         obj.size = statinfo.st_size
