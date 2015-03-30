@@ -1,6 +1,3 @@
-"""
-Django settings for wizfs project.
-"""
 import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -20,10 +17,11 @@ DJANGO_APPS = (
     'django.contrib.staticfiles',
 )
 THIRD_PARTY_APPS = (
-    'debug_toolbar',
     'crispy_forms',
     'menu',
     'haystack',
+    'celery_haystack',
+    'bootstrap_pagination',
 )
 WIZFS_APPS = (
     'snapshots',
@@ -38,13 +36,18 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 ROOT_URLCONF = 'wizfs.urls'
-WSGI_APPLICATION = 'wizfs.wsgi.application'
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
+# WSGI_APPLICATION = 'wizfs.wsgi.application'
+DATABASES = {'default': {'ENGINE': 'django.db.backends.postgresql_psycopg2',
+                         'HOST': '127.0.0.1',
+                         'NAME': 'wizfs',
+                         'PASSWORD': u'wizfs',
+                         'PORT': 5432,
+                         'TEST': {'CHARSET': None,
+                                  'COLLATION': None,
+                                  'MIRROR': None,
+                                  'NAME': None},
+                         'TIME_ZONE': 'UTC',
+                         'USER': 'wizfs'}}
 LANGUAGE_CODE = 'en-gb'
 TIME_ZONE = 'Europe/London'
 USE_I18N = True
@@ -70,10 +73,55 @@ HAYSTACK_CONNECTIONS = {
         'PATH': os.path.join(BASE_DIR, 'xapian_index'),
     },
 }
-HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+HAYSTACK_SIGNAL_PROCESSOR = 'celery_haystack.signals.CelerySignalProcessor'
+CELERY_HAYSTACK_MAX_RETRIES = 20
+CELERY_HAYSTACK_RETRY_DELAY = 2
 BROKER_URL = 'redis://localhost:6379/0'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 CELERY_ACCEPT_CONTENT = ['pickle', ]
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'snapshots/static'),
-)
+CELERYD_PREFETCH_MULTIPLIER = 1
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'logfile': {
+            'level': 'INFO',
+            'class': 'cloghandler.ConcurrentRotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, 'wizfs.log'),
+            'maxBytes': 10 * 1024 * 104,  # 10MB
+            'backupCount': 5,
+            'formatter': 'default',
+        }
+    },
+    'formatters': {
+        'default': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(message)s',
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['logfile'],
+            'level': 'WARNING',
+            'propagate': True,
+        },
+        'django': {
+            'handlers': ['logfile'],
+            'level': 'INFO',
+        }
+    }
+}
+SUIT_CONFIG = {
+    'ADMIN_NAME': 'WiZFS',
+}
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
