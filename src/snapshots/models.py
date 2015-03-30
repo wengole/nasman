@@ -190,5 +190,13 @@ class IconMapping(models.Model):
         db_index=True
     )
 
+    def save(self, **kwargs):
+        icon_mapping = {x[1]: x[0] for x in self.ICON_CHOICES}
+        if self.icon == 'fa-file-o':
+            major = self.mime_type.split('/')[0]
+            if major in icon_mapping:
+                self.icon = icon_mapping[major]
+        super(IconMapping, self).save(**kwargs)
+
     def __str__(self):
         return self.mime_type
