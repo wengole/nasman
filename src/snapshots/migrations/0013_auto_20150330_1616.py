@@ -5,6 +5,18 @@ from django.db import models, migrations
 import django.db.models.deletion
 
 
+def migrate_mimetypes(apps, schema_editor):
+    File = apps.get_model('snapshots', 'File')
+    IconMapping = apps.get_model('snapshots', 'IconMapping')
+    db_alias = schema_editor.connection.alias
+    mime_types = File.objects.distinct('mime_type')
+    for mt in mime_types:
+        IconMapping.objects.get_or_create(
+            mime_type=mt.mime_type
+        )
+        print 'Created %s' % mt.mime_type
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -22,6 +34,7 @@ class Migration(migrations.Migration):
             },
             bases=(models.Model,),
         ),
+        migrations.RunPython(migrate_mimetypes),
         migrations.AlterField(
             model_name='file',
             name='mime_type',
