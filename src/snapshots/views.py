@@ -10,15 +10,14 @@ from django.conf import settings
 from django.core.urlresolvers import reverse_lazy
 from django.core.cache import cache
 from django.shortcuts import redirect
-from haystack.generic_views import FacetedSearchMixin
-from haystack.query import EmptySearchQuerySet
+from haystack.generic_views import FacetedSearchView
+from haystack.query import SearchQuerySet, EmptySearchQuerySet
 from vanilla import (TemplateView,
                      ListView,
                      DetailView,
                      CreateView,
                      DeleteView,
-                     UpdateView,
-                     FormView)
+                     UpdateView)
 
 from .mixins import SearchFormMixin
 from .utils import ZFSHelper
@@ -171,19 +170,26 @@ class FilesystemUpdate(BaseView, UpdateView):
         return u'Edit %s filesystem' % self.get_object().name
 
 
-class SnapshotSearchView(BaseView, FacetedSearchMixin, FormView):
+class SnapshotSearchView(BaseView, FacetedSearchView):
     template = u'search.html'
-    results = EmptySearchQuerySet()
     form_class = CrispyFacetedSearchForm
 
     def get_headline(self):
-        if self.search_field in self.request.GET:
+        if self.search_field in self.request.REQUEST:
             return u'Search results'
         return u'Search'
 
-    def get_form(self, data, files, **kwargs):
-        return self.form_class(data, files, **kwargs)
+    def get_form_kwargs(self):
+        sqs = SearchQuerySet().facet(u'directory')
+        kwargs = super(SnapshotSearchView, self).get_form_kwargs()
+        kwargs.update({u'searchqueryset': sqs,
+                       u'data': self.request.REQUEST})
+        return kwargs
 
-    def get(self, request, *args, **kwargs):
-        context = self.get_context_data(object_list=self.queryset)
-        return self.render_to_response(context)
+    def form_valid(self, form):
+        self.results = form.search()
+        return super(SnapshotSearchView, self).form_valid(form)
+
+    def form_invalid(self, form):
+        self.results = form.search()
+        return super(SnapshotSearchView, self).form_invalid(form)
