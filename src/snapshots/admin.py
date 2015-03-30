@@ -3,7 +3,7 @@ import logging
 from django.conf import settings
 from django.contrib import admin
 
-from .models import Snapshot, File, Filesystem
+from .models import Snapshot, File, Filesystem, IconMapping
 from .tasks import reindex_filesystem
 
 
@@ -38,3 +38,7 @@ class FilesystemAdmin(admin.ModelAdmin):
 
     walk_fs_action.short_description = "Reindex selected filesystem(s)"
 
+
+@admin.register(IconMapping)
+class IconMappingAdmin(admin.ModelAdmin):
+    pass

@@ -164,6 +164,7 @@ class IconMapping(models.Model):
         ('fa-file-text-o', 'text'),
         ('fa-file-video-o', 'video'),
         ('fa-file-word-o', 'word'),
+        ('fa-folder-open-o', 'directory')
     )
     icon = models.CharField(
         u'icon',
