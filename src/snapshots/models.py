@@ -87,18 +87,20 @@ class Snapshot(models.Model):
         """
         return u'%s' % self.name.split(u'@')[0]
 
+    @property
+    def mountpoint(self):
+        return u'%s/.zfs/snapshot/%s' % (
+            self.filesystem.mountpoint,
+            self.base_name
+        )
+
     def walk_snapshot(self):
         """
         os.walk from the snapshot
 
         :returns: An `os.walk` instance starting from the snapshot
         """
-        return os.walk(
-            u'%s/.zfs/snapshot/%s' % (
-                self.filesystem.mountpoint,
-                self.base_name
-            )
-        )
+        return os.walk(self.mountpoint.encode('utf-8'))
 
 
 @python_2_unicode_compatible
