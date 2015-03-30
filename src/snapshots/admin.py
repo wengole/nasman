@@ -41,4 +41,4 @@ class FilesystemAdmin(admin.ModelAdmin):
 
 @admin.register(IconMapping)
 class IconMappingAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['icon', 'mime_type', ]
