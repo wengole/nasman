@@ -20,6 +20,10 @@ class Filesystem(models.Model):
     )
     mountpoint = models.CharField(u'mountpoint', max_length=255, blank=True)
 
+    def save(self, **kwargs):
+        self.mountpoint = os.path.normpath(self.mountpoint)
+        super(Filesystem, self).save(**kwargs)
+
     def __str__(self):
         return self.name
 
@@ -135,6 +139,11 @@ class File(models.Model):
     class Meta:
         unique_together = ()
         index_together = ()
+
+    def save(self, **kwargs):
+        self.full_path = os.path.normpath(self.full_path)
+        self.dirname = os.path.normpath(self.dirname)
+        super(File, self).save(**kwargs)
 
     def __str__(self):
         return self.full_path
