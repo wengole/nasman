@@ -22,6 +22,7 @@ class Common(Configuration):
         'django.contrib.sessions',
         'django.contrib.messages',
         'django.contrib.staticfiles',
+        'django.contrib.humanize',
     )
     THIRD_PARTY_APPS = (
         'crispy_forms',

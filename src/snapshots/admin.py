@@ -1,9 +1,7 @@
 import logging
 
-from haystack.admin import SearchChangeList
 from django.conf import settings
 from django.contrib import admin
-from haystack.query import SearchQuerySet
 
 from .models import Snapshot, File, Filesystem
 from .tasks import reindex_filesystem
@@ -25,19 +23,6 @@ class FileAdmin(admin.ModelAdmin):
     list_display_links = ('name',)
     search_fields = ['full_path', ]
 
-    def get_search_results(self, request, queryset, search_term):
-        sqs = SearchQuerySet().auto_query(request.GET['q']).facet('directory')
-        return sqs, False
-
-    def get_changelist(self, request, **kwargs):
-        return SearchChangeList
-
-    def changelist_view(self, request, extra_context=None):
-        sqs, _ = self.get_search_results(request, None, 'snapshot')
-        extra_context = {
-            'facets': sqs.query.get_facet_counts()
-        }
-        return super(FileAdmin, self).changelist_view(request, extra_context)
 
 @admin.register(Filesystem)
 class FilesystemAdmin(admin.ModelAdmin):

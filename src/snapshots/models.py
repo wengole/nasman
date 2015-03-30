@@ -1,3 +1,4 @@
+from django import forms
 from django.core.cache import cache
 import os
 from django.core.urlresolvers import reverse_lazy
@@ -105,7 +106,12 @@ class File(models.Model):
     """
     Model representing a file/directory/etc on the filesystem
     """
-    full_path = models.CharField(u'full path', max_length=255)
+    full_path = models.TextField(u'full path')
+    dirname = models.TextField(
+        u'dirname',
+        db_index=True
+    )
+    name = models.TextField(u'name')
     snapshot = models.ForeignKey(
         Snapshot,
         verbose_name=u'snapshot',
@@ -134,19 +140,3 @@ class File(models.Model):
         """
         _, extension = os.path.splitext(self.full_path)
         return extension
-
-    @property
-    def dirname(self):
-        """
-        The directory containing this file
-        :rtype: str
-        """
-        return os.path.dirname(self.full_path)
-
-    @property
-    def name(self):
-        """
-        The filename of this file
-        :rtype: str
-        """
-        return os.path.basename(self.full_path)

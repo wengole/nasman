@@ -1,92 +1,36 @@
 {% extends "base.html" %}
-{% load staticfiles i18n %}
+{% load staticfiles i18n humanize %}
 
 {% block title %}File Browser{% endblock %}
 
 {% block page-title %}File Browser{% endblock %}
 
 {% block content %}
-  {{ block.super }}
-  <div class="table-responsive">
-    {% with '/pool/backup' as dirname %}
-      <table class="table table-striped">
-        <thead>
-        <tr>
-          <th class="col-md-1"></th>
-          <th>Filename</th>
-          <th>Directory</th>
-          <th>Type</th>
-          <th>Size</th>
-          <th>Modified</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-          <td><span class="fa fa-folder-open"></span></td>
-          <td>Documents</td>
-          <td>{{ dirname }}</td>
-          <td>directory</td>
-          <td>{{ 4096|filesizeformat }}</td>
-          <td>today</td>
-        </tr>
-        <tr>
-          <td><span class="fa fa-file-o"></span></td>
-          <td>foo</td>
-          <td>{{ dirname }}</td>
-          <td>-</td>
-          <td>{{ 102|filesizeformat }}</td>
-          <td>today</td>
-        </tr>
-        <tr>
-          <td><span class="fa fa-file-video-o"></span></td>
-          <td>watch-me.mp4</td>
-          <td>{{ dirname }}</td>
-          <td>video/mp4</td>
-          <td>{{ 1024000|filesizeformat }}</td>
-          <td>today</td>
-        </tr>
-        <tr>
-          <td><span class="fa fa-file-zip-o"></span></td>
-          <td>stuff.zip</td>
-          <td>{{ dirname }}</td>
-          <td>archive/zip</td>
-          <td>{{ 1234500000|filesizeformat }}</td>
-          <td>today</td>
-        </tr>
-        <tr>
-          <td><span class="fa fa-file-image-o"></span></td>
-          <td>pretty.jpg</td>
-          <td>{{ dirname }}</td>
-          <td>image/jpg</td>
-          <td>{{ 160345|filesizeformat }}</td>
-          <td>today</td>
-        </tr>
-        <tr>
-          <td><span class="fa fa-file-audio-o"></span></td>
-          <td>noise.mp3</td>
-          <td>{{ dirname }}</td>
-          <td>mpg/mp3</td>
-          <td>{{ 10240000|filesizeformat }}</td>
-          <td>today</td>
-        </tr>
-        <tr>
-          <td><span class="fa fa-file-code-o"></span></td>
-          <td>script.py</td>
-          <td>{{ dirname }}</td>
-          <td>text/python</td>
-          <td>{{ 409600|filesizeformat }}</td>
-          <td>today</td>
-        </tr>
-        <tr>
-          <td><span class="fa fa-file-text-o"></span></td>
-          <td>password.txt</td>
-          <td>{{ dirname }}</td>
-          <td>text/plain</td>
-          <td>{{ 10024|filesizeformat }}</td>
-          <td>today</td>
-        </tr>
-        </tbody>
-      </table>
-    {% endwith %}
-  </div>
+{{ block.super }}
+<div class="table-responsive">
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th class="col-md-1"></th>
+      <th>Filename</th>
+      <th>Directory</th>
+      <th>Type</th>
+      <th>Size</th>
+      <th>Modified</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for file in object_list %}
+      <tr>
+        <td><span class="fa fa-folder-open"></span></td>
+        <td>{{ file.name }}</td>
+        <td>{{ file.dirname }}</td>
+        <td>{{ file.mime_type }}</td>
+        <td>{{ file.size|filesizeformat }}</td>
+        <td>{{ file.modified|naturaltime }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% endblock content %}

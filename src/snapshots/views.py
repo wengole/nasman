@@ -9,9 +9,10 @@ from celery import states
 from django.conf import settings
 from django.core.urlresolvers import reverse_lazy
 from django.core.cache import cache
-from django.shortcuts import redirect
+from django.http import Http404
+from django.shortcuts import redirect, get_object_or_404
 from haystack.generic_views import FacetedSearchView
-from haystack.query import SearchQuerySet, EmptySearchQuerySet
+from haystack.query import SearchQuerySet
 from vanilla import (TemplateView,
                      ListView,
                      DetailView,
@@ -22,7 +23,7 @@ from vanilla import (TemplateView,
 from .mixins import SearchFormMixin
 from .utils import ZFSHelper
 from .forms import FilesystemForm, CrispyFacetedSearchForm
-from .models import File, Filesystem
+from .models import File, Filesystem, Snapshot
 from .tasks import reindex_filesystem
 
 
@@ -87,6 +88,31 @@ class DashboardView(JSONResponseMixin, AjaxResponseMixin,
 class FileBrowser(BaseView, ListView):
     model = File
     headline = u'File Browser'
+    fs = None
+    path = None
+    snapshot = None
+
+    def get(self, request, *args, **kwargs):
+        fs_name = self.request.GET.get(u'fs')
+        snap_name = self.request.GET.get(u'snap')
+        self.path = self.request.GET.get(u'path')
+        if fs_name is not None:
+            self.fs = get_object_or_404(Filesystem, name=fs_name)
+        else:
+            self.fs = Filesystem.objects.first()
+            if self.fs is None:
+                raise Http404(u'No Filesystems yet. Please add one')
+        if snap_name is not None:
+            self.snapshot = get_object_or_404(Snapshot, name=snap_name)
+        else:
+            self.snapshot = Snapshot.objects.first()
+        return super(FileBrowser, self).get(request, *args, **kwargs)
+
+    def get_queryset(self):
+        if self.path is None:
+            self.path = self.fs.mountpoint
+        qs = File.objects.filter(dirname=self.path)
+        return qs.order_by(u'-directory', u'name')
 
 
 class FilesystemList(JSONResponseMixin, AjaxResponseMixin, BaseView,
@@ -119,7 +145,9 @@ class FilesystemDetail(JSONResponseMixin, AjaxResponseMixin, MessageMixin,
         if request.GET.get(u'reindex'):
             fs = self.get_object()
             status = fs.reindex_status
-            if status is None or status.state in states.READY_STATES or status.state is None:
+            if (status is None
+                    or status.state in states.READY_STATES
+                    or status.state is None):
                 fs.reindex_status = reindex_filesystem.delay(fs.name)
                 self.messages.info(u'Reindex of %s started' % fs.name)
                 return redirect(u'wizfs:filesystems')
@@ -173,6 +201,7 @@ class FilesystemUpdate(BaseView, UpdateView):
 class SnapshotSearchView(BaseView, FacetedSearchView):
     template = u'search.html'
     form_class = CrispyFacetedSearchForm
+    results = None
 
     def get_headline(self):
         if self.search_field in self.request.REQUEST:

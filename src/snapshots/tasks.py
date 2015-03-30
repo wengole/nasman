@@ -40,6 +40,8 @@ def create_file_object(full_path, snapshot=None, directory=False):
         snapshot=snapshot,
         directory=directory,
         defaults={
+            'name': os.path.basename(full_path),
+            'dirname': os.path.dirname(full_path),
             'mime_type': mime_type,
             'magic': magic_info,
             'modified': mtime,
