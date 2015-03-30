@@ -23,7 +23,13 @@
     {% for file in object_list %}
       <tr>
         <td><span class="fa {{ file.mime_type.icon }}"></span></td>
-        <td>{{ file.name }}</td>
+        <td>
+          {% if file.directory %}
+          <a href="?path={{ file.full_path }}">{{ file.name }}</a>
+          {% else %}
+          {{ file.name }}
+          {% endif %}
+        </td>
         <td>{{ file.dirname }}</td>
         <td>{{ file.mime_type }}</td>
         <td>{{ file.size|filesizeformat }}</td>
