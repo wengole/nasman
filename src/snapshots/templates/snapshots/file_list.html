@@ -22,7 +22,7 @@
     <tbody>
     {% for file in object_list %}
       <tr>
-        <td><span class="fa fa-folder-open"></span></td>
+        <td><span class="fa {{ file.mime_type.icon }}"></span></td>
         <td>{{ file.name }}</td>
         <td>{{ file.dirname }}</td>
         <td>{{ file.mime_type }}</td>
