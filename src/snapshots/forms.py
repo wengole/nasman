@@ -4,7 +4,7 @@ from django import forms
 from django.core.urlresolvers import reverse
 from haystack.forms import FacetedSearchForm
 
-from .models import Filesystem
+from .models import Filesystem, Snapshot
 
 
 class FilesystemForm(forms.ModelForm):
@@ -27,3 +27,14 @@ class CrispyFacetedSearchForm(FacetedSearchForm):
         self.helper.layout.append(Submit(u'search', u'search'))
         self.helper.form_class = u'navbar-form navbar-right'
         self.helper.field_template = 'bootstrap3/layout/inline_field.html'
+
+
+class SnapshotForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(SnapshotForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper(self)
+        self.helper.layout.append(Submit('save', 'save'))
+
+    class Meta:
+        model = Snapshot
+        fields = [u'name', u'filesystem']
