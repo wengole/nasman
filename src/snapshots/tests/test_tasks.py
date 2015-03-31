@@ -48,4 +48,4 @@ class TestCeleryTasks(TestCase):
             full_path=self.file_path
         )
         self.assertEqual(file_obj.magic, '')
-        self.assertEqual(file_obj.mime_type, '')
+        self.assertEqual(file_obj.mime_type, None)
