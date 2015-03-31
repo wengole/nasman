@@ -157,10 +157,20 @@ class Server(Common):
     EMAIL_SUBJECT_PREFIX = values.Value('[WiZFS] ')
 
 
-class Travis(Common):
+class Test(Common):
+    HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+        }
+    }
+
+
+class Travis(Test):
     DATABASES = values.DatabaseURLValue(
         'postgres://postgres@127.0.0.1:5432/travis_ci_test'
     )
+    HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
     CELERY_HAYSTACK_DEFAULT_TASK = 'celery_haystack.tasks.CeleryHaystackSignalHandler'
     CELERY_ALWAYS_EAGER = True
     CELERY_HAYSTACK_TRANSACTION_SAFE = False

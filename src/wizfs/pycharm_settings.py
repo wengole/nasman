@@ -74,7 +74,7 @@ HAYSTACK_CONNECTIONS = {
         'PATH': os.path.join(BASE_DIR, 'xapian_index'),
     },
 }
-HAYSTACK_SIGNAL_PROCESSOR = 'celery_haystack.signals.CelerySignalProcessor'
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 CELERY_HAYSTACK_MAX_RETRIES = 20
 CELERY_HAYSTACK_RETRY_DELAY = 2
 BROKER_URL = 'redis://localhost:6379/0'
@@ -116,12 +116,8 @@ SUIT_CONFIG = {
     'ADMIN_NAME': 'WiZFS',
 }
 CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
     }
 }
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
