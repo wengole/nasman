@@ -20,9 +20,18 @@
     </tr>
     </thead>
     <tbody>
+    {% if up_one %}
+      <tr>
+        <td><i class="fa fa-folder-open-o"></i></td>
+        <td>
+          <a href="?path={{ up_one }}">..</a>
+        </td>
+        <td colspan="4"></td>
+      </tr>
+    {% endif %}
     {% for file in object_list %}
       <tr>
-        <td><span class="fa {{ file.mime_type.icon }}"></span></td>
+        <td><i class="fa {{ file.mime_type.icon }}"></i></td>
         <td>
           {% if file.directory %}
           <a href="?path={{ file.full_path }}">{{ file.name }}</a>

@@ -1,6 +1,7 @@
 """
 Snapshot app views
 """
+import os
 from braces.views import (JSONResponseMixin,
                           AjaxResponseMixin,
                           SetHeadlineMixin, MessageMixin)
@@ -113,6 +114,16 @@ class FileBrowser(BaseView, ListView):
             self.path = self.fs.mountpoint
         qs = File.objects.filter(dirname=self.path)
         return qs.order_by(u'-directory', u'name')
+
+    def get_context_data(self, **kwargs):
+        context = super(FileBrowser, self).get_context_data(**kwargs)
+        up_one = None
+        if self.path != self.fs.mountpoint:
+            up_one = os.path.dirname(self.path)
+        context.update({
+            'up_one': up_one
+        })
+        return context
 
 
 class FilesystemList(JSONResponseMixin, AjaxResponseMixin, BaseView,
