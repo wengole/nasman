@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import magic
 import mock
 import os
@@ -24,6 +24,7 @@ class TestCeleryTasks(TestCase):
         self.statinfo = os.stat(self.file_path)
         mtime = datetime.fromtimestamp(self.statinfo.st_mtime)
         self.mtime = pytz.timezone(get_default_timezone_name()).localize(mtime)
+        self.new_mtime = self.mtime + timedelta(minutes=1)
 
     def tearDown(self):
         os.remove(self.file_path)
@@ -49,3 +50,13 @@ class TestCeleryTasks(TestCase):
         )
         self.assertEqual(file_obj.magic, '')
         self.assertEqual(file_obj.mime_type, None)
+
+    @override_settings(CELERY_ALWAYS_EAGER=True)
+    def test_update_file(self):
+        create_file_object.delay(self.file_path).get()
+        file_obj = File.objects.get(
+            full_path=self.file_path
+        )
+        file_obj.modified = self.new_mtime
+        file_obj.save()
+        self.assertEqual(file_obj, self.new_mtime)
