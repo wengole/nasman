@@ -63,28 +63,6 @@ class DashboardView(JSONResponseMixin, AjaxResponseMixin,
     template_name = u'dashboard.html'
     headline = u'WiZFS Dashboard'
 
-    def get_ajax(self, request, *args, **kwargs):
-        """
-        AJAX call to get reindex task status
-
-        :return: JSON list of tasks
-        """
-        result = cache.get(u'reindex_result')
-        json_dict = {'state': 'NOTFOUND',
-                     'progress': 0.0,
-                     'total': 0,
-                     'done': 0}
-        if result is None:
-            return self.render_json_response(json_dict)
-        json_dict['state'] = result.state
-        if result.state == 'PROGRESS':
-            json_dict['progress'] = result.info['percentage']
-            json_dict['total'] = result.info['total']
-            json_dict['done'] = result.info['done']
-        elif result.state == 'SUCCESS':
-            json_dict['progress'] = 100.0
-        return self.render_json_response(json_dict)
-
 
 class FileBrowser(BaseView, ListView):
     model = File
