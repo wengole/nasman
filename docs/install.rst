@@ -66,4 +66,11 @@ Database Initialisation
     psql
     psql> alter role wizfs unencrypted password '{your password here}';
 
-Don't for get to update the settings.py with your database password
+Don't for get to update the settings.py with your database password.
+
+Then run the migrations:
+
+.. code-block:: bash
+
+    bin/manage migrate
+
