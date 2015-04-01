@@ -33,6 +33,8 @@ class ZFSHelper(object):
         :rtype: `list`
         """
         fs = self._get_pool_as_filesystem()
+        if fs is None:
+            return []
         snapshots = fs.iter_snapshots_sorted()
         return [{'name': x.name,
                 'parent': x.parent} for x in snapshots]
