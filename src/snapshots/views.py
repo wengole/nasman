@@ -1,6 +1,7 @@
 """
 Snapshot app views
 """
+from collections import defaultdict
 from datetime import datetime
 import magic
 import os
@@ -26,7 +27,7 @@ from vanilla import (TemplateView,
 from .mixins import SearchFormMixin
 from .utils import ZFSHelper
 from .forms import FilesystemForm, CrispyFacetedSearchForm
-from .models import File, Filesystem, Snapshot
+from .models import File, Filesystem, Snapshot, IconMapping
 from .tasks import reindex_filesystem
 
 
@@ -97,7 +98,9 @@ class FileBrowser(BaseView, TemplateView):
         if self.path is None:
             self.path = self.fs.mountpoint
         # TODO: List comprehension probably isn't most efficient here
-        # TODO: Icons
+        icon_mapping = defaultdict(lambda: 'fa-file-o', {
+            x.mime_type: x.icon for x in IconMapping.objects.all()
+        })
         object_list = [
             {'name': x,
              'full_path': '%s/%s' % (self.path, x),
@@ -111,7 +114,11 @@ class FileBrowser(BaseView, TemplateView):
              'modified': datetime.fromtimestamp(os.stat(
                  '%s/%s' % (self.path, x)).st_mtime),
              'size': os.stat(
-                 '%s/%s' % (self.path, x)).st_size
+                 '%s/%s' % (self.path, x)).st_size,
+             'icon': icon_mapping[magic.from_file(
+                 '%s/%s' % (self.path, x),
+                 mime=True),
+             ],
              } for x in os.listdir(self.path)
         ]
         object_list = sorted(object_list,
