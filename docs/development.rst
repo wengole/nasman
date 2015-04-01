@@ -16,8 +16,10 @@ The primary function of this project,
 is to allow convenient recovery of files from ZFS snapshots.
 
  * Search for files across "live" filesystem(s) and snapshots
+   
    - Done for live filesystem
  * Browse filesystems and snapshot
+   
    - Done for live filesystem
  * Recover files from snapshots to live filesystem
 
@@ -100,7 +102,8 @@ Possible backup options include:
  * Backups piped to xz/tar for compression
  * Backups piped to GnuPG or OpenSSL for encryption
  * Backup to a file to be stored on non-zfs filesystem
-     * Cloud, DVD, Bluray, dumb hard drive, etc.
+   
+   - Cloud, DVD, Bluray, dumb hard drive, etc.
  * Combinations of the above
  
 Perhaps even having access to cloud providers within the app to do this automatically.
