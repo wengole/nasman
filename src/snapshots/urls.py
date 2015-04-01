@@ -5,7 +5,7 @@ from .views.filesystems import FileBrowser, FilesystemList, FilesystemDetail
 from .views.filesystems import FilesystemCreate, FilesystemDelete
 from .views.filesystems import FilesystemUpdate
 from .views.search import SnapshotSearchView
-from .views.snapshots import SnapshotList
+from .views.snapshots import SnapshotList, SnapshotCreate
 
 
 urlpatterns = patterns(
@@ -22,6 +22,7 @@ urlpatterns = patterns(
     url(r'^filesystem/(?P<pk>\d+)/edit$', FilesystemUpdate.as_view(),
         name=u'edit-fs'),
     url(r'^snapshots$', SnapshotList.as_view(), name=u'snapshots'),
+    url(r'^snapshot/add$', SnapshotCreate.as_view(), name=u'add-snap'),
     url(r'^search$', SnapshotSearchView.as_view(),
         name=u'search'),
 )
