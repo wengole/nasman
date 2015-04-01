@@ -115,7 +115,7 @@ class FileBrowser(BaseView, TemplateView):
                     '%s/%s' % (self.path, x)).st_size,
                 'icon': icon_mapping[mime_type],
             })
-        object_list.sort(key=lambda k: (k['directory'], k['name']))
+        object_list.sort(key=lambda k: (not k['directory'], k['name']))
         dirs = self.path.split(os.path.sep)
         path = [
             {'path': '/'.join(dirs[:dirs.index(x) + 1]),
