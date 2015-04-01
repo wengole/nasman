@@ -1,30 +1,41 @@
 {% extends "base.html" %}
-{% load static %}{% load i18n %}
+{% load static i18n humanize %}
 
 {% block content %}
   {{ block.super }}
-  <div class="container">
-
-    <div class="row">
-      <div class="col-xs-12">
-        <h2>Users</h2>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-lg-12">
-        <div class="list-group">
-          {% for snapshot in snapshot_list %}
-            <a href="{% url 'snapshots:detail' snapshot.name %}"
-               class="list-group-item">
-              <p class="list-group-item-text">{{ snapshot.name }}</p>
-            </a>
-          {% endfor %}
-
-        </div>
-      </div>
-    </div>
-
+  <a href="{% url "wizfs:add-snap" %}"
+     class="btn btn-success btn-sm">Add snapshot</a>
+  <a href="{% url "wizfs:add-snap" %}?auto=1"
+     class="btn btn-success btn-sm">Auto add snapshots</a>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+      <tr>
+        <th>Name</th>
+        <th>Filesystem</th>
+        <th>Created</th>
+        <th style="text-align: right">Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for snap in object_list %}
+        <tr>
+          <td>
+            <a href="{% url "wizfs:edit-snap" pk=snap.pk %}">{{ snap.name }}</a>
+          </td>
+          <td>{{ snap.filesystem }}</td>
+          <td>{{ snap.timestamp|naturaltime }}</td>
+          <td>
+            <div class="pull-right">
+              <a class="btn btn-primary btn-xs"
+                 href="{% url "wizfs:snapshot" pk=snap.pk %}?reindex=1">Reindex</a>
+              <a class="btn btn-warning btn-xs"
+                 href="{% url "wizfs:delete-snap" pk=snap.pk %}">Delete</a>
+            </div>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
   </div>
-
 {% endblock content %}
