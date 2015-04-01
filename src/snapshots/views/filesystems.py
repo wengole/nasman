@@ -97,7 +97,6 @@ class FilesystemDetail(JSONResponseMixin, AjaxResponseMixin, MessageMixin,
 
 class FilesystemCreate(MessageMixin, BaseView, CreateView):
     model = Filesystem
-    fields = [u'name', u'mountpoint', u'parent']
     headline = u'Add New Filesystem'
     form_class = FilesystemForm
 
