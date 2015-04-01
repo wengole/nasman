@@ -97,6 +97,7 @@ class FileBrowser(BaseView, TemplateView):
         context = super(FileBrowser, self).get_context_data(**kwargs)
         if self.path is None:
             self.path = self.fs.mountpoint
+        self.path = os.path.normpath(self.path)
         icon_mapping = defaultdict(lambda: 'fa-file-o', {
             x.mime_type: x.icon for x in IconMapping.objects.all()
         })
@@ -106,7 +107,7 @@ class FileBrowser(BaseView, TemplateView):
                 '%s/%s' % (self.path, x), mime=True).decode('utf8')
             object_list.append({
                 'name': x,
-                'full_path': '%s/%s' % (self.path, x),
+                'full_path': os.path.join(self.path, x),
                 'directory': True if mime_type == 'inode/directory' else False,
                 'mime_type': mime_type,
                 'modified': datetime.fromtimestamp(os.stat(
@@ -116,9 +117,9 @@ class FileBrowser(BaseView, TemplateView):
                 'icon': icon_mapping[mime_type],
             })
         object_list.sort(key=lambda k: (not k['directory'], k['name']))
-        dirs = self.path.split(os.path.sep)
+        dirs = filter(None, self.path.split(os.path.sep))
         path = [
-            {'path': '/'.join(dirs[:dirs.index(x) + 1]),
+            {'path': os.path.normpath('/'.join(dirs[:dirs.index(x) + 1])),
              'name': x} for x in dirs
         ]
         up_one = None
