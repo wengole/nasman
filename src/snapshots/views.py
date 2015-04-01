@@ -38,10 +38,7 @@ app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 
 def get_status_dict(fs):
     status = fs.reindex_status
-    json_dict = {'state': 'NOTFOUND',
-                 'progress': 0.0,
-                 'total': 0,
-                 'done': 0}
+    json_dict = {'state': 'NOTFOUND', 'progress': 0.0, 'total': 0, 'done': 0}
     if status is None:
         return json_dict
     json_dict['state'] = status.state
@@ -84,9 +81,10 @@ class FileBrowser(BaseView, TemplateView):
         if self.path is None:
             self.path = self.fs.mountpoint
         self.path = os.path.normpath(self.path)
-        icon_mapping = defaultdict(lambda: 'fa-file-o', {
-            x.mime_type: x.icon for x in IconMapping.objects.all()
-        })
+        icon_mapping = defaultdict(
+            lambda: 'fa-file-o',
+            {x.mime_type: x.icon
+             for x in IconMapping.objects.all()})
         object_list = []
         for x in os.listdir(self.path):
             mime_type = magic.from_file(
@@ -96,18 +94,17 @@ class FileBrowser(BaseView, TemplateView):
                 'full_path': os.path.join(self.path, x),
                 'directory': True if mime_type == 'inode/directory' else False,
                 'mime_type': mime_type,
-                'modified': datetime.fromtimestamp(os.stat(
-                    '%s/%s' % (self.path, x)).st_mtime),
-                'size': os.stat(
-                    '%s/%s' % (self.path, x)).st_size,
+                'modified': datetime.fromtimestamp(
+                    os.stat('%s/%s' % (self.path, x)).st_mtime),
+                'size': os.stat('%s/%s' % (self.path, x)).st_size,
                 'icon': icon_mapping[mime_type],
             })
         object_list.sort(key=lambda k: (not k['directory'], k['name']))
         dirs = filter(None, self.path.split(os.path.sep))
-        path = [
-            {'path': os.path.normpath('/'.join(dirs[:dirs.index(x) + 1])),
-             'name': x} for x in dirs
-        ]
+        path = [{
+            'path': os.path.normpath('/'.join(dirs[:dirs.index(x) + 1])),
+            'name': x
+        } for x in dirs]
         up_one = None
         if self.path != self.fs.mountpoint:
             up_one = os.path.dirname(self.path)
@@ -119,8 +116,7 @@ class FileBrowser(BaseView, TemplateView):
         return context
 
 
-class FilesystemList(JSONResponseMixin, AjaxResponseMixin, BaseView,
-                     ListView):
+class FilesystemList(JSONResponseMixin, AjaxResponseMixin, BaseView, ListView):
     model = Filesystem
     headline = u'ZFS Filesystems'
 
@@ -130,9 +126,7 @@ class FilesystemList(JSONResponseMixin, AjaxResponseMixin, BaseView,
             json_dict = get_status_dict(fs)
             json_dict['id'] = fs.id
             filesystems.append(json_dict)
-        return self.render_json_response({
-            'filesystems': filesystems
-        })
+        return self.render_json_response({'filesystems': filesystems})
 
 
 class FilesystemDetail(JSONResponseMixin, AjaxResponseMixin, MessageMixin,
@@ -215,8 +209,7 @@ class SnapshotSearchView(BaseView, FacetedSearchView):
     def get_form_kwargs(self):
         sqs = SearchQuerySet().facet(u'directory')
         kwargs = super(SnapshotSearchView, self).get_form_kwargs()
-        kwargs.update({u'searchqueryset': sqs,
-                       u'data': self.request.REQUEST})
+        kwargs.update({u'searchqueryset': sqs, u'data': self.request.REQUEST})
         return kwargs
 
     def form_valid(self, form):
