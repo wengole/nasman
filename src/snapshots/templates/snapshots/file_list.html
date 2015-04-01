@@ -7,6 +7,12 @@
 
 {% block content %}
 {{ block.super }}
+<ol class="breadcrumb">
+  {% for directory in path %}
+    <li><a href="?path={{ directory.path }}">{{ directory.name }}</a></li>
+  {% endfor %}
+  <li class="active">{{ current_directory }}</li>
+</ol>
 <div class="table-responsive">
   <table class="table table-striped">
     <thead>
