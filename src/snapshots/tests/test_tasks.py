@@ -59,4 +59,4 @@ class TestCeleryTasks(TestCase):
         )
         file_obj.modified = self.new_mtime
         file_obj.save()
-        self.assertEqual(file_obj, self.new_mtime)
+        self.assertEqual(file_obj.modified, self.new_mtime)
