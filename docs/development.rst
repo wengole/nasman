@@ -53,6 +53,7 @@ there are many other useful possibilities that could be developed later:
  * Disk space usage analyser - find large files/folders
  * `Duplicate Finder`_
  * `System health dashboard`_
+ * `Backup to multiple locations`_
 
 Duplicate Finder
 ----------------
@@ -83,3 +84,23 @@ There aren't many (any?) good, simple monitoring tools "that just work" out the 
  * Monitor hardware - temp, disk health etc
  * Monitor pool(s) - disk space, faulted disks
  * Notifications
+ 
+Backup to multiple locations
+----------------------------
+
+Using zfs send and receive commands pools can be easily backed up whilst online.
+There are other tools that do this, but as wizfs will manage snapshots it makes 
+sense for it to manage backups.
+
+Possible backup options include:
+ 
+ * Mirroring pool to local or remote pool
+ * Incremental backup
+ * A customisable history of snapshots
+ * Backups piped to xz/tar for compression
+ * Backups piped to GnuPG or OpenSSL for encryption
+ * Backup to a file to be stored on non-zfs filesystem
+     * Cloud, DVD, Bluray, dumb hard drive, etc.
+ * Combinations of the above
+ 
+Perhaps even having access to cloud providers within the app to do this automatically.
