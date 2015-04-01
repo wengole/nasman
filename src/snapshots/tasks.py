@@ -62,10 +62,9 @@ def create_file_object(full_path, snapshot=None, directory=False):
 
 
 @shared_task(bind=True, track_started=True)
-def reindex_filesystem(self, fs_name):
+def walk_and_reindex(self, path):
     """
-    Task to walk a given filesystem (which may be a snapshot) and index all
-    files and directories within it
+    Task to walk a given path and index all files and directories within it
     """
     self.total_files = 0
     self.groups = []
@@ -112,27 +111,19 @@ def reindex_filesystem(self, fs_name):
             }
         )
 
-    # Don't reindex this filesystem if there's a reindex in progress
-    cache_key = u'reindex_%s_status' % fs_name
+    # Don't reindex this path if there's a reindex in progress
+    cache_key = u'reindex_status%s' % hashlib.sha1(path).hexdigest()[-6:]
     cached = cache.get(cache_key)
     if cached is not None and cached.state == 'RUNNING':
-        message = u'Already reindexing %s' % fs_name
+        message = u'Already reindexing %s' % path
         logger.warn(message)
         raise AlreadyRunning(message)
 
-    try:
-        fs = Filesystem.objects.get(
-            name=fs_name
-        )
-    except Filesystem.DoesNotExist as exc:
-        logger.error(u'Filesystem "%s" does not exist', fs_name)
-        raise exc
-
-    for dirname, subdirs, files in fs.walk_fs():
+    for dirname, subdirs, files in os.walk(path):
         logger.info(u'Adding subdirs for %s', dirname)
         self.total_files += len(subdirs)
         subdirs_job = group([create_file_object.s(
-            full_path='%s/%s' % (dirname, s),
+            full_path=os.path.join(dirname, s),
             directory=True
         ) for s in subdirs])
         self.groups.append(subdirs_job.apply_async())
@@ -141,7 +132,7 @@ def reindex_filesystem(self, fs_name):
         logger.info(u'Adding files for %s', dirname)
         self.total_files += len(files)
         files_job = group([create_file_object.s(
-            full_path='%s/%s' % (dirname, f)
+            full_path=os.path.join(dirname, f)
         ) for f in files])
         self.groups.append(files_job.apply_async())
         update_progress(self)
