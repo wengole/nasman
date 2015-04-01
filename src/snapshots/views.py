@@ -97,32 +97,25 @@ class FileBrowser(BaseView, TemplateView):
         context = super(FileBrowser, self).get_context_data(**kwargs)
         if self.path is None:
             self.path = self.fs.mountpoint
-        # TODO: List comprehension probably isn't most efficient here
         icon_mapping = defaultdict(lambda: 'fa-file-o', {
             x.mime_type: x.icon for x in IconMapping.objects.all()
         })
-        object_list = [
-            {'name': x,
-             'full_path': '%s/%s' % (self.path, x),
-             'dirname': self.path,
-             'directory': True if magic.from_file(
-                 '%s/%s' % (self.path, x),
-                 mime=True) == 'inode/directory' else False,
-             'mime_type': magic.from_file(
-                 '%s/%s' % (self.path, x),
-                 mime=True),
-             'modified': datetime.fromtimestamp(os.stat(
-                 '%s/%s' % (self.path, x)).st_mtime),
-             'size': os.stat(
-                 '%s/%s' % (self.path, x)).st_size,
-             'icon': icon_mapping[magic.from_file(
-                 '%s/%s' % (self.path, x),
-                 mime=True),
-             ],
-             } for x in os.listdir(self.path)
-        ]
-        object_list = sorted(object_list,
-                             key=lambda k: (not k['directory'], k['name']))
+        object_list = []
+        for x in os.listdir(self.path):
+            mime_type = magic.from_file(
+                '%s/%s' % (self.path, x), mime=True).decode('utf8')
+            object_list.append({
+                'name': x,
+                'full_path': '%s/%s' % (self.path, x),
+                'directory': True if mime_type == 'inode/directory' else False,
+                'mime_type': mime_type,
+                'modified': datetime.fromtimestamp(os.stat(
+                    '%s/%s' % (self.path, x)).st_mtime),
+                'size': os.stat(
+                    '%s/%s' % (self.path, x)).st_size,
+                'icon': icon_mapping[mime_type],
+            })
+        object_list.sort(key=lambda k: (k['directory'], k['name']))
         dirs = self.path.split(os.path.sep)
         path = [
             {'path': '/'.join(dirs[:dirs.index(x) + 1]),
