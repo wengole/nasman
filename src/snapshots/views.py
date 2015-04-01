@@ -1,6 +1,8 @@
 """
 Snapshot app views
 """
+from datetime import datetime
+import magic
 import os
 from braces.views import (JSONResponseMixin,
                           AjaxResponseMixin,
@@ -64,8 +66,11 @@ class DashboardView(JSONResponseMixin, AjaxResponseMixin,
     headline = u'WiZFS Dashboard'
 
 
-class FileBrowser(BaseView, ListView):
-    model = File
+class FileBrowser(BaseView, TemplateView):
+    """
+    Browse live filesystem using python os stblib
+    """
+    template_name = u'snapshots/file_list.html'
     headline = u'File Browser'
     fs = None
     path = None
@@ -87,19 +92,42 @@ class FileBrowser(BaseView, ListView):
             self.snapshot = Snapshot.objects.first()
         return super(FileBrowser, self).get(request, *args, **kwargs)
 
-    def get_queryset(self):
-        if self.path is None:
-            self.path = self.fs.mountpoint
-        qs = File.objects.filter(dirname=self.path)
-        return qs.order_by(u'-directory', u'name')
-
     def get_context_data(self, **kwargs):
         context = super(FileBrowser, self).get_context_data(**kwargs)
+        if self.path is None:
+            self.path = self.fs.mountpoint
+        # TODO: List comprehension probably isn't most efficient here
+        # TODO: Icons
+        object_list = [
+            {'name': x,
+             'full_path': '%s/%s' % (self.path, x),
+             'dirname': self.path,
+             'directory': True if magic.from_file(
+                 '%s/%s' % (self.path, x),
+                 mime=True) == 'inode/directory' else False,
+             'mime_type': magic.from_file(
+                 '%s/%s' % (self.path, x),
+                 mime=True),
+             'modified': datetime.fromtimestamp(os.stat(
+                 '%s/%s' % (self.path, x)).st_mtime),
+             'size': os.stat(
+                 '%s/%s' % (self.path, x)).st_size
+             } for x in os.listdir(self.path)
+        ]
+        object_list = sorted(object_list,
+                             key=lambda k: (not k['directory'], k['name']))
+        dirs = self.path.split(os.path.sep)
+        path = [
+            {'path': '/'.join(dirs[:dirs.index(x) + 1]),
+             'name': x} for x in dirs
+        ]
         up_one = None
         if self.path != self.fs.mountpoint:
             up_one = os.path.dirname(self.path)
         context.update({
-            'up_one': up_one
+            'up_one': up_one,
+            'object_list': object_list,
+            'path': path
         })
         return context
 
