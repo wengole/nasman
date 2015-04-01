@@ -3,33 +3,25 @@ Snapshot app views
 """
 from collections import defaultdict
 from datetime import datetime
-import magic
 import os
-from braces.views import (JSONResponseMixin,
-                          AjaxResponseMixin,
-                          SetHeadlineMixin, MessageMixin)
+
+from braces.views import JSONResponseMixin, AjaxResponseMixin, MessageMixin
 from celery import Celery
 from celery import states
 from django.conf import settings
 from django.core.urlresolvers import reverse_lazy
-from django.core.cache import cache
 from django.http import Http404
 from django.shortcuts import redirect, get_object_or_404
 from haystack.generic_views import FacetedSearchView
 from haystack.query import SearchQuerySet
-from vanilla import (TemplateView,
-                     ListView,
-                     DetailView,
-                     CreateView,
-                     DeleteView,
-                     UpdateView)
+import magic
+from vanilla import TemplateView, ListView, DetailView, CreateView, DeleteView
+from vanilla import UpdateView
 
-from .mixins import SearchFormMixin
+from .views.base import BaseView
 from .utils import ZFSHelper
 from .forms import FilesystemForm, CrispyFacetedSearchForm
-from .models import File, Filesystem, Snapshot, IconMapping
-from .tasks import reindex_filesystem
-
+from .models import Filesystem, Snapshot, IconMapping
 
 app = Celery('wizfs')
 app.config_from_object('django.conf:settings')
