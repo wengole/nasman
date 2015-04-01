@@ -7,7 +7,7 @@ reference
 Code Style
 ----------
 
- * PEP8 always
+* PEP8 always
 
 File recovery feature
 ---------------------
@@ -15,13 +15,13 @@ File recovery feature
 The primary function of this project,
 is to allow convenient recovery of files from ZFS snapshots.
 
- * Search for files across "live" filesystem(s) and snapshots
-   
-   - Done for live filesystem
- * Browse filesystems and snapshot
-   
-   - Done for live filesystem
- * Recover files from snapshots to live filesystem
+* Search for files across "live" filesystem(s) and snapshots
+
+  - Done for live filesystem
+* Browse filesystems and snapshot
+
+  - Done for live filesystem
+* Recover files from snapshots to live filesystem
 
 .. todo::
 
@@ -36,8 +36,8 @@ we need to make sure we don't index files that are the same live filesystem.
 
 To do this we determine the uniqueness of a file:
 
- * Filename + size + moditified time? Quite reliable and fast. Hash for good measure?
- * MD5 hash of file?
+* Filename + size + moditified time? Quite reliable and fast. Hash for good measure?
+* MD5 hash of file?
 
 References
 ^^^^^^^^^^
@@ -52,10 +52,10 @@ Planned Features
 As the primary use case is for ZFS based storage servers
 there are many other useful possibilities that could be developed later:
 
- * Disk space usage analyser - find large files/folders
- * `Duplicate Finder`_
- * `System health dashboard`_
- * `Backup to multiple locations`_
+* Disk space usage analyser - find large files/folders
+* `Duplicate Finder`_
+* `System health dashboard`_
+* `Backup to multiple locations`_
 
 Duplicate Finder
 ----------------
@@ -70,9 +70,9 @@ But they should have at least similar metadata.
 
 The plan therefore is to do the following:
 
- * Extract metadata from files whilst indexing them
- * Store the metadata in Xapian faceted
- * Use facets to determine duplicates
+* Extract metadata from files whilst indexing them
+* Store the metadata in Xapian faceted
+* Use facets to determine duplicates
 
 System health dashboard
 -----------------------
@@ -83,9 +83,9 @@ until something breaks.
 
 There aren't many (any?) good, simple monitoring tools "that just work" out the box
 
- * Monitor hardware - temp, disk health etc
- * Monitor pool(s) - disk space, faulted disks
- * Notifications
+* Monitor hardware - temp, disk health etc
+* Monitor pool(s) - disk space, faulted disks
+* Notifications
  
 Backup to multiple locations
 ----------------------------
@@ -96,14 +96,14 @@ sense for it to manage backups.
 
 Possible backup options include:
  
- * Mirroring pool to local or remote pool
- * Incremental backup
- * A customisable history of snapshots
- * Backups piped to xz/tar for compression
- * Backups piped to GnuPG or OpenSSL for encryption
- * Backup to a file to be stored on non-zfs filesystem
-   
-   - Cloud, DVD, Bluray, dumb hard drive, etc.
- * Combinations of the above
+* Mirroring pool to local or remote pool
+* Incremental backup
+* A customisable history of snapshots
+* Backups piped to xz/tar for compression
+* Backups piped to GnuPG or OpenSSL for encryption
+* Backup to a file to be stored on non-zfs filesystem
+
+  - Cloud, DVD, Bluray, dumb hard drive, etc.
+* Combinations of the above
  
 Perhaps even having access to cloud providers within the app to do this automatically.
