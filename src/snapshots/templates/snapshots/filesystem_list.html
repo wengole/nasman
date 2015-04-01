@@ -13,7 +13,6 @@
       <tr>
         <th>Name</th>
         <th>Mountpoint</th>
-        <th>Status</th>
         <th style="text-align: right">Actions</th>
       </tr>
       </thead>
@@ -23,21 +22,7 @@
           <td><a href="{% url "wizfs:edit-fs" pk=fs.pk %}">{{ fs.name }}</a></td>
           <td>{{ fs.mountpoint }}</td>
           <td>
-            <div class="progress">
-              <div class="progress-bar"
-                   role="progressbar"
-                   id="progress-bar-{{ fs.id }}">
-              </div>
-            </div>
-            <span class="done-files"
-                  id="done-files-{{ fs.id }}">123</span>&nbsp;/&nbsp;
-            <span class="total-files"
-                  id="total-files-{{ fs.id }}">456</span>
-          </td>
-          <td>
             <div class="pull-right">
-              <a class="btn btn-primary btn-xs"
-                 href="{% url "wizfs:filesystem" pk=fs.pk %}?reindex=1">Reindex</a>
               <a class="btn btn-warning btn-xs"
                  href="{% url "wizfs:delete-fs" pk=fs.pk %}">Delete</a>
             </div>
@@ -48,38 +33,3 @@
     </table>
   </div>
 {% endblock content %}
-{% block javascript %}
-  {{ block.super }}
-  <script type="text/javascript">
-    var ready_states = ['SUCCESS', 'NOTFOUND', 'FAILURE'];
-    function update_progress_bar() {
-      $.ajax({
-        dataType: 'json',
-        url: '{% url "wizfs:filesystems" %}',
-        method: 'GET',
-        success: function (result) {
-          $.each(result.filesystems, function (idx, val) {
-            var pb_id = '#progress-bar-' + val.id;
-            var done_id = '#done-files-' + val.id;
-            var total_id = '#total-files-' + val.id;
-            var pb = $(pb_id);
-            var done = $(done_id);
-            var total = $(total_id);
-            pb.attr('data-transitiongoal', val.progress).progressbar({
-              display_text: 'fill'
-            });
-            done.text(val.done);
-            total.text(val.total);
-          });
-          if (result.filesystems.every(function(elem, idx, arr) {
-                return ready_states.indexOf(elem.state) >= 0;
-              })) {
-            clearInterval(update_interval);
-          }
-        }
-      });
-    }
-    var update_interval = setInterval(update_progress_bar, 5000);
-    update_progress_bar();
-  </script>
-{% endblock javascript %}
