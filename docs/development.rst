@@ -23,9 +23,7 @@ is to allow convenient recovery of files from ZFS snapshots.
 
 .. todo::
 
-    * :ref:`indexing-snapshots`
-
-.. _indexing-snapshots
+    * `Indexing snapshots`_
 
 Indexing snapshots
 ++++++++++++++++++
@@ -46,10 +44,8 @@ As the primary use case is for ZFS based storage servers
 there are many other useful possibilities that could be developed later:
 
  * Disk space usage analyser - find large files/folders
- * :ref:`duplicate-finder-detail`
- * :ref:`system-health-dashboard`
-
-.. _duplicate-finder-detail
+ * `Duplicate Finder`_
+ * `System health dashboard`_
 
 Duplicate Finder
 ----------------
@@ -67,8 +63,6 @@ The plan therefore is to do the following:
  * Extract metadata from files whilst indexing them
  * Store the metadata in Xapian faceted
  * Use facets to determine duplicates
-
-.. _system-health-dashboard
 
 System health dashboard
 -----------------------
