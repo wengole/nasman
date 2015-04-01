@@ -1,16 +1,17 @@
 from __future__ import absolute_import
 from datetime import datetime
 from decimal import Decimal
+import hashlib
 import logging
+import magic
 import os
 
 from celery import group, shared_task, states
 from django.core.cache import cache
 from django.utils.timezone import get_default_timezone_name
-import magic
 import pytz
 
-from .models import File, Filesystem, IconMapping
+from .models import File, IconMapping
 
 
 logger = logging.getLogger(__name__)
