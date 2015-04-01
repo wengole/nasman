@@ -31,20 +31,13 @@ Indexing snapshots
 ++++++++++++++++++
 
 * WiZFS will eventually handle snapshot creation and rotation.
-A call to a view will create a snapshot, optionally recursively
-and rotate old ones.
+  A call to a view will create a snapshot, optionally recursively
+  and rotate old ones.
 
 * When a snapshot is created, we fire a task to index it.
-Likewise when one is deleted, remove it from the index.
+  Likewise when one is deleted, remove it from the index.
 
 * Indexing doesn't have to do anything fancy like hash files.
-
-References
-^^^^^^^^^^
-
-http://stackoverflow.com/a/14298190/1124450
-http://en.wikipedia.org/wiki/Universally_unique_identifier#Version_3_.28MD5_hash_.26_namespace.29
-https://django-pgfields.readthedocs.org/en/latest/fields.html#uuid-field
 
 Planned Features
 ----------------
