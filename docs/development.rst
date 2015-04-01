@@ -30,14 +30,14 @@ is to allow convenient recovery of files from ZFS snapshots.
 Indexing snapshots
 ++++++++++++++++++
 
-We're only interested in the "history" of files in the ZFS filesystem.
-As snapshots appear as an entire representation of the filesystem at a point in time,
-we need to make sure we don't index files that are the same live filesystem.
+* WiZFS will eventually handle snapshot creation and rotation.
+A call to a view will create a snapshot, optionally recursively
+and rotate old ones.
 
-To do this we determine the uniqueness of a file:
+* When a snapshot is created, we fire a task to index it.
+Likewise when one is deleted, remove it from the index.
 
-* Filename + size + moditified time? Quite reliable and fast. Hash for good measure?
-* MD5 hash of file?
+* Indexing doesn't have to do anything fancy like hash files.
 
 References
 ^^^^^^^^^^
