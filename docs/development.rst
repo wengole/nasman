@@ -37,6 +37,13 @@ To do this we determine the uniqueness of a file:
  * Filename + size + moditified time? Quite reliable and fast. Hash for good measure?
  * MD5 hash of file?
 
+References
+^^^^^^^^^^
+
+http://stackoverflow.com/a/14298190/1124450
+http://en.wikipedia.org/wiki/Universally_unique_identifier#Version_3_.28MD5_hash_.26_namespace.29
+https://django-pgfields.readthedocs.org/en/latest/fields.html#uuid-field
+
 Planned Features
 ----------------
 
