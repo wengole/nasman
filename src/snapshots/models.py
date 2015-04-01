@@ -37,7 +37,11 @@ class Snapshot(models.Model):
     Model representing a ZFS snapshot
     """
     name = models.CharField(u'name', max_length=255)
-    timestamp = models.DateTimeField(u'timestamp', null=True, blank=True)
+    timestamp = models.DateTimeField(
+        u'timestamp',
+        null=True,
+        auto_now_add=True
+    )
     filesystem = models.ForeignKey(u'Filesystem', related_name=u'snapshots')
 
     def __str__(self):
