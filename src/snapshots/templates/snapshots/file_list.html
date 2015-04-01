@@ -19,7 +19,6 @@
     <tr>
       <th class="col-md-1"></th>
       <th>Filename</th>
-      <th>Directory</th>
       <th>Type</th>
       <th>Size</th>
       <th>Modified</th>
@@ -32,12 +31,12 @@
         <td>
           <a href="?path={{ up_one }}">..</a>
         </td>
-        <td colspan="4"></td>
+        <td colspan="3"></td>
       </tr>
     {% endif %}
     {% for file in object_list %}
       <tr>
-        <td><i class="fa {{ file.mime_type.icon }}"></i></td>
+        <td><i class="fa {{ file.icon }}"></i></td>
         <td>
           {% if file.directory %}
           <a href="?path={{ file.full_path }}">{{ file.name }}</a>
@@ -45,7 +44,6 @@
           {{ file.name }}
           {% endif %}
         </td>
-        <td>{{ file.dirname }}</td>
         <td>{{ file.mime_type }}</td>
         <td>{{ file.size|filesizeformat }}</td>
         <td>{{ file.modified|naturaltime }}</td>
