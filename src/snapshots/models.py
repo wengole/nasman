@@ -30,36 +30,6 @@ class Filesystem(models.Model):
     def get_absolute_url(self):
         return reverse_lazy('wizfs:filesystem', kwargs={'pk': self.pk})
 
-    def walk_fs(self):
-        """
-        os.walk from the filesystem mountpoint
-
-        :returns: An `os.walk` instance starting from the mountpoint
-        """
-        return os.walk(self.mountpoint.encode('utf-8'))
-
-    @property
-    def reindex_cache_key(self):
-        """
-        Cache key for reindex job
-        """
-        return u'reindex_%s_status' % self.name
-
-    @property
-    def reindex_status(self):
-        """
-        Gets the cached `AsyncResult` of a reindex job
-        """
-        status = cache.get(self.reindex_cache_key)
-        return status
-
-    @reindex_status.setter
-    def reindex_status(self, status):
-        """
-        Sets the cached `AsyncResult` of a reindex job
-        """
-        cache.set(self.reindex_cache_key, status, None)
-
 
 @python_2_unicode_compatible
 class Snapshot(models.Model):
@@ -69,10 +39,6 @@ class Snapshot(models.Model):
     name = models.CharField(u'name', max_length=255)
     timestamp = models.DateTimeField(u'timestamp', null=True, blank=True)
     filesystem = models.ForeignKey(u'Filesystem', related_name=u'snapshots')
-
-    class Meta:
-        unique_together = ()
-        index_together = ()
 
     def __str__(self):
         return self.name
@@ -93,18 +59,10 @@ class Snapshot(models.Model):
 
     @property
     def mountpoint(self):
-        return u'%s/.zfs/snapshot/%s' % (
+        return os.path.join(
             self.filesystem.mountpoint,
             self.base_name
         )
-
-    def walk_snapshot(self):
-        """
-        os.walk from the snapshot
-
-        :returns: An `os.walk` instance starting from the snapshot
-        """
-        return os.walk(self.mountpoint.encode('utf-8'))
 
 
 @python_2_unicode_compatible
@@ -135,10 +93,6 @@ class File(models.Model):
     magic = models.CharField(u'magic', blank=True, max_length=255)
     modified = models.DateTimeField(u'modified')
     size = models.IntegerField(u'size', blank=True, null=True)
-
-    class Meta:
-        unique_together = ()
-        index_together = ()
 
     def save(self, **kwargs):
         self.full_path = os.path.normpath(self.full_path)
