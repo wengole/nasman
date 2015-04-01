@@ -53,20 +53,6 @@ def get_status_dict(fs):
     return json_dict
 
 
-class BaseView(SetHeadlineMixin, SearchFormMixin):
-    pass
-
-
-class DashboardView(JSONResponseMixin, AjaxResponseMixin,
-                    BaseView, TemplateView):
-    """
-    View for the homepage
-    """
-    http_method_names = [u'get']
-    template_name = u'dashboard.html'
-    headline = u'WiZFS Dashboard'
-
-
 class FileBrowser(BaseView, TemplateView):
     """
     Browse live filesystem using python os stblib
