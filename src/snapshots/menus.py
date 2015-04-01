@@ -4,7 +4,7 @@ from menu import MenuItem
 from menu import Menu
 
 
-def snapshots_menu(request):
+def filesystems_menu(request):
     menu = [
         MenuItem(
             title=u'File Browser',
@@ -21,11 +21,32 @@ def snapshots_menu(request):
 Menu.add_item(
     u'top_nav_left',
     MenuItem(
-        title=u'File',
+        title=u'Files',
         url=u'#',
-        children=snapshots_menu,
+        children=filesystems_menu,
         classes=u'dropdown',
         #TODO: Restrict showing menu
         # check=lambda x: True
+    )
+)
+
+
+def snapshots_menu(request):
+    menu = [
+        MenuItem(
+            title=u'Snapshots',
+            url=reverse(u'wizfs:snapshots')
+        )
+    ]
+    return menu
+
+
+Menu.add_item(
+    u'top_nav_left',
+    MenuItem(
+        title=u'Snapshots',
+        url=u'#',
+        children=snapshots_menu,
+        classes=u'dropdown'
     )
 )
