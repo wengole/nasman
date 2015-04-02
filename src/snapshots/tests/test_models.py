@@ -39,16 +39,6 @@ class TestSnapshotModel(TestCase):
         self.assertEqual(snapshot.base_name, u'foo-bar')
         self.assertEqual(snapshot.parent_name, self.test_pool)
 
-    def test_walk_snapshot(self):
-        snapshot = Snapshot.objects.create(
-            name=u'%s@foo-bar' % self.test_pool,
-            filesystem=self.test_fs
-        )
-        os.makedirs(u'%s/.zfs/snapshot/foo-bar/test-dir' % self.test_pool)
-        x = snapshot.walk_snapshot()
-        dirname, subdirs, filenames = next(x)
-        self.assertIn(u'test-dir', subdirs)
-
 
 class TestFileModel(TestCase):
 
