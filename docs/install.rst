@@ -34,25 +34,21 @@ This is left as an exercise to the user :) (for now)
 
     * Document how to set up Celery as a service (systemd, supervisor)
 
-Buildout
---------
+Installation
+------------
 
-This project uses buildout. Clone the project then from inside the project
-directory
+Clone the project, then from inside the project directory
 
 .. code-block:: bash
 
    virtualenv -p /usr/bin/python2 .
-   . bin/activate
-   python bootstrap.py
-   deactivate
-   bin/buildout
+   bin/pip install -r requirements/local.txt
 
-The traditional manage.py gets put into bin/
+Run ``mange.py`` with the virtualenv interpreter
 
 .. code-block:: bash
 
-   bin/manage runserver
+   bin/python manage.py runserver
 
 
 Database Initialisation
@@ -72,5 +68,5 @@ Then run the migrations:
 
 .. code-block:: bash
 
-    bin/manage migrate
+    bin/python manage.py migrate
 
