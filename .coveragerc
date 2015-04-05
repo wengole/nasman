@@ -1,6 +1,0 @@
-[report]
-omit =
-    */migrations/*
-    */pycharm_settings.py
-    src/snapshots/__init__.py
-    src/base/__init__.py
