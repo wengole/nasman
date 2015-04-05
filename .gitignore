@@ -42,3 +42,4 @@ share
 .floo*
 *.lock
 src/
+.idea/
