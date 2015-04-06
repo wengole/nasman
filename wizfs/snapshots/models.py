@@ -1,5 +1,3 @@
-from django import forms
-from django.core.cache import cache
 import os
 from django.core.urlresolvers import reverse_lazy
 from django.db import models
@@ -19,6 +17,9 @@ class Filesystem(models.Model):
         blank=True
     )
     mountpoint = models.CharField(u'mountpoint', max_length=255, blank=True)
+
+    class Meta:
+        app_label = 'snapshots'
 
     def save(self, **kwargs):
         self.mountpoint = os.path.normpath(self.mountpoint)
@@ -43,6 +44,9 @@ class Snapshot(models.Model):
         auto_now_add=True
     )
     filesystem = models.ForeignKey(u'Filesystem', related_name=u'snapshots')
+
+    class Meta:
+        app_label = 'snapshots'
 
     def __str__(self):
         return self.name
@@ -98,6 +102,9 @@ class File(models.Model):
     modified = models.DateTimeField(u'modified')
     size = models.IntegerField(u'size', blank=True, null=True)
 
+    class Meta:
+        app_label = 'snapshots'
+
     def save(self, **kwargs):
         self.full_path = os.path.normpath(self.full_path)
         self.dirname = os.path.normpath(self.dirname)
@@ -147,6 +154,9 @@ class IconMapping(models.Model):
         primary_key=True,
         db_index=True
     )
+
+    class Meta:
+        app_label = 'snapshots'
 
     def save(self, **kwargs):
         icon_mapping = {x[1]: x[0] for x in self.ICON_CHOICES}
