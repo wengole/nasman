@@ -36,7 +36,7 @@ class Snapshot(models.Model):
     """
     Model representing a ZFS snapshot
     """
-    name = models.CharField(u'name', max_length=255)
+    name = models.CharField(u'name', max_length=255, unique=True)
     timestamp = models.DateTimeField(
         u'timestamp',
         null=True,
