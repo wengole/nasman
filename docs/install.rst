@@ -40,6 +40,7 @@ Clone the project, then from inside the project directory
 .. code-block:: bash
 
    virtualenv -p /usr/bin/python2 .
+   bin/pip install cffi
    bin/pip install -r requirements/local.txt
 
 Run ``mange.py`` with the virtualenv interpreter

@@ -10,6 +10,7 @@ install:
   - sudo apt-get update > /dev/null
   - sudo apt-get install -qq libxapian22 xapian-tools python-xapian libzfs-dev
   - ln -s /usr/lib/python2.7/dist-packages/xapian $VIRTUAL_ENV/lib/python2.7/site-packages/.
+  - pip install cffi
   - pip install -r requirements/testing.txt
 before_script:
   - psql -c 'create database travis_ci_test;' -U postgres

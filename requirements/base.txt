@@ -2,7 +2,6 @@
 # After the first "pip install -r", just run "pip freeze" and add the version
 # to each package in each requirements/*.txt.
 Celery[redis]
-cffi
 dj_database_url
 django
 django-bootstrap-pagination
