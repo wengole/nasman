@@ -28,9 +28,7 @@ class Common(Configuration):
     )
     THIRD_PARTY_APPS = (
         'bootstrap_pagination',
-        'celery_haystack',
         'floppyforms',
-        'haystack',
         'menu',
     )
     WIZFS_APPS = (
@@ -79,15 +77,6 @@ class Common(Configuration):
             }
         },
     ]
-    HAYSTACK_CONNECTIONS = {
-        'default': {
-            'ENGINE': 'xapian_backend.XapianEngine',
-            'PATH': os.path.join(BASE_DIR, 'xapian_index'),
-        },
-    }
-    HAYSTACK_SIGNAL_PROCESSOR = 'celery_haystack.signals.CelerySignalProcessor'
-    CELERY_HAYSTACK_MAX_RETRIES = 20
-    CELERY_HAYSTACK_RETRY_DELAY = 2
     BROKER_URL = 'redis://localhost:6379/0'
     CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
     CELERY_ACCEPT_CONTENT = ['pickle', ]
@@ -182,7 +171,6 @@ class Server(Common):
 
 
 class Test(Common):
-    HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
     CACHES = {
         'default': {
             'BACKEND': 'django_redis.cache.RedisCache',
@@ -198,10 +186,4 @@ class Travis(Test):
     DATABASES = values.DatabaseURLValue(
         'postgres://postgres@127.0.0.1:5432/travis_ci_test'
     )
-    HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
-    CELERY_HAYSTACK_DEFAULT_TASK = 'celery_haystack.tasks.CeleryHaystackSignalHandler'
     CELERY_ALWAYS_EAGER = True
-    CELERY_HAYSTACK_TRANSACTION_SAFE = False
-    CELERY_HAYSTACK_DEFAULT_ALIAS = None
-    CELERY_HAYSTACK_MAX_RETRIES = 1
-    CELERY_HAYSTACK_RETRY_DELAY = 1

@@ -19,9 +19,7 @@ DJANGO_APPS = (
 THIRD_PARTY_APPS = (
     'debug_toolbar',
     'bootstrap_pagination',
-    'celery_haystack',
     'floppyforms',
-    'haystack',
     'menu',
 )
 WIZFS_APPS = (
@@ -67,15 +65,6 @@ TEMPLATES = [
         }
     },
 ]
-HAYSTACK_CONNECTIONS = {
-    'default': {
-        'ENGINE': 'xapian_backend.XapianEngine',
-        'PATH': os.path.join(BASE_DIR, 'xapian_index'),
-    },
-}
-HAYSTACK_SIGNAL_PROCESSOR = 'celery_haystack.signals.CelerySignalProcessor'
-CELERY_HAYSTACK_MAX_RETRIES = 20
-CELERY_HAYSTACK_RETRY_DELAY = 2
 BROKER_URL = 'redis://localhost:6379/0'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 CELERY_ACCEPT_CONTENT = ['pickle', ]

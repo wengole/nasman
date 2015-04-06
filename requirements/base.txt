@@ -1,16 +1,13 @@
 # Versions are left out on purpose in order for you to use the latest ones.
 # After the first "pip install -r", just run "pip freeze" and add the version
 # to each package in each requirements/*.txt.
-celery-haystack
 Celery[redis]
 dj_database_url
 django
 django-bootstrap-pagination
 django-braces
-django-celery-transactions<0.2
 django-debug-toolbar
 django-floppyforms
-django-haystack
 django-model-utils
 django-redis
 django-simple-menu
@@ -23,4 +20,3 @@ pyzfscore
 
 # Non pypi releases
 -e git+git@github.com:jezdez/django-configurations.git#egg=django-configurations
--e git+git@github.com:notanumber/xapian-haystack.git#egg=xapian-haystack

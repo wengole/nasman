@@ -23,11 +23,9 @@ Other dependencies
 
 These are installed by buildout
 
- * Xapian (search backend)
  * Celery (task queue)
 
-Xapian requires no further input from the user.
-Celery however should be configured to run as a service.
+Celery should be configured to run as a service.
 This is left as an exercise to the user :) (for now)
 
 .. todo::
@@ -69,4 +67,3 @@ Then run the migrations:
 .. code-block:: bash
 
     bin/python manage.py migrate
-
