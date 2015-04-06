@@ -1,9 +1,16 @@
+from datetime import datetime
+import os
+
+from dateutil import parser
 from django.utils.timezone import get_default_timezone_name
 import pytz
 import pyzfscore as zfs
-from dateutil import parser
 
-from snapshots.models import Snapshot, Filesystem
+from .models import Snapshot, Filesystem
+
+
+def root_directory():
+    return os.path.abspath(os.path.sep)
 
 
 class ZFSHelper(object):
@@ -12,7 +19,8 @@ class ZFSHelper(object):
     """
     timezone_name = get_default_timezone_name()
 
-    def _get_pool_as_filesystem(self):
+    @staticmethod
+    def _get_pool_as_filesystem():
         """
         Get the first available `ZPool` object and return it as a `ZFilesystem`
 
@@ -25,19 +33,18 @@ class ZFSHelper(object):
         fs = pools[0].to_filesystem()
         return fs
 
-    def get_snapshots(self):
+    def get_snapshots(self, fs=None):
         """
         Get a list of snapshot names from the first available pool
 
         :return: Snapshot names
         :rtype: `list`
         """
-        fs = self._get_pool_as_filesystem()
+        if fs is None:
+            fs = self._get_pool_as_filesystem()
         if fs is None:
             return []
-        snapshots = fs.iter_snapshots_sorted()
-        return [{'name': x.name,
-                'parent': x.parent} for x in snapshots]
+        return fs.iter_snapshots_sorted()
 
     def create_snapshot_objects(self):
         """
@@ -45,17 +52,31 @@ class ZFSHelper(object):
         """
         snapshots = self.get_snapshots()
         for snap in snapshots:
-            try:
-                ts = parser.parse(snap['name'], fuzzy=True)
-                ts = pytz.timezone(self.timezone_name).localize(ts)
-            except ValueError:
-                ts = None
-            fs = self.create_filesystem_object(snap['parent'])
-            Snapshot.objects.get_or_create(
-                name=snap['name'],
-                timestamp=ts,
-                filesystem=fs,
+            creation = datetime.fromtimestamp(
+                int(snap.props['creation'].value) * 1000
             )
+            try:
+                ts_from_name = parser.parse(
+                    snap.name,
+                    fuzzy=True
+                )
+            except ValueError:
+                ts = creation
+            else:
+                ts = creation if creation > ts_from_name else ts_from_name
+            ts = pytz.timezone(self.timezone_name).localize(ts)
+            fs = self.create_filesystem_object(snap.parent)
+            snap, created = Snapshot.objects.get_or_create(
+                name=snap.name,
+                defaults={
+                    'timestamp': ts,
+                    'filesystem': fs
+                }
+            )
+            if not created:
+                snap.timestamp = ts
+                snap.filesystem = fs
+                snap.save()
 
     def get_all_filesystems(self, filesystem=None):
         """
@@ -88,11 +109,13 @@ class ZFSHelper(object):
         if filesystem.parent_name is not None:
             parentfs = filesystem.parent
             parent = self.create_filesystem_object(parentfs)
-        fs, _ = Filesystem.objects.get_or_create(
+        fs, created = Filesystem.objects.get_or_create(
             name=filesystem.name,
-            parent=parent,
-            mountpoint=filesystem.is_mounted(),
         )
+        if not created:
+            fs.parent = parent
+            fs.mountpoint = filesystem.props['mountpoint'].value
+            fs.save()
         return fs
 
     def create_filesystem_objects(self):
