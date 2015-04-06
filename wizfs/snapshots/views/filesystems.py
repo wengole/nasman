@@ -12,7 +12,7 @@ from vanilla import UpdateView
 
 from ..forms import FilesystemForm
 from ..models import Filesystem, Snapshot, IconMapping
-from ..utils import ZFSHelper
+from ..utils import ZFSHelper, root_directory
 from ..views.base import BaseView
 
 
@@ -43,6 +43,9 @@ class FileBrowser(BaseView, TemplateView):
         return super(FileBrowser, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
+        """
+        Build the context data for the file browser
+        """
         context = super(FileBrowser, self).get_context_data(**kwargs)
         if self.path is None:
             self.path = self.fs.mountpoint
@@ -73,8 +76,12 @@ class FileBrowser(BaseView, TemplateView):
             ),
             'name': x
         } for x in dirs]
+        path.insert(0, {
+            u'name': u'root',
+            u'path': unicode(root_directory())
+        })
         up_one = None
-        if self.path != self.fs.mountpoint:
+        if self.path not in [self.fs.mountpoint, root_directory()]:
             up_one = os.path.dirname(self.path)
         context.update({
             'up_one': up_one,
