@@ -1,0 +1,12 @@
+{% load i18n menu %}
+{% generate_menu %}
+<ul class="nav navbar-nav">
+  {% with menu=menus.top_nav_left %}
+    {% include "nav/top-nav-items.html" %}
+  {% endwith %}
+</ul>
+<ul class="nav navbar-nav navbar-right">
+  {% with menu=menus.top_nav_right %}
+    {% include "nav/top-nav-items.html" %}
+  {% endwith %}
+</ul>

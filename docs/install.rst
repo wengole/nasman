@@ -23,36 +23,31 @@ Other dependencies
 
 These are installed by buildout
 
- * Xapian (search backend)
  * Celery (task queue)
 
-Xapian requires no further input from the user.
-Celery however should be configured to run as a service.
+Celery should be configured to run as a service.
 This is left as an exercise to the user :) (for now)
 
 .. todo::
 
     * Document how to set up Celery as a service (systemd, supervisor)
 
-Buildout
---------
+Installation
+------------
 
-This project uses buildout. Clone the project then from inside the project
-directory
+Clone the project, then from inside the project directory
 
 .. code-block:: bash
 
    virtualenv -p /usr/bin/python2 .
-   . bin/activate
-   python bootstrap.py
-   deactivate
-   bin/buildout
+   bin/pip install cffi
+   bin/pip install -r requirements/local.txt
 
-The traditional manage.py gets put into bin/
+Run ``mange.py`` with the virtualenv interpreter
 
 .. code-block:: bash
 
-   bin/manage runserver
+   bin/python manage.py runserver
 
 
 Database Initialisation
@@ -72,5 +67,4 @@ Then run the migrations:
 
 .. code-block:: bash
 
-    bin/manage migrate
-
+    bin/python manage.py migrate

@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% load staticfiles i18n %}
+
+{% block content %}
+  {{ block.super }}
+  {% include "base_form.html" %}
+{% endblock content %}
