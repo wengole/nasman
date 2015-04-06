@@ -19,4 +19,4 @@ pytz
 pyzfscore
 
 # Non pypi releases
--e git+git@github.com:jezdez/django-configurations.git#egg=django-configurations
+-e git+https://github.com/jezdez/django-configurations.git#egg=django-configurations
