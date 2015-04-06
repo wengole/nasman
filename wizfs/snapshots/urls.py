@@ -4,7 +4,11 @@ from .views.base import DashboardView
 from .views.filesystems import FileBrowser, FilesystemList, FilesystemDetail
 from .views.filesystems import FilesystemCreate, FilesystemDelete
 from .views.filesystems import FilesystemUpdate
-from .views.snapshots import SnapshotList, SnapshotCreate
+from .views.snapshots import (SnapshotList,
+                              SnapshotCreate,
+                              SnapshotUpdate,
+                              SnapshotDetail,
+                              SnapshotDelete)
 
 
 urlpatterns = patterns(
@@ -21,5 +25,11 @@ urlpatterns = patterns(
     url(r'^filesystem/(?P<pk>\d+)/edit$', FilesystemUpdate.as_view(),
         name=u'edit-fs'),
     url(r'^snapshots$', SnapshotList.as_view(), name=u'snapshots'),
+    url(r'^snapshot/(?P<pk>\d+)$', SnapshotDetail.as_view(),
+        name=u'snapshot'),
     url(r'^snapshot/add$', SnapshotCreate.as_view(), name=u'add-snap'),
+    url(r'^snapshot/(?P<pk>\d+)/edit$', SnapshotUpdate.as_view(),
+        name=u'edit-snap'),
+    url(r'^snapshot/(?P<pk>\d+)/delete$', SnapshotDelete.as_view(),
+        name=u'delete-snap'),
 )
