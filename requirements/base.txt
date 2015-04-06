@@ -8,7 +8,6 @@ django
 django-bootstrap-pagination
 django-braces
 django-celery-transactions<0.2
-#django-configurations
 django-debug-toolbar
 django-floppyforms
 django-haystack
@@ -21,7 +20,7 @@ python-dateutil
 python-magic
 pytz
 pyzfscore
-xapian-haystack
 
 # Non pypi releases
 -e git+git@github.com:jezdez/django-configurations.git#egg=django-configurations
+-e git+git@github.com:notanumber/xapian-haystack.git#egg=xapian-haystack

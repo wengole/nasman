@@ -1,11 +1,16 @@
 # -*- coding: utf-8 -*-
 import os
+import sys
 
 from configurations import Configuration, values
 
 
+BASE_DIR = os.path.dirname(__file__)
+sys.path.insert(0, os.path.join(BASE_DIR, 'wizfs'))
+
+
 class Common(Configuration):
-    BASE_DIR = os.path.dirname(__file__)
+    BASE_DIR = BASE_DIR
     SECRET_KEY = ('FftmF3EEwdCoJhqsCjpHUh2gPHXM83MhRTmnXDwyb8RbWxd5r4gXNwxM7eZ'
                   'nhJQP')
     DEBUG = True
