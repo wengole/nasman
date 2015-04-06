@@ -1,4 +1,3 @@
-from __future__ import absolute_import
 from datetime import datetime
 from decimal import Decimal
 import hashlib
@@ -10,7 +9,8 @@ from celery import group, shared_task, states
 from django.core.cache import cache
 from django.utils.timezone import get_default_timezone_name
 import pytz
-from snapshots.models import File, IconMapping
+
+from .models import File, IconMapping
 
 
 logger = logging.getLogger(__name__)

@@ -1,9 +1,10 @@
 import datetime
 
 from dateutil import tz
-import mock
 from django.test import TestCase
-from snapshots.models import Snapshot, Filesystem
+import mock
+
+from ..models import Snapshot, Filesystem
 from ..utils import ZFSHelper
 
 

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from snapshots.models import Snapshot, File, Filesystem, IconMapping
+from .models import Snapshot, File, Filesystem, IconMapping
 
 
 @admin.register(Snapshot)

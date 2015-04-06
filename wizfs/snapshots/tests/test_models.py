@@ -3,7 +3,7 @@ import os
 
 from django.test import TestCase
 from django.utils import timezone
-from snapshots.models import Snapshot, File, Filesystem
+from ..models import Snapshot, File, Filesystem
 
 
 class TestSnapshotModel(TestCase):

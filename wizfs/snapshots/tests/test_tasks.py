@@ -7,7 +7,8 @@ import pytz
 from django.test import TestCase
 from django.test.utils import override_settings
 from django.utils.timezone import get_default_timezone_name
-from snapshots.models import File
+
+from ..models import File
 from ..tasks import create_file_object
 
 
