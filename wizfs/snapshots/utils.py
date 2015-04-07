@@ -6,7 +6,7 @@ from django.utils.timezone import get_default_timezone_name
 import pytz
 import pyzfscore as zfs
 
-from .models import Snapshot, Filesystem
+from wizfs.snapshots.models import Snapshot, Filesystem
 
 
 def root_directory():
@@ -114,7 +114,7 @@ class ZFSHelper(object):
         )
         if not created:
             fs.parent = parent
-            fs.mountpoint = filesystem.props['mountpoint'].value
+            fs.mountpoint = filesystem.is_mounted()
             fs.save()
         return fs
 

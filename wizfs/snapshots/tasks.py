@@ -10,7 +10,7 @@ from django.core.cache import cache
 from django.utils.timezone import get_default_timezone_name
 import pytz
 
-from .models import File, IconMapping
+from wizfs.snapshots.models import File, IconMapping
 
 
 logger = logging.getLogger(__name__)

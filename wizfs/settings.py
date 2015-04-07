@@ -32,7 +32,7 @@ class Common(Configuration):
         'menu',
     )
     WIZFS_APPS = (
-        'snapshots',
+        'wizfs.snapshots',
     )
     INSTALLED_APPS = WIZFS_APPS + DJANGO_APPS + THIRD_PARTY_APPS
     MIDDLEWARE_CLASSES = (
@@ -43,7 +43,7 @@ class Common(Configuration):
         'django.middleware.common.CommonMiddleware',
         'django.middleware.csrf.CsrfViewMiddleware',
     )
-    ROOT_URLCONF = 'urls'
+    ROOT_URLCONF = 'wizfs.urls'
     DATABASES = values.DatabaseURLValue(
         'postgres://wizfs:wizfs@127.0.0.1:5432/wizfs'
     )
