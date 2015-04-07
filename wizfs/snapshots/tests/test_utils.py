@@ -59,7 +59,7 @@ class TestZFSHelper(TestCase):
         MockZPool.list.return_value = [self.pool]
         util = ZFSHelper()
         snapshots = util.get_snapshots()
-        snapshots = [x['name'] for x in snapshots]
+        snapshots = [x.name for x in snapshots]
         self.assertEqual(
             snapshots,
             ['pool@zfs-auto-snap_frequent-2015-01-15-1215',
