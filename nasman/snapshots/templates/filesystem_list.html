@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load staticfiles i18n %}
+
+{% block content %}
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+      <tr>
+        <th>Name</th>
+        <th>Mountpoint</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for fs in object_list %}
+        <tr>
+          <td>{{ fs.name }}</td>
+          <td>{{ fs.mountpoint }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock content %}

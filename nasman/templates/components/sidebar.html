@@ -1,0 +1,17 @@
+{% load staticfiles i18n sitetree %}
+
+<aside class="main-sidebar">
+
+  <!-- sidebar: style can be found in sidebar.less -->
+  <section class="sidebar">
+
+    <!-- Sidebar user panel (optional) -->
+{#    {% include "components/sidebar/user_panel.html" %}#}
+
+    <!-- search form (Optional) -->
+    {% include "components/sidebar/search_form.html" %}
+
+    <!-- Sidebar Menu -->
+    {% sitetree_tree from "sidebar" template "components/sidebar/menu.html" %}
+  </section>
+</aside>
