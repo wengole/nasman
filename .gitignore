@@ -56,11 +56,7 @@ venv
 *.iws
 .idea/
 
-nasman/settings/local.py
-nasman/settings/production.py
-
 # collect static output directory
-nasman/assets/
 nasman/static/
 
 .DS_Store
