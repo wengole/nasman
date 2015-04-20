@@ -29,17 +29,9 @@ class ZFSFilesystem(BaseFilesystem):
     def mountpoint(self):
         return self._mountpoint
 
-    @mountpoint.setter
-    def mountpoint(self, value):
-        self._mountpoint = value
-
     @property
     def name(self):
         return self._name
-
-    @name.setter
-    def name(self, value):
-        self._name = value
 
 
 class ZFSSnapshot(BaseSnapshot):
