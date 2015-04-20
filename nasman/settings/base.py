@@ -64,9 +64,8 @@ WSGI_APPLICATION = 'nasman.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'HOST': '127.0.0.1',
-        'NAME': 'nasman',
-        'PASSWORD': 'nasman',
+        'HOST': 'db',
+        'NAME': 'postgres',
         'PORT': 5432,
         'TEST': {
             'CHARSET': None,
@@ -75,7 +74,7 @@ DATABASES = {
             'NAME': None
         },
         'TIME_ZONE': 'UTC',
-        'USER': 'nasman'
+        'USER': 'postgres'
     }
 }
 
@@ -128,8 +127,8 @@ TEMPLATES = [
 TEMPLATE_DIRS = (
     root('templates'),
 )
-BROKER_URL = 'redis://localhost:6379/0'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+BROKER_URL = 'redis://redis:6379/0'
+CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
 CELERY_ACCEPT_CONTENT = ['pickle', ]
 CELERYD_PREFETCH_MULTIPLIER = 1
 LOGGING = {
@@ -165,7 +164,7 @@ LOGGING = {
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379/1',
+        'LOCATION': 'redis://redis:6379/1',
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         }

@@ -1,0 +1,24 @@
+db:
+  image: postgres
+redis:
+  image: redis
+web:
+  build: .
+  command: python manage.py runserver 0.0.0.0:8000
+  volumes:
+    - .:/srv
+  ports:
+    - "8000:8000"
+  links:
+    - db
+    - redis
+  privileged: true
+celery:
+  image: nasman_web
+  environment:
+    - C_FORCE_ROOT=1
+  volumes_from:
+    - web
+  command: celery -A nasman worker -l info -Ofair -C
+  links:
+    - redis

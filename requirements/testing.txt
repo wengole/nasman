@@ -1,5 +1,0 @@
--r base.txt
-
-coveralls
-mock
-model-mommy
