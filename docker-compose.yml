@@ -1,0 +1,7 @@
+web:
+  extends:
+    file: common.yml
+    service: web
+  command: python manage.py runserver 0.0.0.0:8000
+  volumes:
+    - .:/srv
