@@ -6,6 +6,7 @@ from os.path import join, abspath, dirname
 here = lambda *x: join(abspath(dirname(__file__)), *x)
 PROJECT_ROOT = here("..")
 root = lambda *x: join(abspath(PROJECT_ROOT), *x)
+show_if_debug = lambda *x: DEBUG
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -16,6 +17,9 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 INTERNAL_IPS = ('127.0.0.1',)
 ALLOWED_HOSTS = []
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TOOLBAR_CALLBACK': show_if_debug
+}
 
 # Application definition
 
