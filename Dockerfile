@@ -12,7 +12,3 @@ ENV PYTHONUNBUFFERED 1
 COPY requirements.txt /srv/
 WORKDIR /srv
 RUN pip install -r requirements.txt
-
-# Run Django migrations and django-sitetree sync
-RUN python manage.py migrate
-RUN python manage.py sitetree_resync_apps

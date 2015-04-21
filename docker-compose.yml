@@ -1,3 +1,7 @@
+db:
+  image: postgres
+redis:
+  image: redis
 web:
   extends:
     file: common.yml
@@ -5,3 +9,16 @@ web:
   command: python manage.py runserver 0.0.0.0:8000
   volumes:
     - .:/srv
+  links:
+    - db
+    - redis
+celery:
+  image: nasman_web
+  environment:
+    - C_FORCE_ROOT=1
+  command: celery -A nasman worker -l info -Ofair -C
+  volumes_from:
+    - web
+  links:
+    - redis
+    - db
