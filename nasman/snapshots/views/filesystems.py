@@ -45,7 +45,7 @@ class FileBrowser(BaseView, TemplateView):
         for x in self.path.iterdir():
             mime_type = magic.from_file(str(x), mime=True).decode('utf8')
             object_list.append({
-                'name': x,
+                'name': x.name,
                 'full_path': x,
                 'directory': x.is_dir(),
                 'mime_type': mime_type,
@@ -54,10 +54,10 @@ class FileBrowser(BaseView, TemplateView):
                 'icon': icon_mapping[mime_type],
             })
         object_list.sort(key=lambda k: (not k['directory'], k['name']))
-        path = [self.path.root] + sorted([Path(x) for x in self.path.parents])
+        path = sorted(self.path.parents) + [self.path]
         up_one = None
         if self.path not in [self.fs.mountpoint, self.path.root]:
-            up_one = self.path
+            up_one = self.path.parent
         context.update({
             'up_one': up_one,
             'object_list': object_list,
