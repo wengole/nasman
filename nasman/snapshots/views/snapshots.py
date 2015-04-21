@@ -6,7 +6,7 @@ from vanilla import FormView, TemplateView
 from ..forms import SnapshotForm
 from .base import BaseView
 from nasman.snapshots import tasks
-from ..utils import ZFSUtil
+from ..utils.zfs import ZFSUtil
 
 
 class SnapshotCreate(MessageMixin, BaseView, FormView):

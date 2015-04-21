@@ -2,17 +2,12 @@ from datetime import datetime
 import logging
 from subprocess import check_output, CalledProcessError
 
-import os
 import pytz
 
-from .base import BaseUtil, BaseFilesystem, BaseSnapshot
+from ..base import BaseUtil, BaseFilesystem, BaseSnapshot
 
 
 logger = logging.getLogger(__name__)
-
-
-def root_directory():
-    return os.path.abspath(os.path.sep)
 
 
 def _parse_cmd_output(cmd):
@@ -22,16 +17,6 @@ def _parse_cmd_output(cmd):
         logger.error('Failed to pass command %s', ' '.join(cmd))
         return None
     return [x.split() for x in output.decode('utf-8').splitlines()]
-
-
-class ZFSFilesystem(BaseFilesystem):
-    @property
-    def mountpoint(self):
-        return self._mountpoint
-
-    @property
-    def name(self):
-        return self._name
 
 
 class ZFSSnapshot(BaseSnapshot):
@@ -65,6 +50,16 @@ class ZFSSnapshot(BaseSnapshot):
     def mountpoint(self):
         fs = ZFSUtil.get_filesystem(self.parent_name)
         return fs.mountpoint
+
+
+class ZFSFilesystem(BaseFilesystem):
+    @property
+    def mountpoint(self):
+        return self._mountpoint
+
+    @property
+    def name(self):
+        return self._name
 
 
 class ZFSUtil(BaseUtil):
@@ -125,7 +120,7 @@ class ZFSUtil(BaseUtil):
         :param fs_name: Name of the filesystem to get
         :type fs_name: basestring
         :return: A `ZFSFilesystem`
-        :rtype: `ZFSFilesystem`
+        :rtype: `nasman.snapshots.zfs.ZFSFilesystem`
         """
         parsed = _parse_cmd_output(
             ['zfs',
@@ -146,7 +141,7 @@ class ZFSUtil(BaseUtil):
         :param snap_name: Name of the snapshot to get
         :type snap_name: basestring
         :return: A `ZFSSnapshot`
-        :rtype: `ZFSSnapshot`
+        :rtype: `nasman.snapshots.zfs.ZFSSnapshot`
         """
         parsed = _parse_cmd_output(
             ['zfs',

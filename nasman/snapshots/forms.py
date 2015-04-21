@@ -1,5 +1,5 @@
 import floppyforms as forms
-from nasman.snapshots.utils import ZFSUtil
+from .utils.zfs import ZFSUtil
 
 
 def filesystem_choices():
