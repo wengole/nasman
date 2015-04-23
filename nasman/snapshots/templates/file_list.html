@@ -11,12 +11,12 @@
   {% for directory in path %}
     {% if forloop.first %}
       <li{% if foorloop.last %} class="active"{% endif %}>
-        <a href="?path={{ directory.path }}"><i class="fa fa-folder"></i></a>
+      <a href="?path={{ directory }}"><i class="fa fa-folder"></i></a>
       </li>
     {% else %}
     <li{% if forloop.last %} class="active"{% endif %}>
       {% if not forloop.last%}
-        <a href="?path={{ directory.path }}">
+        <a href="?path={{ directory }}">
       {% endif %}
       {{ directory.name }}
       {% if not forloop.last %}
