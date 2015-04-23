@@ -35,7 +35,7 @@ class FileBrowser(BaseView, TemplateView):
         """
         context = super(FileBrowser, self).get_context_data(**kwargs)
         if self.path is None:
-            self.path = Path(self.fs.mountpoint)
+            self.path = Path(self.fs.mountpoint).root
         self.path = Path(self.path)
         icon_mapping = defaultdict(
             lambda: 'fa-file-o',
