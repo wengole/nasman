@@ -6,12 +6,24 @@
   <section class="sidebar">
 
     <!-- Sidebar user panel (optional) -->
-{#    {% include "components/sidebar/user_panel.html" %}#}
+    {#    {% include "components/sidebar/user_panel.html" %}#}
 
     <!-- search form (Optional) -->
     {% include "components/sidebar/search_form.html" %}
 
     <!-- Sidebar Menu -->
     {% sitetree_tree from "sidebar" template "components/sidebar/menu.html" %}
+
+    <!-- Sidebar context -->
+    {% block sidebar_context %}
+      {% if extra_sidebar %}
+        <ul class="sidebar-menu">
+          <li class="header">{{ extra_sidebar.header }}</li>
+          {% for item in extra_sidebar.list %}
+            <li>{{ item }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endblock sidebar_context %}
   </section>
 </aside>
