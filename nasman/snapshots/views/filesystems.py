@@ -3,19 +3,21 @@ from datetime import datetime
 from collections import defaultdict
 import magic
 from pathlib import Path
-from vanilla import TemplateView
+from vanilla import TemplateView, FormView
 
 from ..models import IconMapping
+from ..forms import FileBrowserForm
 from ..utils.zfs import ZFSUtil
 from ..views.base import BaseView
 
 
-class FileBrowser(BaseView, TemplateView):
+class FileBrowser(BaseView, FormView):
     """
     Browse live filesystem using python os stdlib
     """
     template_name = 'file_list.html'
     headline = 'File Browser'
+    form_class = FileBrowserForm
     fs = None
     path = None
     snapshot = None
