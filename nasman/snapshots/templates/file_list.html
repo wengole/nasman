@@ -6,7 +6,6 @@
 {% block page-title %}File Browser{% endblock %}
 
 {% block content %}
-{{ block.super }}
 <ol class="breadcrumb">
   {% for directory in path %}
     {% if forloop.first %}
@@ -26,6 +25,15 @@
     {% endif %}
   {% endfor %}
 </ol>
+<div class="box">
+<div class="box-header with-border">
+  {% with path|last as current_path %}
+    <h3 class="box-title">{{ current_path }}</h3>
+  {% endwith %}
+  <div class="box-tools pull-right">
+    {{ form.filesystem }}
+  </div>
+</div>
 <div class="table-responsive">
   <table class="table table-striped">
     <thead>
@@ -64,5 +72,6 @@
     {% endfor %}
     </tbody>
   </table>
+</div>
 </div>
 {% endblock content %}
