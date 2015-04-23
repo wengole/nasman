@@ -6,74 +6,74 @@
 {% block page-title %}File Browser{% endblock %}
 
 {% block content %}
-<ol class="breadcrumb">
-  {% for directory in path %}
-    {% if forloop.first %}
-      <li{% if foorloop.last %} class="active"{% endif %}>
-      <a href="?path={{ directory }}"><i class="fa fa-folder"></i></a>
-      </li>
-    {% else %}
-    <li{% if forloop.last %} class="active"{% endif %}>
-      {% if not forloop.last%}
-        <a href="?path={{ directory }}">
-      {% endif %}
-      {{ directory.name }}
-      {% if not forloop.last %}
-        </a>
-      {% endif %}
-    </li>
-    {% endif %}
-  {% endfor %}
-</ol>
-<div class="box">
-<div class="box-header with-border">
-  {% with path|last as current_path %}
-    <h3 class="box-title">{{ current_path }}</h3>
-  {% endwith %}
-  <div class="box-tools pull-right">
-    {{ form.filesystem }}
-  </div>
-</div>
-<div class="table-responsive">
-  <table class="table table-striped">
-    <thead>
-    <tr>
-      <th class="col-md-1"></th>
-      <th>Filename</th>
-      <th>Type</th>
-      <th>Size</th>
-      <th>Modified</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% if up_one %}
-      <tr>
-        <td><i class="fa fa-folder-open-o"></i></td>
-        <td>
-          <a href="?path={{ up_one }}">..</a>
-        </td>
-        <td colspan="3"></td>
-      </tr>
-    {% endif %}
-    {% for file in object_list %}
-      <tr>
-        <td><i class="fa {{ file.icon }}"></i></td>
-        <td>
-          {% if file.directory %}
-          <a href="?path={{ file.full_path }}">{{ file.name }}</a>
-          {% else %}
-          {{ file.name }}
+  <ol class="breadcrumb">
+    {% for directory in path %}
+      {% if forloop.first %}
+        <li{% if foorloop.last %} class="active"{% endif %}>
+          <a href="?path={{ directory }}"><i class="fa fa-folder"></i></a>
+        </li>
+      {% else %}
+        <li{% if forloop.last %} class="active"{% endif %}>
+          {% if not forloop.last %}
+            <a href="?path={{ directory }}">
           {% endif %}
-        </td>
-        <td>{{ file.mime_type }}</td>
-        <td>{{ file.size|filesizeformat }}</td>
-        <td>{{ file.modified|naturaltime }}</td>
-      </tr>
+          {{ directory.name }}
+          {% if not forloop.last %}
+            </a>
+          {% endif %}
+        </li>
+      {% endif %}
     {% endfor %}
-    </tbody>
-  </table>
-</div>
-</div>
+  </ol>
+  <div class="box">
+    <div class="box-header with-border">
+      {% with path|last as current_path %}
+        <h3 class="box-title">{{ current_path }}</h3>
+      {% endwith %}
+      <div class="box-tools pull-right">
+        {{ form.filesystem }}
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th class="col-md-1"></th>
+          <th>Filename</th>
+          <th>Type</th>
+          <th>Size</th>
+          <th>Modified</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if up_one %}
+          <tr>
+            <td><i class="fa fa-folder-open-o"></i></td>
+            <td>
+              <a href="?path={{ up_one }}">..</a>
+            </td>
+            <td colspan="3"></td>
+          </tr>
+        {% endif %}
+        {% for file in object_list %}
+          <tr>
+            <td><i class="fa {{ file.icon }}"></i></td>
+            <td>
+              {% if file.directory %}
+                <a href="?path={{ file.full_path }}">{{ file.name }}</a>
+              {% else %}
+                {{ file.name }}
+              {% endif %}
+            </td>
+            <td>{{ file.mime_type }}</td>
+            <td>{{ file.size|filesizeformat }}</td>
+            <td>{{ file.modified|naturaltime }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
 {% endblock content %}
 
 {% block javascript %}
