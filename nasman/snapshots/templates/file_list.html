@@ -75,3 +75,8 @@
 </div>
 </div>
 {% endblock content %}
+
+{% block javascript %}
+  {{ block.super }}
+  {% include "file_list_js.html" %}
+{% endblock javascript %}
