@@ -1,7 +1,9 @@
 db:
   image: postgres
+  restart: always
 redis:
   image: redis
+  restart: always
 web:
   extends:
     file: common.yml
@@ -22,3 +24,4 @@ celery:
   links:
     - redis
     - db
+  restart: always
