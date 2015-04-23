@@ -1,7 +1,15 @@
 <script type="application/javascript">
-  var fs_select = $('select#id_filesystem');
-  fs_select.change(function ()
+  $('select#id_filesystem').change(function ()
   {
-    console.debug(fs_select.val());
+    $('#id_path').val('');
+    $('#filebrowser-form').submit();
   });
+
+  $('.file-link, .breadcrumb-link').each(function () {
+    $(this).click(function() {
+      $('select#id_filesystem').val('None');
+      $('#id_path').val($(this).attr('data-target'));
+      $('#filebrowser-form').submit();
+    });
+  })
 </script>

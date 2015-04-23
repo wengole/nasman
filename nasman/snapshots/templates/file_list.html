@@ -10,12 +10,12 @@
     {% for directory in path %}
       {% if forloop.first %}
         <li{% if foorloop.last %} class="active"{% endif %}>
-          <a href="?path={{ directory }}"><i class="fa fa-folder"></i></a>
+          <a class="breadcrumb-link" data-target="{{ directory }}"><i class="fa fa-folder"></i></a>
         </li>
       {% else %}
         <li{% if forloop.last %} class="active"{% endif %}>
           {% if not forloop.last %}
-            <a href="?path={{ directory }}">
+            <a class="breadcrumb-link" data-target="{{ directory }}">
           {% endif %}
           {{ directory.name }}
           {% if not forloop.last %}
@@ -25,6 +25,8 @@
       {% endif %}
     {% endfor %}
   </ol>
+  <form method="post" id="filebrowser-form">
+  {% csrf_token %}
   <div class="box">
     <div class="box-header with-border">
       {% with path|last as current_path %}
@@ -34,8 +36,8 @@
         {{ form.filesystem }}
       </div>
     </div>
-    <div class="table-responsive">
-      <table class="table table-striped">
+    <div class="box-body table-responsive no-padding">
+      <table class="table table-striped table-hover">
         <thead>
         <tr>
           <th class="col-md-1"></th>
@@ -50,7 +52,7 @@
           <tr>
             <td><i class="fa fa-folder-open-o"></i></td>
             <td>
-              <a href="?path={{ up_one }}">..</a>
+              <a class="file-link" data-target="{{ up_one }}">..</a>
             </td>
             <td colspan="3"></td>
           </tr>
@@ -60,7 +62,7 @@
             <td><i class="fa {{ file.icon }}"></i></td>
             <td>
               {% if file.directory %}
-                <a href="?path={{ file.full_path }}">{{ file.name }}</a>
+                <a class="file-link" data-target="{{ file.full_path }}">{{ file.name }}</a>
               {% else %}
                 {{ file.name }}
               {% endif %}
@@ -73,7 +75,10 @@
         </tbody>
       </table>
     </div>
-  </div>
+    </div>
+  {{ form.path }}
+  {{ form.snapshot }}
+  </form>
 {% endblock content %}
 
 {% block javascript %}

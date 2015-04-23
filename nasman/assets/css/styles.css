@@ -1,1 +1,3 @@
-/*! project specific CSS goes here. */
+a.file-link, a.breadcrumb-link {
+    cursor: pointer;
+}
