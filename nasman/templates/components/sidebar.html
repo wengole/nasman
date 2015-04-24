@@ -20,7 +20,7 @@
         <ul class="sidebar-menu" id="{{ extra_sidebar.id }}">
           <li class="header">{{ extra_sidebar.header|upper }}</li>
           {% for item in extra_sidebar.list %}
-            <li><a data-target="{{ item.link }}">{{ item.title }}</a></li>
+            <li><a data-target="{{ item.link }}" class="sidebar-link">{{ item.title }}</a></li>
           {% endfor %}
         </ul>
       {% endif %}

@@ -31,6 +31,12 @@ class FilesystemField(forms.ChoiceField):
             return ZFSUtil.get_filesystem(value)
 
 
+class SnapshotField(forms.ChoiceField):
+    def clean(self, value):
+        if value is not None:
+            return ZFSUtil.get_snapshot(value)
+
+
 class PathField(forms.Field):
     def clean(self, value):
         if value is not None:
@@ -54,5 +60,5 @@ class FileBrowserForm(forms.Form):
         choices=filesystem_choices,
         widget=SmallSelectWidget
     )
-    snapshot = forms.CharField(widget=forms.HiddenInput)
+    snapshot = SnapshotField(widget=forms.HiddenInput)
     path = PathField(widget=forms.HiddenInput)

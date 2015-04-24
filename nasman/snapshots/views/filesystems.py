@@ -1,7 +1,6 @@
 from datetime import datetime
 from pathlib import Path
 
-from braces.views import CsrfExemptMixin
 from collections import defaultdict
 from django.core.urlresolvers import reverse_lazy
 import magic
@@ -22,25 +21,16 @@ class FileBrowser(BaseView, FormView):
     form_class = FileBrowserForm
     success_url = reverse_lazy('nasman:file-browser')
 
-    # def get_form(self, data=None, files=None, **kwargs):
-    #     if data is None:
-    #         initial = {
-    #             'path': '/'
-    #         }
-    #     form = self.get_form_class()(data, initial=initial)
-    #     form.is_valid()
-    #     return form
-
     def get_context_data(self, **kwargs):
         """
         Build the context data for the file browser
         """
         context = super(FileBrowser, self).get_context_data(**kwargs)
         form = context['form']
-        form.is_valid()
-        path = form.cleaned_data.get('path')
-        filesystem = form.cleaned_data.get('filesystem')
-        snapshot = form.cleaned_data.get('snapshot')
+        if form.is_bound:
+            form.is_valid()
+            # filesystem = form.cleaned_data.get('filesystem')
+            # snapshot = form.cleaned_data.get('snapshot')
         if 'path' in form.changed_data:
             path = form.cleaned_data['path']
         elif 'filesystem' in form.changed_data:
@@ -92,10 +82,13 @@ class FileBrowser(BaseView, FormView):
             'object_list': object_list,
             'path': breadcrumbs,
             'extra_sidebar': extra_sidebar,
-            'filesystem': filesystem,
-            'snapshot': snapshot
+            # 'filesystem': filesystem,
+            # 'snapshot': snapshot
         })
         return context
+
+    def form_valid(self, form):
+        return self.form_invalid(form)
 
 
 class FilesystemList(BaseView, TemplateView):
