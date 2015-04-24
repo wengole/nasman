@@ -64,6 +64,21 @@ class ZFSFilesystem(BaseFilesystem):
     def name(self):
         return self._name
 
+    @property
+    def is_mounted(self):
+        parsed = _parse_cmd_output(
+            ['zfs', 'get', 'mounted', '-H', self.name]
+        )
+        return True if parsed[0][2] == 'yes' else False
+
+    def mount(self):
+        if self.is_mounted:
+            return True
+        parsed = _parse_cmd_output(
+            ['zfs', 'mount', self.name]
+        )
+        return False if parsed is None else True
+
     def __repr__(self):
         return self.name
 
