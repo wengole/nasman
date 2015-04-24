@@ -12,4 +12,11 @@
       $('#filebrowser-form').submit();
     });
   })
+  
+  $('#snapshot-list').find('li a').each(function () {
+    $(this).click(function () {
+      $('#id_snapshot').val($(this).attr('data-target'));
+      $('#filebrowser-form').submit();
+    })
+  })
 </script>

@@ -51,6 +51,9 @@ class ZFSSnapshot(BaseSnapshot):
         fs = ZFSUtil.get_filesystem(self.parent_name)
         return fs.mountpoint
 
+    def __repr__(self):
+        return self.name
+
 
 class ZFSFilesystem(BaseFilesystem):
     @property
@@ -60,6 +63,9 @@ class ZFSFilesystem(BaseFilesystem):
     @property
     def name(self):
         return self._name
+
+    def __repr__(self):
+        return self.name
 
 
 class ZFSUtil(BaseUtil):

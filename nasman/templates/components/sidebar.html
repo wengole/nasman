@@ -17,10 +17,10 @@
     <!-- Sidebar context -->
     {% block sidebar_context %}
       {% if extra_sidebar %}
-        <ul class="sidebar-menu">
-          <li class="header">{{ extra_sidebar.header }}</li>
+        <ul class="sidebar-menu" id="{{ extra_sidebar.id }}">
+          <li class="header">{{ extra_sidebar.header|upper }}</li>
           {% for item in extra_sidebar.list %}
-            <li>{{ item }}</li>
+            <li><a data-target="{{ item.link }}">{{ item.title }}</a></li>
           {% endfor %}
         </ul>
       {% endif %}

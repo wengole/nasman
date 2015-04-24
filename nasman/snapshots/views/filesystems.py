@@ -1,6 +1,7 @@
 from datetime import datetime
 from pathlib import Path
 
+from braces.views import CsrfExemptMixin
 from collections import defaultdict
 from django.core.urlresolvers import reverse_lazy
 import magic
@@ -21,22 +22,14 @@ class FileBrowser(BaseView, FormView):
     form_class = FileBrowserForm
     success_url = reverse_lazy('nasman:file-browser')
 
-    def get_form(self, data=None, files=None, **kwargs):
-        if data is None:
-            data = {
-                'path': '/'
-            }
-        else:
-            path = data.get('path')
-            if path is None:
-                fs = data.get('filesystem')
-                snap = data.get('snapshot')
-                data.update({
-                    'path': fs.mountpoint or snap.mountpoint
-                })
-        form = self.get_form_class()(data)
-        form.is_valid()
-        return form
+    # def get_form(self, data=None, files=None, **kwargs):
+    #     if data is None:
+    #         initial = {
+    #             'path': '/'
+    #         }
+    #     form = self.get_form_class()(data, initial=initial)
+    #     form.is_valid()
+    #     return form
 
     def get_context_data(self, **kwargs):
         """
@@ -44,11 +37,19 @@ class FileBrowser(BaseView, FormView):
         """
         context = super(FileBrowser, self).get_context_data(**kwargs)
         form = context['form']
-        path = form.cleaned_data.get('path') or Path('/')
-        fs = form.cleaned_data.get('filesystem')
-        root = Path(path.root)
-        if fs is not None:
-            root = path = Path(fs.mountpoint)
+        form.is_valid()
+        path = form.cleaned_data.get('path')
+        filesystem = form.cleaned_data.get('filesystem')
+        snapshot = form.cleaned_data.get('snapshot')
+        if 'path' in form.changed_data:
+            path = form.cleaned_data['path']
+        elif 'filesystem' in form.changed_data:
+            path = Path(form.cleaned_data['filesystem'].mountpoint)
+        elif 'snapshot' in form.changed_data:
+            path = Path(form.cleaned_data['snapshot'].mountpoint)
+        else:
+            path = Path('/')
+        root = path.root
         icon_mapping = defaultdict(
             lambda: 'fa-file-o',
             {x.mime_type: x.icon
@@ -78,16 +79,23 @@ class FileBrowser(BaseView, FormView):
             up_one = path.parent
 
         # Snapshot list for sidebar
-
+        extra_sidebar = {
+            'id': 'snapshot-list',
+            'header': 'Snapshots',
+            'list': [
+                {'link': x.name,
+                 'title': x.name} for x in ZFSUtil.get_snapshots()
+            ]
+        }
         context.update({
             'up_one': up_one,
             'object_list': object_list,
-            'path': breadcrumbs
+            'path': breadcrumbs,
+            'extra_sidebar': extra_sidebar,
+            'filesystem': filesystem,
+            'snapshot': snapshot
         })
         return context
-
-    def form_valid(self, form):
-        pass
 
 
 class FilesystemList(BaseView, TemplateView):
