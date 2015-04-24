@@ -11,6 +11,14 @@ logger = logging.getLogger(__name__)
 
 
 def _parse_cmd_output(cmd):
+    """
+    Run the given arguments as a subprocess, and spilt the output into lines
+    and columns
+    :param cmd: The command arguments to run
+    :type cmd: list
+    :return: The parsed output
+    :rtype: list
+    """
     try:
         output = check_output(cmd)
     except CalledProcessError:
@@ -20,16 +28,28 @@ def _parse_cmd_output(cmd):
 
 
 class ZFSSnapshot(BaseSnapshot):
+    """
+    ZFS Snapshot object definition
+    """
     @property
     def filesystem(self):
+        """
+        The filesystem this is a snapshot of
+        """
         return self.basename
 
     @property
     def timestamp(self):
+        """
+        The `datetime` this snapshot was created (according to ZFS)
+        """
         return self._timestamp
 
     @property
     def name(self):
+        """
+        The name of this snapshot
+        """
         return self._name
 
     @property
@@ -48,6 +68,9 @@ class ZFSSnapshot(BaseSnapshot):
 
     @property
     def mountpoint(self):
+        """
+        The mountpoint of this snapshot (if it is mounted)
+        """
         fs = ZFSUtil.get_filesystem(self.parent_name)
         return fs.mountpoint
 
@@ -56,22 +79,39 @@ class ZFSSnapshot(BaseSnapshot):
 
 
 class ZFSFilesystem(BaseFilesystem):
+    """
+    ZFS Filesystem object definition
+    """
     @property
     def mountpoint(self):
+        """
+        The mountpoint of this filesystem as defined within ZFS
+        """
         return self._mountpoint
 
     @property
     def name(self):
+        """
+        Name of this filesystem
+        """
         return self._name
 
     @property
     def is_mounted(self):
+        """
+        Whether this filesystem is currently mounted
+        """
         parsed = _parse_cmd_output(
             ['zfs', 'get', 'mounted', '-H', self.name]
         )
         return True if parsed[0][2] == 'yes' else False
 
     def mount(self):
+        """
+        If this file system is not already mounted, mount it using ZFS
+        :return: Whether the filesystem is now mounted (False on error)
+        :rtype: bool
+        """
         if self.is_mounted:
             return True
         parsed = _parse_cmd_output(
