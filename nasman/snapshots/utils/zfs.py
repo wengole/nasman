@@ -21,9 +21,9 @@ def _parse_cmd_output(cmd):
     """
     try:
         output = check_output(cmd)
-    except CalledProcessError:
+    except CalledProcessError as e:
         logger.error('Failed to pass command %s', ' '.join(cmd))
-        return []
+        raise
     return [x.split() for x in output.decode('utf-8').splitlines()]
 
 
