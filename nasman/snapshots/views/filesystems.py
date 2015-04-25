@@ -79,20 +79,11 @@ class FileBrowser(BaseView, FormView):
         if path != root:
             up_one = path.parent
 
-        # Snapshot list for sidebar
-        extra_sidebar = {
-            'id': 'snapshot-list',
-            'header': 'Snapshots',
-            'list': [
-                {'link': x.name,
-                 'title': x.name} for x in ZFSUtil.get_snapshots()
-            ]
-        }
+        # TODO: context relevant snapshot list
         context.update({
             'up_one': up_one,
             'object_list': object_list,
             'path': breadcrumbs,
-            'extra_sidebar': extra_sidebar,
             'browser_title': breadcrumbs[-1],
         })
         return context
