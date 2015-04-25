@@ -7,6 +7,9 @@ RUN wget http://archive.zfsonlinux.org/debian/pool/main/z/zfsonlinux/zfsonlinux_
 RUN dpkg -i zfsonlinux_5_all.deb && rm zfsonlinux_5_all.deb
 RUN apt-get update -qq && apt-get install -y debian-zfs
 
+# Make mountpoint for host filesystem
+RUN mkdir /host_root
+
 # Install python packages
 ENV PYTHONUNBUFFERED 1
 COPY requirements.txt /srv/
