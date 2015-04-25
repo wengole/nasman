@@ -154,6 +154,17 @@ class ZFSFilesystem(BaseFilesystem):
         )
         return True
 
+    def unmount(self):
+        """
+        If this filesystem is mounted, unmount it using ZFS
+        """
+        if not self.is_mounted:
+            return True
+        parsed = _parse_cmd_output(
+            ['zfs', 'unmount', self.name]
+        )
+        return True
+
     def __repr__(self):
         return self.name
 
