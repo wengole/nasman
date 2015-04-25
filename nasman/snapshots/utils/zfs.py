@@ -124,7 +124,7 @@ class ZFSFilesystem(BaseFilesystem):
         """
         The mountpoint of this filesystem as defined within ZFS
         """
-        return self._mountpoint
+        return '/host_root{0}'.format(self._mountpoint)
 
     @property
     def name(self):
