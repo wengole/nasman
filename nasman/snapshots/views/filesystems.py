@@ -1,8 +1,8 @@
+from collections import defaultdict
 from datetime import datetime
 import logging
 from pathlib import Path
 
-from collections import defaultdict
 from django.core.urlresolvers import reverse_lazy
 import magic
 from vanilla import TemplateView, FormView
