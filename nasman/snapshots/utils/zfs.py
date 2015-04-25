@@ -146,15 +146,13 @@ class ZFSFilesystem(BaseFilesystem):
     def mount(self):
         """
         If this file system is not already mounted, mount it using ZFS
-        :return: Whether the filesystem is now mounted (False on error)
-        :rtype: bool
         """
         if self.is_mounted:
             return True
         parsed = _parse_cmd_output(
             ['zfs', 'mount', self.name]
         )
-        return False if parsed is None else True
+        return True
 
     def __repr__(self):
         return self.name
