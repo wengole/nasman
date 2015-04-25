@@ -5,7 +5,7 @@ Welcome to NASMan
    :target: https://travis-ci.org/wengole/nasman
    :alt: Continuous Integration Status
 .. image:: https://coveralls.io/repos/wengole/nasman/badge.svg?branch=master
-   :target: https://coveralls.io/r/wengole/wizfs?branch=develop
+   :target: https://coveralls.io/r/wengole/nasman?branch=master
    :alt: Coverage Status
 .. image:: https://readthedocs.org/projects/nasman/badge/?version=master
    :target: https://nasman.readthedocs.org/en/latest
