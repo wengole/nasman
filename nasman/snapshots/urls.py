@@ -12,7 +12,7 @@ urlpatterns = patterns(
     url(r'^filesystems$', FilesystemList.as_view(), name='filesystems'),
     url(r'^snapshots$', SnapshotList.as_view(), name='snapshots'),
     url(r'^snapshot/add$', SnapshotCreate.as_view(), name='add-snap'),
-    url(r'^snapshot/(?P<name>[\w\d@]+)$',
+    url(r'^snapshot/(?P<name>[\w\d@\-:.]+)$',
         SnapshotReindex.as_view(),
         name='reindex-snap'),
 )
