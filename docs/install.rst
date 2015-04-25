@@ -1,39 +1,21 @@
 Installation
 ============
 
-Before building out the project,
-first make sure the prerequisite system packages are installed
+NASMan is a `Docker <https://www.docker.com>`_ application.
+To install it you will need to have docker and docker-compose installed on your host system
 
-If you're using ZFS,
-you either need to run NASMan as root (dangerous) or
-you need to allow ``/dev/zfs`` to be accessed by non-root users
+NASMan requires access to ZFS in order to be useful.
+The main docker container runs in privileged_ mode.
+This allows the container and the app to access the ZFS filesystems on the host
 
-See `this issue on github <https://github.com/zfsonlinux/zfs/issues/362>`_.
-
-.. todo::
-
-    * Figure out what if anything needs to be done for BTRFS
+.. _privileged: https://docs.docker.com/reference/run/#runtime-privilege-linux-capabilities-and-lxc-configuration
 
 Prerequisites
 -------------
 
- * Python 3.3+
- * PostgreSQL
- * Redis
-
-Other dependencies
-------------------
-
-These are installed by buildout
-
- * Celery (task queue)
-
-Celery should be configured to run as a service.
-This is left as an exercise to the user :) (for now)
-
-.. todo::
-
-    * Document how to set up Celery as a service (systemd, supervisor)
+ * Docker
+ * Docker compose
+ * ZFS (for now, will make this optional later)
 
 Installation
 ------------
@@ -42,32 +24,14 @@ Clone the project, then from inside the project directory
 
 .. code-block:: bash
 
-   virtualenv -p /usr/bin/python2 .
-   bin/pip install cffi
-   bin/pip install -r requirements/local.txt
+   $ docker-compose up -d
+   $ docker exec nasman_web_1 python manage.py migrate
+   $ docker exec nasman_web_1 python manage.py sitetree_resync_apps
 
-Run ``mange.py`` with the virtualenv interpreter
+Your installation will now be running and listening on port 8000 of the host.
 
-.. code-block:: bash
-
-   bin/python manage.py runserver
-
-
-Database Initialisation
------------------------
-
-.. code-block:: bash
-
-    su postgres
-    createuser nasmannasman --interactive
-    createdb -U nasman nasman
-    psql
-    psql> alter role nasman unencrypted password '{your password here}';
-
-Don't for get to update the settings.py with your database password.
-
-Then run the migrations:
-
-.. code-block:: bash
-
-    bin/python manage.py migrate
+At the moment it is using the Django runserver,
+which is discouraged from being used in production for performance issues,
+however due to the use case of NASMan,
+it seems unlikely to be an issue.
+Feel free to raise an issue on github of you encounter any problems.
