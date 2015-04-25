@@ -34,3 +34,20 @@ class SnapshotReindex(View):
             path='%s/.zfs/snapshot/%s' % (snap.mountpoint, snap.basename)
         )
         return redirect('nasman:snapshots')
+
+
+class SnapshotMount(MessageMixin, View):
+    http_method_names = ['get']
+
+    def get(self, request, name=None):
+        snap = ZFSUtil.get_snapshot(name)
+        if snap.is_mounted:
+            if snap.unmount():
+                self.messages.info('{0} is now unmounted'.format(name))
+            else:
+                self.messages.error('Failed to unmount {0}'.format(name))
+        else:
+            if snap.mount():
+                self.messages.info('{0} is now mounted at {1}'.format(
+                    name, snap.mountpoint))
+        return redirect('nasman:snapshots')

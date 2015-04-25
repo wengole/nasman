@@ -25,13 +25,17 @@
         {% for snap in object_list %}
           <tr>
             <td>{{ snap.name }}</td>
-            <td>{{ snap.mountpoint|default_if_none:"-" }}</td>
+            <td>{% if snap.is_mounted %}{{ snap.mountpoint }}{% else %} - {% endif %}</td>
             <td>{{ snap.timestamp|naturaltime }}</td>
             <td>
               <div class="pull-right">
+                <a class="btn btn-xs {% if snap.is_mounted %}btn-warning{% else %}btn-info{% endif %}"
+                   href="{% url "nasman:mount-snap" name=snap.name %}">
+                {% if snap.is_mounted %}Unmount{% else %}Mount{% endif %}
+                </a>
                 <a class="btn btn-primary btn-xs"
                    href="{% url "nasman:reindex-snap" name=snap.name %}">Reindex</a>
-                <a class="btn btn-warning btn-xs disabled"
+                <a class="btn btn-danger btn-xs disabled"
                    href="#">Delete</a>
               </div>
             </td>
