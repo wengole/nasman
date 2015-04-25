@@ -52,6 +52,7 @@ THIRD_PARTY_APPS = (
     'bootstrap_pagination',
     'floppyforms',
     'sitetree',
+    'django_extensions',
 )
 
 PROJECT_APPS = (

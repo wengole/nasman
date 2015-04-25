@@ -4,16 +4,19 @@ django
 django-bootstrap-pagination
 django-braces
 django-debug-toolbar
+django-extensions
 django-floppyforms
 django-model-utils
 django-redis
 django-sitetree
 django-vanilla-views
 djorm-ext-pgfulltext
+ipython[notebook]
 psycopg2
 python-dateutil
 python-magic
 pytz
+readline
 uwsgi
 
 # Non pypi releases
