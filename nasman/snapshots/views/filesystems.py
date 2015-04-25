@@ -53,14 +53,18 @@ class FileBrowser(BaseView, FormView):
         # The file list/browser
         object_list = []
         for x in path.iterdir():
-            mime_type = magic.from_file(str(x), mime=True).decode('utf8')
+            try:
+                mime_type = magic.from_file(str(x), mime=True).decode('utf8')
+            except OSError as e:
+                logger.warn('Unable to get mime_type of %s', str(x))
+                mime_type = None
             object_list.append({
                 'name': x.name,
                 'full_path': x,
                 'directory': x.is_dir(),
                 'mime_type': mime_type,
-                'modified': datetime.fromtimestamp(x.stat().st_mtime),
-                'size': x.stat().st_size,
+                'modified': datetime.fromtimestamp(x.lstat().st_mtime),
+                'size': x.lstat().st_size,
                 'icon': icon_mapping[mime_type],
             })
         object_list.sort(key=lambda k: (not k['directory'], k['name']))
