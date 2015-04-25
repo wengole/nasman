@@ -27,19 +27,19 @@ class SmallSelectWidget(forms.Select):
 
 class FilesystemField(forms.ChoiceField):
     def clean(self, value):
-        if value is not None:
+        if value:
             return ZFSUtil.get_filesystem(value)
 
 
 class SnapshotField(forms.ChoiceField):
     def clean(self, value):
-        if value is not None:
+        if value:
             return ZFSUtil.get_snapshot(value)
 
 
 class PathField(forms.Field):
     def clean(self, value):
-        if value is not None:
+        if value:
             return Path(value)
 
 
