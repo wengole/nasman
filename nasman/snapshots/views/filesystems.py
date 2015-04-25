@@ -93,8 +93,7 @@ class FileBrowser(BaseView, FormView):
             'object_list': object_list,
             'path': breadcrumbs,
             'extra_sidebar': extra_sidebar,
-            # 'filesystem': filesystem,
-            # 'snapshot': snapshot
+            'browser_title': breadcrumbs[-1],
         })
         return context
 
