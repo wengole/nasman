@@ -16,7 +16,7 @@
         <thead>
         <tr>
           <th>Name</th>
-          <th>Filesystem</th>
+          <th>Mountpoint</th>
           <th>Created</th>
           <th style="text-align: right">Actions</th>
         </tr>
@@ -25,7 +25,7 @@
         {% for snap in object_list %}
           <tr>
             <td>{{ snap.name }}</td>
-            <td>{{ snap.filesystem }}</td>
+            <td>{{ snap.mountpoint|default_if_none:"-" }}</td>
             <td>{{ snap.timestamp|naturaltime }}</td>
             <td>
               <div class="pull-right">
