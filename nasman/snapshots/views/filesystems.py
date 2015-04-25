@@ -30,16 +30,18 @@ class FileBrowser(BaseView, FormView):
         """
         context = super(FileBrowser, self).get_context_data(**kwargs)
         form = context['form']
+        filesystem = None
+        snapshot = None
         if form.is_bound:
             form.is_valid()
-            # filesystem = form.cleaned_data.get('filesystem')
-            # snapshot = form.cleaned_data.get('snapshot')
+            filesystem = form.cleaned_data.get('filesystem')
+            snapshot = form.cleaned_data.get('snapshot')
         if 'path' in form.changed_data:
             path = form.cleaned_data['path']
         elif 'filesystem' in form.changed_data:
-            path = Path(form.cleaned_data['filesystem'].mountpoint)
+            filesystem.mount()
+            path = Path(filesystem.mountpoint)
         elif 'snapshot' in form.changed_data:
-            snapshot = form.cleaned_data['snapshot']
             snapshot.mount()
             path = Path(snapshot.mountpoint)
         else:
