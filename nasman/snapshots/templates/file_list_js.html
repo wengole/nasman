@@ -2,16 +2,18 @@
   $('select#id_filesystem').change(function ()
   {
     $('#id_path').val('');
+    $('#id_snapshot').val('');
     $('#filebrowser-form').submit();
   });
 
   $('.file-link, .breadcrumb-link').each(function () {
     $(this).click(function() {
       $('select#id_filesystem').val('None');
+      $('#id_snapshot').val('');
       $('#id_path').val($(this).attr('data-target'));
       $('#filebrowser-form').submit();
     });
-  })
+  });
   
   $('#snapshot-list').find('li a').each(function () {
     $(this).click(function () {
