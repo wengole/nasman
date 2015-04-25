@@ -74,6 +74,43 @@ class ZFSSnapshot(BaseSnapshot):
         """
         return Path('/tmp/zfs/snapshot/{0}'.format(self.name))
 
+    @property
+    def is_mounted(self):
+        """
+        Whether this snapshot is currently mounted
+        """
+        parsed = _parse_cmd_output(
+            ['mount']
+        )
+        mounts = [x[0] for x in parsed]
+        return self.name in mounts
+
+    def mount(self):
+        """
+        If this snapshot is not already mounted, mount it under /tmp
+        """
+        if self.is_mounted:
+            return True
+        mountpoint = self.mountpoint
+        if not mountpoint.exists():
+            self.mountpoint.mkdir(parents=True)
+        parsed = _parse_cmd_output(
+            ['mount', '-tzfs', self.name, str(mountpoint)]
+        )
+        return True
+
+    def unmount(self):
+        """
+        If this snapshot it mounted, unmount it
+        """
+        if not self.is_mounted:
+            return True
+        mountpoint = self.mountpoint
+        parsed = _parse_cmd_output(
+            ['umount', str(mountpoint)]
+        )
+        return True
+
     def __repr__(self):
         return self.name
 
