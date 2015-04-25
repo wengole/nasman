@@ -1,4 +1,5 @@
 from datetime import datetime
+import logging
 from pathlib import Path
 
 from collections import defaultdict
@@ -10,6 +11,8 @@ from ..models import IconMapping
 from ..forms import FileBrowserForm
 from ..utils.zfs import ZFSUtil
 from ..views.base import BaseView
+
+logger = logging.getLogger(__name__)
 
 
 class FileBrowser(BaseView, FormView):
