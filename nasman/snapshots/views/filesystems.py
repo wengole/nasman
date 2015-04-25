@@ -36,7 +36,9 @@ class FileBrowser(BaseView, FormView):
         elif 'filesystem' in form.changed_data:
             path = Path(form.cleaned_data['filesystem'].mountpoint)
         elif 'snapshot' in form.changed_data:
-            path = Path(form.cleaned_data['snapshot'].mountpoint)
+            snapshot = form.cleaned_data['snapshot']
+            snapshot.mount()
+            path = Path(snapshot.mountpoint)
         else:
             path = Path('/')
         root = path.root
