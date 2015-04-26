@@ -1,0 +1,6 @@
+{% load floppyforms %}
+<div class="checkbox{% if field.errors %} has-error{% endif %}">
+  {% if field|id %}<label for="{{ field|id }}">{% endif %}
+    {% formfield field %}
+  {% if field|id %}{{ field.label }}</label>{% endif %}
+</div>

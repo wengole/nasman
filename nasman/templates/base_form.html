@@ -1,6 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
 <div class="box box-primary">
   <div class="box-body">
-    {{ form }}
+    <form method="{{ method }}">
+    {% block form_block %}
+      {% csrf_token %}
+      {{ form }}
+    {% endblock %}
+    </form>
   </div>
   <div class="box-footer">
     <button type="submit" class="btn btn-primary">
@@ -8,3 +16,4 @@
     </button>
   </div>
 </div>
+{% endblock %}

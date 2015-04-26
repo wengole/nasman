@@ -1,8 +1,12 @@
-{% extends "base.html" %}
-{% load staticfiles i18n %}
+{% extends "base_form.html" %}
+{% load floppyforms staticfiles i18n %}
 
-{% block content %}
-  <form method="post">
-    {% include "base_form.html" with submit_button="Save" %}
-  </form>
-{% endblock content %}
+{% with method="post" %}
+  {% block form_block %}
+    {% form form using %}
+        {% csrf_token %}
+        {% formrow form.name form.filesystem using "floppyforms/rows/bootstrap.html" %}
+        {% formrow form.recursive using "floppyforms/rows/checkbox_row.html" %}
+    {% endform %}
+  {% endblock form_block %}
+{% endwith %}

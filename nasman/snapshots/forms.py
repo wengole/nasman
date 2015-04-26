@@ -1,7 +1,8 @@
-from pathlib import Path
-
 import floppyforms as forms
 
+from .fields import FilesystemField, SnapshotField, PathField
+from .widgets import SmallSelectWidget, BootstrapCheckboxWidget, BootstrapTextWidget, \
+    BootstrapSelectWidget
 from .utils.zfs import ZFSUtil
 
 
@@ -16,49 +17,28 @@ def filesystem_choices():
     return choices + tuple(zip(filesystems, filesystems))
 
 
-class SmallSelectWidget(forms.Select):
-    def get_context_data(self):
-        context = super(SmallSelectWidget, self).get_context_data()
-        context.update({
-            'classes': ['input-sm']
-        })
-        return context
-
-
-class FilesystemField(forms.ChoiceField):
-    def clean(self, value):
-        if value:
-            return ZFSUtil.get_filesystem(value)
-
-
-class SnapshotField(forms.ChoiceField):
-    def clean(self, value):
-        if value:
-            return ZFSUtil.get_snapshot(value)
-
-
-class PathField(forms.Field):
-    def clean(self, value):
-        if value:
-            return Path(value)
-
-
 class SnapshotForm(forms.Form):
     name = forms.CharField(
         label='Snapshot name',
         max_length=120,
-        required=True
+        required=True,
+        widget=BootstrapTextWidget,
     )
     filesystem = forms.TypedChoiceField(
         label='Parent filesystem',
         choices=filesystem_choices,
+        widget=BootstrapSelectWidget,
+    )
+    recursive = forms.BooleanField(
+        label='Recurse filesystems?',
+        widget=BootstrapCheckboxWidget,
     )
 
 
 class FileBrowserForm(forms.Form):
     filesystem = FilesystemField(
         choices=filesystem_choices,
-        widget=SmallSelectWidget
+        widget=SmallSelectWidget()
     )
     snapshot = SnapshotField(widget=forms.HiddenInput)
     path = PathField(widget=forms.HiddenInput)

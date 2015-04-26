@@ -14,6 +14,9 @@ class SnapshotCreate(MessageMixin, BaseView, FormView):
     form_class = SnapshotForm
     template_name = 'snapshot_form.html'
 
+    def form_valid(self, form):
+        pass
+
 
 class SnapshotList(BaseView, TemplateView):
     headline = 'ZFS Snapshots'

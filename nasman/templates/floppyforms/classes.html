@@ -1,2 +1,1 @@
-class="form-control
-{% if classes %}{% for class in classes %} {{ class }}{% endfor %}{% endif %}"
+class="{% if classes %}{% for class in classes %} {{ class }}{% endfor %}{% endif %}"
