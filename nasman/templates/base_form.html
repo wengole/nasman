@@ -1,13 +1,10 @@
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-12">
-        <h1>{% block header %}{% endblock %}</h1>
-
-        <div class="well">
-          {% block form %}
-            {{ form }}
-          {% endblock %}
-        </div>
-      </div>
-    </div>
+<div class="box box-primary">
+  <div class="box-body">
+    {{ form }}
   </div>
+  <div class="box-footer">
+    <button type="submit" class="btn btn-primary">
+      {{ submit_button|default:"Submit" }}
+    </button>
+  </div>
+</div>
