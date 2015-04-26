@@ -2,5 +2,7 @@
 {% load staticfiles i18n %}
 
 {% block content %}
-  {% include "base_form.html" with submit_button="Save" %}
+  <form method="post">
+    {% include "base_form.html" with submit_button="Save" %}
+  </form>
 {% endblock content %}
