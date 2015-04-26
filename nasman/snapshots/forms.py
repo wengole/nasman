@@ -32,6 +32,7 @@ class SnapshotForm(forms.Form):
     recursive = forms.BooleanField(
         label='Recurse filesystems?',
         widget=BootstrapCheckboxWidget,
+        required=False,
     )
 
 
