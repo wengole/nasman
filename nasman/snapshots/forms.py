@@ -1,6 +1,6 @@
 import floppyforms as forms
 
-from .fields import FilesystemField, SnapshotField, PathField
+from .formfields import FilesystemField, SnapshotField, PathField
 from .widgets import SmallSelectWidget, BootstrapCheckboxWidget, BootstrapTextWidget, \
     BootstrapSelectWidget
 from .utils.zfs import ZFSUtil
