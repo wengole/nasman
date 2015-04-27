@@ -7,28 +7,16 @@ sitetrees = (
         title='NAVIGATION',
         items=(
             item(
-                'Files',
-                '#',
-                children=[
-                    item(
-                        'File Browser',
-                        'nasman:file-browser'
-                    ),
-                    item(
-                        'List Filesystems',
-                        'nasman:filesystems'
-                    )
-                ]
+                'File Browser',
+                'nasman:file-browser'
             ),
             item(
-                'Snapshots',
-                '#',
-                children=[
-                    item(
-                        'List Snapshots',
-                        'nasman:snapshots'
-                    )
-                ]
+                'List Filesystems',
+                'nasman:filesystems'
+            ),
+            item(
+                'List Snapshots',
+                'nasman:snapshots'
             ),
         )),
 )
