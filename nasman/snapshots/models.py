@@ -3,13 +3,29 @@ import os
 from django.db import models
 from djorm_pgfulltext.fields import VectorField
 from djorm_pgfulltext.models import SearchManager
+from pathlib import Path
+
+
+class PathField(models.TextField):
+
+    description = 'A path on a filesystem.'
+
+    def to_python(self, value):
+        if value is None:
+            return value
+        return Path(value)
+
+    def from_db_value(self, value, expression, connection, context):
+        if value is None:
+            return value
+        return Path(value)
 
 
 class File(models.Model):
     """
     Model representing a file/directory/etc on the filesystem
     """
-    full_path = models.TextField('full path')
+    full_path = PathField('full path')
     dirname = models.TextField(
         'dirname',
         db_index=True
@@ -31,11 +47,6 @@ class File(models.Model):
     class Meta:
         app_label = 'snapshots'
 
-    def save(self, **kwargs):
-        self.full_path = os.path.normpath(self.full_path)
-        self.dirname = os.path.normpath(self.dirname)
-        super(File, self).save(**kwargs)
-
     def __unicode__(self):
         return self.full_path
 
@@ -45,8 +56,7 @@ class File(models.Model):
         The file extension of this file
         :rtype: str
         """
-        _, extension = os.path.splitext(self.full_path)
-        return extension
+        return self.full_path.suffix
 
     objects = SearchManager(
         fields=('name', 'dirname', 'snapshot_name', 'magic'),
