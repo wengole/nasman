@@ -190,6 +190,8 @@ CACHES = {
 }
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 SESSION_CACHE_ALIAS = 'default'
+SITETREE_MODEL_TREE = 'snapshots.NasmanTree'
+SITETREE_MODEL_TREE_ITEM = 'snapshots.NasmanTreeItem'
 
 
 # .local.py overrides all the common settings.

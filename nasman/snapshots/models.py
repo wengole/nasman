@@ -7,6 +7,7 @@ from djorm_pgfulltext.fields import VectorField
 from djorm_pgfulltext.models import SearchManager
 import magic
 import pytz
+from sitetree.models import TreeItemBase, TreeBase
 
 
 class PathField(models.TextField):
@@ -138,3 +139,14 @@ class IconMapping(models.Model):
 
     def __str__(self):
         return self.mime_type
+
+
+class NasmanTree(TreeBase):
+    pass
+
+
+class NasmanTreeItem(TreeItemBase):
+    icon = models.CharField(
+        'icon',
+        max_length=50
+    )

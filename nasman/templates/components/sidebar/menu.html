@@ -15,6 +15,7 @@
       {% else %}
       {% sitetree_url for item %}
       {% endif %}">
+        <i class="fa {{ item.icon|default:"fa-circle-o" }}"></i>
         <span>{{ item.title_resolved }}</span>
         {% if item.has_children %}
           <i class="fa fa-angle-left pull-right"></i>
