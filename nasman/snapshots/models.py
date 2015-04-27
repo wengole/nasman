@@ -1,9 +1,12 @@
-import os
+from datetime import datetime
+from pathlib import Path
 
 from django.db import models
+from django.utils.timezone import get_default_timezone_name
 from djorm_pgfulltext.fields import VectorField
 from djorm_pgfulltext.models import SearchManager
-from pathlib import Path
+import magic
+import pytz
 
 
 class PathField(models.TextField):
@@ -44,8 +47,40 @@ class File(models.Model):
     size = models.IntegerField('size', blank=True, null=True)
     search_index = VectorField()
 
+    objects = SearchManager(
+        fields=('name', 'dirname', 'snapshot_name', 'magic'),
+        config='pg_catalog.english',
+        search_field='search_index',
+        auto_update_search_field=True
+    )
+
     class Meta:
         app_label = 'snapshots'
+
+    def clean_fields(self, exclude=None):
+        path_field = self._meta.get_field('full_path')
+        self.full_path = path_field.clean(self.full_path, self)
+        self.dirname = str(self.full_path.parent)
+        self.name = str(self.full_path.name)
+        self.directory = self.full_path.is_dir()
+        try:
+            mime_type = magic.from_file(
+                str(self.full_path), mime=True).decode('utf-8')
+            self.magic = magic.from_file(
+                str(self.full_path)).decode('utf-8')
+        except magic.MagicException:
+            icon = None
+            self.magic = ''
+        else:
+            icon, _ = IconMapping.objects.get_or_create(
+                mime_type=mime_type
+            )
+        self.mime_type = icon
+        mtime = datetime.fromtimestamp(self.full_path.lstat().st_mtime)
+        mtime = pytz.timezone(get_default_timezone_name()).localize(mtime)
+        self.modified = mtime
+        self.size = self.full_path.lstat().st_size
+        super(File, self).clean_fields(exclude)
 
     def __unicode__(self):
         return self.full_path
@@ -57,13 +92,6 @@ class File(models.Model):
         :rtype: str
         """
         return self.full_path.suffix
-
-    objects = SearchManager(
-        fields=('name', 'dirname', 'snapshot_name', 'magic'),
-        config='pg_catalog.english',
-        search_field='search_index',
-        auto_update_search_field=True
-    )
 
 
 class IconMapping(models.Model):
