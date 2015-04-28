@@ -8,15 +8,18 @@ sitetrees = (
         items=(
             item(
                 'File Browser',
-                'nasman:file-browser'
+                'nasman:file-browser',
+                icon='search',
             ),
             item(
                 'List Filesystems',
-                'nasman:filesystems'
+                'nasman:filesystems',
+                icon='files-o',
             ),
             item(
                 'List Snapshots',
-                'nasman:snapshots'
+                'nasman:snapshots',
+                icon='camera',
             ),
         )),
 )
