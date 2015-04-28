@@ -12,6 +12,7 @@ RUN mkdir /host_root
 
 # Install python packages
 ENV PYTHONUNBUFFERED 1
-COPY requirements.txt /srv/
+COPY requirements.txt /root/
+WORKDIR /root/
+RUN pip install -r /root/requirements.txt
 WORKDIR /srv
-RUN pip install -r requirements.txt
