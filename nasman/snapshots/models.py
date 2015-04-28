@@ -150,4 +150,5 @@ class NasmanTree(TreeBase):
 class NasmanTreeItem(TreeItemBase):
     icon = IconField(
         'icon',
+        default='circle-o'
     )
