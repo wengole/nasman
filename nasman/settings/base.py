@@ -57,6 +57,7 @@ THIRD_PARTY_APPS = (
 
 PROJECT_APPS = (
     'nasman.snapshots',
+    'nasman.fontawesome',
 )
 
 INSTALLED_APPS = PROJECT_APPS + DJANGO_APPS + THIRD_PARTY_APPS
