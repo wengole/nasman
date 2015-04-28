@@ -20,3 +20,4 @@ readline
 uwsgi
 
 # Non pypi releases
+git+https://github.com/wengole/django-fontawesome.git@master#egg=django-fontawesome

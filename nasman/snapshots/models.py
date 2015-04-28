@@ -9,7 +9,7 @@ import magic
 import pytz
 from sitetree.models import TreeItemBase, TreeBase
 
-from ..fontawesome.fields import IconField
+from fontawesome.fields import IconField
 
 
 class PathField(models.TextField):
