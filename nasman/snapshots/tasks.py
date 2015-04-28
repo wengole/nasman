@@ -1,87 +1,53 @@
 from datetime import datetime
-from decimal import Decimal
 import logging
-
-import hashlib
-import os
-import magic
-from celery import group, shared_task, states
-from django.core.cache import cache
-from django.utils.timezone import get_default_timezone_name
-import pytz
-
-from .models import File, IconMapping
-
 
 logger = logging.getLogger(__name__)
 
 
-class AlreadyRunning(Exception):
-    pass
-
-
-@shared_task(name='nasman.snapshots.tasks.create_file_object')
-def create_file_object(full_path, snapshot=None, directory=False):
-    logger.info('Adding %s: %s',
-                ('directory' if directory else 'file'), full_path)
-    statinfo = os.stat(full_path)
-    mtime = datetime.fromtimestamp(statinfo.st_mtime)
-    mtime = pytz.timezone(get_default_timezone_name()).localize(mtime)
-    try:
-        magic_info = magic.from_file(full_path)
-    except magic.MagicException:
-        magic_info = ''
-    try:
-        mime_type = magic.from_file(full_path, mime=True)
-    except magic.MagicException:
-        icon = None
-    else:
-        icon, _ = IconMapping.objects.get_or_create(
-            mime_type=mime_type
-        )
-    obj, created = File.objects.get_or_create(
-        full_path=full_path,
-        snapshot=snapshot,
-        directory=directory,
-        defaults={
-            'name': os.path.basename(full_path),
-            'dirname': os.path.dirname(full_path),
-            'mime_type': icon,
-            'magic': magic_info,
-            'modified': mtime,
-            'size': statinfo.st_size,
-        }
-    )
-    if not created:
-        obj.mime_type = icon
-        obj.magic = magic_info
-        obj.modified = mtime
-        obj.size = statinfo.st_size
-        obj.save()
-
-
-@shared_task
-def walk_and_index(path):
+def build_file_list(path):
     """
-    Recursive task for walking a filesystem tree and adding files to the
-    database
-    :param path: The path to start walking from
+    Build a list a list of files (and directories) by iterating recursively
+    over the given path
+    :param path: The path to iterate over
     :type path: pathlib.Path
+    :return: A tuple of directories and files
+    :rtype: tuple(list, list)
     """
     dirs = []
     files = []
     for x in path.iterdir():
-        if not x.exists():
-            logger.warn('%s does not exist, skipping indexing', x)
+        try:
+            if x.is_symlink():
+                continue
+            elif x.is_dir():
+                dirs.append(x)
+                new_dirs, new_files = build_file_list(x)
+                dirs.extend(new_dirs)
+                files.extend(new_files)
+            elif x.is_file():
+                files.append(x)
+        except PermissionError:
             continue
-        if x.is_dir():
-            dirs.append(x)
-            walk_and_index(x)
-        if x.is_file():
-            files.append(x)
-    dir_tasks = [[
-        x,
-        None,
-        True
-    ] for x in dirs]
-    create_file_object.chunks(dir_tasks, 10)
+    # print('{0} contained {1} dirs and {2} files'.format(
+    #     str(path), len(dirs), len(files)
+    # ))
+    return dirs, files
+
+def index_path(path):
+    """
+    Recursively add all files and directories of the given path to the
+    database
+    :param path: The path to iterate over recursively
+    :type path: pathlib.Path
+    """
+    logger.info('Building file list...')
+    print('Building file list...')
+    start_time = datetime.now()
+    dirs, files = build_file_list(path)
+    seconds = (datetime.now() - start_time).total_seconds()
+    logger.info(
+        'Found {0} dirs and {1} files in {2}s', len(dirs), len(files), seconds
+    )
+    print(
+        'Found {0} dirs and {1} files in {2}s'.format(len(dirs), len(files), seconds)
+    )

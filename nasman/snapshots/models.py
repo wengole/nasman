@@ -143,10 +143,6 @@ class IconMapping(models.Model):
         return self.mime_type
 
 
-class NasmanTree(TreeBase):
-    pass
-
-
 class NasmanTreeItem(TreeItemBase):
     icon = IconField(
         'icon',
