@@ -9,6 +9,8 @@ import magic
 import pytz
 from sitetree.models import TreeItemBase, TreeBase
 
+from ..fontawesome.fields import IconField
+
 
 class PathField(models.TextField):
 
@@ -146,7 +148,6 @@ class NasmanTree(TreeBase):
 
 
 class NasmanTreeItem(TreeItemBase):
-    icon = models.CharField(
+    icon = IconField(
         'icon',
-        max_length=50
     )
