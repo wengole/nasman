@@ -1,6 +1,8 @@
 db:
   image: postgres
   restart: always
+  volumes:
+    - var/lib/postgresql/data:/var/lib/postgresql/data
 redis:
   image: redis
   restart: always
