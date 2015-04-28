@@ -7,7 +7,7 @@ Welcome to NASMan
 .. image:: https://coveralls.io/repos/wengole/nasman/badge.svg?branch=master
    :target: https://coveralls.io/r/wengole/nasman?branch=master
    :alt: Coverage Status
-.. image:: https://readthedocs.org/projects/nasman/badge/?version=master
+.. image:: https://readthedocs.org/projects/nasman/badge/?version=latest
    :target: https://nasman.readthedocs.org/en/latest
    :alt: Documentation Status
 
