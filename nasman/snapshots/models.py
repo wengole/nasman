@@ -5,11 +5,11 @@ from django.db import models
 from django.utils.timezone import get_default_timezone_name
 from djorm_pgfulltext.fields import VectorField
 from djorm_pgfulltext.models import SearchManager
+from fontawesome.fields import IconField
 import magic
 import pytz
 from sitetree.models import TreeItemBase, TreeBase
 
-from fontawesome.fields import IconField
 
 
 class PathField(models.TextField):
