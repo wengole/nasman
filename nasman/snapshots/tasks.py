@@ -1,5 +1,9 @@
 from datetime import datetime
 import logging
+from celery import shared_task
+from nasman.snapshots.models import File
+
+from .utils.zfs import ZFSUtil
 
 logger = logging.getLogger(__name__)
 
@@ -28,12 +32,9 @@ def build_file_list(path):
                 files.append(x)
         except PermissionError:
             continue
-    # print('{0} contained {1} dirs and {2} files'.format(
-    #     str(path), len(dirs), len(files)
-    # ))
     return dirs, files
 
-def index_path(path):
+def collect_files(path):
     """
     Recursively add all files and directories of the given path to the
     database
@@ -41,13 +42,30 @@ def index_path(path):
     :type path: pathlib.Path
     """
     logger.info('Building file list...')
-    print('Building file list...')
     start_time = datetime.now()
     dirs, files = build_file_list(path)
     seconds = (datetime.now() - start_time).total_seconds()
     logger.info(
-        'Found {0} dirs and {1} files in {2}s', len(dirs), len(files), seconds
+        'Found {0} files and directories in {1:.3}s'.format(
+            len(dirs) + len(files),
+            seconds
+        )
     )
-    print(
-        'Found {0} dirs and {1} files in {2}s'.format(len(dirs), len(files), seconds)
-    )
+    return dirs, files
+
+
+@shared_task
+def index_snapshot(snap_name):
+    snap = ZFSUtil.get_snapshot(snap_name)
+    if not snap.is_mounted:
+        snap.mount()
+    dirs, files = collect_files(snap.mountpoint)
+    logger.info('Saving files to database')
+    for x in dirs + files:
+        obj = File(
+            full_path=x,
+            snapshot_name=snap_name
+        )
+        obj.full_clean()
+        obj.save()
+

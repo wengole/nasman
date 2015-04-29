@@ -28,14 +28,12 @@ class SnapshotList(BaseView, TemplateView):
         return context
 
 
-class SnapshotReindex(View):
+class SnapshotReindex(MessageMixin, View):
     http_method_names = ['get']
 
     def get(self, request, name=None):
-        snap = ZFSUtil.get_snapshot(name)
-        res = tasks.walk_and_reindex.delay(
-            path='%s/.zfs/snapshot/%s' % (snap.mountpoint, snap.basename)
-        )
+        res = tasks.index_snapshot.apply_async(args=(name, ))
+        self.messages.info('Reindex of {0} started'.format(name))
         return redirect('nasman:snapshots')
 
 
