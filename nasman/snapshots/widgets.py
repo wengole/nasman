@@ -9,7 +9,6 @@ class BootstrapClassesMixin(object):
     """
     def get_context_data(self):
         classes = getattr(self, 'classes', ['form-control'])
-        logger.error('classes is %s', classes)
         context = super().get_context_data()
         context.update({
             'classes': classes
