@@ -1,9 +1,13 @@
 import floppyforms as forms
 
 from .formfields import FilesystemField, SnapshotField, PathField
-from .widgets import SmallSelectWidget, BootstrapCheckboxWidget, BootstrapTextWidget, \
-    BootstrapSelectWidget
 from .utils.zfs import ZFSUtil
+from .widgets import (
+    SmallSelectWidget,
+    BootstrapCheckboxWidget,
+    BootstrapTextWidget,
+    BootstrapSelectWidget
+)
 
 
 def filesystem_choices():
