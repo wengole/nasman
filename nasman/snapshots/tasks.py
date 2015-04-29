@@ -66,6 +66,5 @@ def index_snapshot(snap_name):
             full_path=x,
             snapshot_name=snap_name
         )
-        obj.full_clean()
         obj.save()
 
