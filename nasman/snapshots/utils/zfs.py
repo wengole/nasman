@@ -1,6 +1,6 @@
 from datetime import datetime
 import logging
-from subprocess import check_output, CalledProcessError
+from subprocess import check_output, CalledProcessError, STDOUT
 from pathlib import Path
 
 import pytz
@@ -21,7 +21,7 @@ def _parse_cmd_output(cmd):
     :rtype: list
     """
     try:
-        output = check_output(cmd)
+        output = check_output(cmd, stderr=STDOUT)
     except CalledProcessError as e:
         logger.error('Failed to pass command %s', ' '.join(cmd))
         raise
