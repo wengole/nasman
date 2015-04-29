@@ -60,6 +60,11 @@ class File(models.Model):
     class Meta:
         app_label = 'snapshots'
 
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        self.full_clean()
+        super(File, self).save()
+
     def clean_fields(self, exclude=None):
         path_field = self._meta.get_field('full_path')
         self.full_path = path_field.clean(self.full_path, self)
