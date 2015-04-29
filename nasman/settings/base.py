@@ -84,7 +84,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'HOST': 'db',
-        'NAME': 'postgres',
+        'NAME': 'nasman',
+        'PASSWORD': 'nasman',
         'PORT': 5432,
         'TEST': {
             'CHARSET': None,
@@ -93,7 +94,7 @@ DATABASES = {
             'NAME': None
         },
         'TIME_ZONE': 'UTC',
-        'USER': 'postgres'
+        'USER': 'nasman'
     }
 }
 

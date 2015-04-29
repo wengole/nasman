@@ -1,6 +1,10 @@
 web:
-  build: .
+  build: dockerfiles/web/
   ports:
     - "8000:8000"
   privileged: true
   restart: always
+db:
+  build: dockerfiles/db/
+  restart: always
+

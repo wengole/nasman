@@ -130,3 +130,5 @@ target/
 
 
 docker-settings
+
+.secret-env

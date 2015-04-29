@@ -1,8 +1,10 @@
 db:
-  image: postgres
-  restart: always
+  extends:
+    file: common.yml
+    service: db
   volumes:
     - var/lib/postgresql/data:/var/lib/postgresql/data
+  env_file: .secret-env
 redis:
   image: redis
   restart: always
