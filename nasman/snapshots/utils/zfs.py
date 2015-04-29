@@ -262,3 +262,30 @@ class ZFSUtil(BaseUtil):
             return None
         return ZFSSnapshot(parsed[0][0], parsed[0][1])
 
+    @classmethod
+    def create_snapshot(cls, snap_name, fs_name, recurse):
+        """
+        Creates a snapshot
+        :param snap_name: Name of the snapshot to create
+        :type snap_name: str
+        :param fs_name: Name of the filesystem to take snapshot of
+        :type fs_name: str
+        :param recurse: Whether to recurse filesystems
+        :type recurse: bool
+        :return: The snapshot just created
+        :rtype: `nasman.snapshots.zfs.ZFSSnapshot`
+        """
+        full_name = '{0}@{1}'.format(
+            fs_name,
+            snap_name
+        )
+        cmd = ['zfs',
+               'snapshot',
+               full_name
+               ]
+        if recurse:
+            cmd.append('-r')
+        parsed = _parse_cmd_output(cmd)
+        if parsed is None:
+            return None
+        return cls.get_snapshot(full_name)
