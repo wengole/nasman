@@ -29,4 +29,5 @@ celery:
   links:
     - redis
     - db
+  privileged: true
   restart: always
