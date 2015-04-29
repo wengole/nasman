@@ -5,7 +5,8 @@
 
 {% block page-title %}File Browser{% endblock %}
 
-{% block content %}
+{% block content-header %}
+  {{ block.super }}
   <ol class="breadcrumb">
     {% for directory in path %}
       {% if forloop.first %}
@@ -26,6 +27,8 @@
       {% endif %}
     {% endfor %}
   </ol>
+{% endblock %}
+{% block content %}
   <form method="post" id="filebrowser-form">
     {% csrf_token %}
     <div class="box box-primary">
