@@ -1,4 +1,6 @@
+from subprocess import CalledProcessError
 from braces.views import MessageMixin
+from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import redirect
 from django.views.generic import View
 from vanilla import FormView, TemplateView
@@ -13,10 +15,27 @@ class SnapshotCreate(MessageMixin, BaseView, FormView):
     headline = 'Create new snapshot'
     form_class = SnapshotForm
     template_name = 'snapshot_form.html'
+    success_url = reverse_lazy('nasman:snapshots')
 
     def form_valid(self, form):
-        pass
-
+        snap_name = form.cleaned_data['name']
+        fs_name = form.cleaned_data['filesystem']
+        recurse = form.cleaned_data['recursive']
+        try:
+            ZFSUtil.create_snapshot(snap_name, fs_name, recurse)
+        except CalledProcessError as e:
+            self.messages.error(
+                '{1}'.format(
+                    snap_name,
+                    str(e.output.decode('utf-8'))
+                ).capitalize(),
+                extra_tags='ban'
+            )
+        else:
+            self.messages.info(
+                'Created {0}'.format(form.cleaned_data['name'])
+            )
+        return super(SnapshotCreate, self).form_valid(form)
 
 class SnapshotList(BaseView, TemplateView):
     headline = 'ZFS Snapshots'
