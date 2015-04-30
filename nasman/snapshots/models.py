@@ -2,6 +2,7 @@ from datetime import datetime
 from pathlib import Path
 
 import chardet
+from django.contrib.postgres.fields import HStoreField
 from django.db import models
 from django.utils.timezone import get_default_timezone_name
 from djorm_pgfulltext.fields import VectorField
@@ -12,20 +13,35 @@ import pytz
 from sitetree.models import TreeItemBase, TreeBase
 
 
-
-class PathField(models.TextField):
+class PathField(HStoreField):
 
     description = 'A path on a filesystem.'
 
     def to_python(self, value):
+        if isinstance(value, Path):
+            return value
+
         if value is None:
             return value
-        return Path(value)
+
+        path = value['path'].encode(value['encoding'])
+        return Path(path)
+
+    def get_prep_value(self, value):
+        if value is None:
+            return value
+
+        b = bytes(value)
+        enc = chardet.detect(b)['encoding']
+        return {'path': b.decode(enc),
+                'encoding': enc}
 
     def from_db_value(self, value, expression, connection, context):
         if value is None:
             return value
-        return Path(value)
+
+        path = value['path'].encode(value['encoding'])
+        return Path(path)
 
 
 class File(models.Model):
@@ -33,6 +49,7 @@ class File(models.Model):
     Model representing a file/directory/etc on the filesystem
     """
     full_path = PathField('full path')
+    path_encoding = models.TextField('path encoding')
     dirname = models.TextField(
         'dirname',
         db_index=True
@@ -46,7 +63,7 @@ class File(models.Model):
         on_delete=models.SET_NULL,
         null=True
     )
-    magic = models.CharField('magic', blank=True, max_length=255)
+    magic = models.TextField('magic', blank=True)
     modified = models.DateTimeField('modified')
     size = models.IntegerField('size', blank=True, null=True)
     search_index = VectorField()
@@ -69,8 +86,9 @@ class File(models.Model):
     def clean_fields(self, exclude=None):
         path_field = self._meta.get_field('full_path')
         self.full_path = path_field.clean(self.full_path, self)
-        self.dirname = str(self.full_path.parent)
-        self.name = str(self.full_path.name)
+        self.path_encoding = chardet.detect(bytes(self.full_path))['encoding']
+        self.dirname = self._encode_path_value(self.full_path.parent)
+        self.name = self._encode_path_value(self.full_path.name)
         self.directory = self.full_path.is_dir()
         if self.directory:
             mime_type = 'inode/directory'
@@ -80,9 +98,12 @@ class File(models.Model):
         else:
             try:
                 mime_type = magic.from_file(
-                    str(self.full_path), mime=True).decode('utf-8')
+                    self._encode_path_value(self.full_path),
+                    mime=True
+                ).decode('utf-8')
                 self.magic = magic.from_file(
-                    str(self.full_path)).decode('utf-8')
+                    self._encode_path_value(self.full_path)
+                ).decode('utf-8')
             except (magic.MagicException, UnicodeError):
                 icon = None
                 self.magic = ''
@@ -97,10 +118,10 @@ class File(models.Model):
         self.size = self.full_path.lstat().st_size
         super(File, self).clean_fields(exclude)
 
-    @property
-    def decoded_path(self):
-        encoding = chardet.detect(bytes(self.full_path))['encoding']
-        return bytes(self.full_path).decode(encoding)
+    def _encode_path_value(self, value):
+        return str(value).encode(
+            'utf-8',
+            'surrogateescape').decode(self.path_encoding)
 
     def __unicode__(self):
         return self.full_path

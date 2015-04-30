@@ -1,3 +1,4 @@
+chardet
 Celery[redis]
 dj_database_url
 django
