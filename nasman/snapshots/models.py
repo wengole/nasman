@@ -14,11 +14,12 @@ from sitetree.models import TreeItemBase, TreeBase
 
 
 class PathField(HStoreField):
+    #TODO: Turn this into a model method to convert stored unicode to/from a
+    #Path object
 
     description = 'A path on a filesystem.'
 
     def to_python(self, value):
-        # TODO: This should return a dict for HStore
         if isinstance(value, Path):
             return value
 
@@ -26,7 +27,7 @@ class PathField(HStoreField):
             return value
 
         path = value['path'].encode(value['encoding'])
-        return Path(path)
+        return Path(path.decode('utf-8', 'surrogateescape'))
 
     def get_prep_value(self, value):
         if value is None:
@@ -42,7 +43,16 @@ class PathField(HStoreField):
             return value
 
         path = value['path'].encode(value['encoding'])
-        return Path(path)
+        return Path(path.decode('utf-8', 'surrogateescape'))
+
+    def validate(self, value, model_instance):
+        b = bytes(value)
+        enc = chardet.detect(b)['encoding']
+        to_validate = {
+            'path': b.decode(enc),
+            'encoding': enc
+        }
+        return super(PathField, self).validate(to_validate, model_instance)
 
 
 class File(models.Model):
