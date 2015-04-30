@@ -1,5 +1,6 @@
 from datetime import datetime
 from pathlib import Path
+import chardet
 
 from django.db import models
 from django.utils.timezone import get_default_timezone_name
@@ -71,24 +72,35 @@ class File(models.Model):
         self.dirname = str(self.full_path.parent)
         self.name = str(self.full_path.name)
         self.directory = self.full_path.is_dir()
-        try:
-            mime_type = magic.from_file(
-                str(self.full_path), mime=True).decode('utf-8')
-            self.magic = magic.from_file(
-                str(self.full_path)).decode('utf-8')
-        except magic.MagicException:
-            icon = None
-            self.magic = ''
-        else:
+        if self.directory:
+            mime_type = 'inode/directory'
             icon, _ = IconMapping.objects.get_or_create(
                 mime_type=mime_type
             )
+        else:
+            try:
+                mime_type = magic.from_file(
+                    str(self.full_path), mime=True).decode('utf-8')
+                self.magic = magic.from_file(
+                    str(self.full_path)).decode('utf-8')
+            except (magic.MagicException, UnicodeError):
+                icon = None
+                self.magic = ''
+            else:
+                icon, _ = IconMapping.objects.get_or_create(
+                    mime_type=mime_type
+                )
         self.mime_type = icon
         mtime = datetime.fromtimestamp(self.full_path.lstat().st_mtime)
         mtime = pytz.timezone(get_default_timezone_name()).localize(mtime)
         self.modified = mtime
         self.size = self.full_path.lstat().st_size
         super(File, self).clean_fields(exclude)
+
+    @property
+    def decoded_path(self):
+        encoding = chardet.detect(bytes(self.full_path))['encoding']
+        return bytes(self.full_path).decode(encoding)
 
     def __unicode__(self):
         return self.full_path
