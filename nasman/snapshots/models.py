@@ -18,6 +18,7 @@ class PathField(HStoreField):
     description = 'A path on a filesystem.'
 
     def to_python(self, value):
+        # TODO: This should return a dict for HStore
         if isinstance(value, Path):
             return value
 
