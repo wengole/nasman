@@ -76,7 +76,7 @@ class File(models.Model):
     )
     magic = models.TextField('magic', blank=True)
     modified = models.DateTimeField('modified')
-    size = models.IntegerField('size', blank=True, null=True)
+    size = models.BigIntegerField('size', blank=True, null=True)
     search_index = VectorField()
 
     objects = SearchManager(
