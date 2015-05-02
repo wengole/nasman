@@ -2,10 +2,11 @@ from datetime import datetime
 import logging
 from subprocess import check_output, CalledProcessError, STDOUT
 from pathlib import Path
+from django.core.cache import cache
 
 import pytz
 
-from ..base import BaseUtil, BaseFilesystem, BaseSnapshot
+from .base import BaseUtil, BaseFilesystem, BaseSnapshot
 
 
 logger = logging.getLogger(__name__)
@@ -203,6 +204,9 @@ class ZFSUtil(BaseUtil):
         :return: A list of `ZFSSnapshot`
         :rtype: list
         """
+        cached = cache.get('zfs-snapshots')
+        if cached is not None:
+            return cached
         parsed = _parse_cmd_output(
             ['zfs', 'list', '-Hp', '-tsnap', '-oname,creation']
         )
@@ -218,6 +222,7 @@ class ZFSUtil(BaseUtil):
                     ts
                 )
             )
+        cache.set('zfs-snapshots', snaps, 43200)
         return snaps
 
     @classmethod
@@ -275,6 +280,7 @@ class ZFSUtil(BaseUtil):
         :return: The snapshot just created
         :rtype: `nasman.snapshots.zfs.ZFSSnapshot`
         """
+        cache.delete('zfs-snapshots')
         full_name = '{0}@{1}'.format(
             fs_name,
             snap_name
