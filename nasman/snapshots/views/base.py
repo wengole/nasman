@@ -14,5 +14,5 @@ class DashboardView(JSONResponseMixin,
     View for the homepage
     """
     http_method_names = ['get']
-    template_name = 'base.html'
+    template_name = 'dashboard.html'
     headline = 'NASMan Dashboard'
