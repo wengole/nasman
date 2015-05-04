@@ -1,7 +1,7 @@
 import logging
 from subprocess import CalledProcessError
 
-from braces.views import MessageMixin
+from braces.views import MessageMixin, JSONResponseMixin, AjaxResponseMixin
 from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import redirect
 from django.views.generic import View
@@ -42,15 +42,26 @@ class SnapshotCreate(MessageMixin, BaseView, FormView):
             )
         return super(SnapshotCreate, self).form_valid(form)
 
-class SnapshotList(BaseView, ListView):
+class SnapshotList(JSONResponseMixin, AjaxResponseMixin, BaseView, ListView):
     headline = 'ZFS Snapshots'
     template_name = 'snapshot_list.html'
     refresh = False
-    paginate_by = 10
     context_object_name = 'snapshot_list'
 
+    def get_ajax(self, request, *args, **kwargs):
+        draw = int(self.request.GET.get('draw')) + 1
+        records = self.get_queryset()
+        record_count = len(records)
+        json_dict = {
+            'draw': draw,
+            'recordsTotal': record_count,
+            'recordsFiltered': record_count,
+            'data': records
+        }
+        return self.render_json_response(json_dict)
+
     def get_queryset(self):
-        logger.info('Getting snapshot list refresh: {0}'.format(self.refresh))
+        logger.info('Getting snapshot list refresh: %s', self.refresh)
         return ZFSUtil.get_snapshots(self.refresh)
 
 

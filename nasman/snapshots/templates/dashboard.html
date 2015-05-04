@@ -82,6 +82,7 @@
   <script type="text/javascript">
   $(document).ready(function() {
     $('#snapshot-list').dataTable({
+      'serverSide': true,
       'ajax': '{% url "nasman:snapshots" %}'
     });
   });
