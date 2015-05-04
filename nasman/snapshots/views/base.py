@@ -1,4 +1,4 @@
-from braces.views import JSONResponseMixin, AjaxResponseMixin, SetHeadlineMixin
+from braces.views import SetHeadlineMixin
 from vanilla import TemplateView
 
 
@@ -6,9 +6,7 @@ class BaseView(SetHeadlineMixin):
     pass
 
 
-class DashboardView(JSONResponseMixin,
-                    AjaxResponseMixin,
-                    BaseView,
+class DashboardView(BaseView,
                     TemplateView):
     """
     View for the homepage

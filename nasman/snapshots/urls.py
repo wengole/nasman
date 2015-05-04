@@ -11,6 +11,8 @@ urlpatterns = patterns(
     url(r'^file-browser$', FileBrowser.as_view(), name='file-browser'),
     url(r'^filesystems$', FilesystemList.as_view(), name='filesystems'),
     url(r'^snapshots$', snaps.SnapshotList.as_view(), name='snapshots'),
+    url(r'^snapshots/refresh$', snaps.SnapshotList.as_view(refresh=True),
+        name='snapshots-refresh'),
     url(r'^snapshot/add$', snaps.SnapshotCreate.as_view(), name='add-snap'),
     url(r'^snapshot/(?P<name>[\w\d@\-:.\/]+)/reindex$',
         snaps.SnapshotReindex.as_view(),

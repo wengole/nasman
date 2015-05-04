@@ -1,14 +1,18 @@
+import logging
 from subprocess import CalledProcessError
 from braces.views import MessageMixin
 from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import redirect
 from django.views.generic import View
-from vanilla import FormView, TemplateView
+from django.views.generic.list import MultipleObjectMixin
+from vanilla import FormView, TemplateView, ListView
 
 from ..forms import SnapshotForm
 from .base import BaseView
 from nasman.snapshots import tasks
 from ..utils.zfs import ZFSUtil
+
+logger = logging.getLogger(__name__)
 
 
 class SnapshotCreate(MessageMixin, BaseView, FormView):
@@ -37,14 +41,16 @@ class SnapshotCreate(MessageMixin, BaseView, FormView):
             )
         return super(SnapshotCreate, self).form_valid(form)
 
-class SnapshotList(BaseView, TemplateView):
+class SnapshotList(BaseView, ListView):
     headline = 'ZFS Snapshots'
     template_name = 'snapshot_list.html'
+    refresh = False
+    paginate_by = 10
+    context_object_name = 'snapshot_list'
 
-    def get_context_data(self, **kwargs):
-        context = super(SnapshotList, self).get_context_data()
-        context['object_list'] = ZFSUtil.get_snapshots()
-        return context
+    def get_queryset(self):
+        logger.info('Getting snapshot list refresh: {0}'.format(self.refresh))
+        return ZFSUtil.get_snapshots(self.refresh)
 
 
 class SnapshotReindex(MessageMixin, View):

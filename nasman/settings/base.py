@@ -179,6 +179,10 @@ LOGGING = {
         'django': {
             'handlers': ['logfile'],
             'level': 'INFO',
+        },
+        'nasman': {
+            'handlers': ['logfile'],
+            'level': 'INFO',
         }
     }
 }
