@@ -51,6 +51,8 @@ class SnapshotList(JSONResponseMixin, AjaxResponseMixin, BaseView, ListView):
 
     def get_ajax(self, request, *args, **kwargs):
         draw = int(self.request.GET.get('draw', 0)) + 1
+        start = int(self.request.GET.get('start', 0))
+        end = start + int(self.request.GET.get('length', 1))
         records = [
             {'name': x.name,
              'created': naturaltime(x.timestamp),
@@ -62,7 +64,7 @@ class SnapshotList(JSONResponseMixin, AjaxResponseMixin, BaseView, ListView):
             'draw': draw,
             'recordsTotal': record_count,
             'recordsFiltered': record_count,
-            'data': records
+            'data': records[start:end]
         }
         return self.render_json_response(json_dict)
 
