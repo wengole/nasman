@@ -1,4 +1,5 @@
 import sys
+import os
 from os.path import join, abspath, dirname
 
 # PATH vars
@@ -10,7 +11,7 @@ show_if_debug = lambda *x: DEBUG
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'CHANGE THIS!!!'
+SECRET_KEY = os.getenv('SECRET_KEY', 'CHANGE THIS!!!')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
