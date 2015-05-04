@@ -2,6 +2,7 @@ import logging
 from subprocess import CalledProcessError
 
 from braces.views import MessageMixin, JSONResponseMixin, AjaxResponseMixin
+from django.contrib.humanize.templatetags.humanize import naturaltime
 from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import redirect
 from django.views.generic import View
@@ -50,7 +51,13 @@ class SnapshotList(JSONResponseMixin, AjaxResponseMixin, BaseView, ListView):
 
     def get_ajax(self, request, *args, **kwargs):
         draw = int(self.request.GET.get('draw')) + 1
-        records = self.get_queryset()
+        records = [
+            [x.name,
+             naturaltime(x.timestamp),
+             x.timestamp,
+             ]
+            for x in self.get_queryset()
+            ]
         record_count = len(records)
         json_dict = {
             'draw': draw,

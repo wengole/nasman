@@ -21,7 +21,7 @@
             </div>
           </div>
         </div>
-        <div class="box-body table-responsive no-padding">
+        <div class="box-body table">
           <table
               id="snapshot-list"
               class="table table-striped table-hover">
@@ -80,10 +80,21 @@
 {% block javascript %}
   {{ block.super }}
   <script type="text/javascript">
+  function actionButtons (data, row, type, meta) {
+
+  }
   $(document).ready(function() {
     $('#snapshot-list').dataTable({
+      'lengthChange': false,
+      'searching': false,
       'serverSide': true,
-      'ajax': '{% url "nasman:snapshots" %}'
+      'ajax': '{% url "nasman:snapshots" %}',
+      'columnDefs': [
+        {
+          'targets': -1,
+          'render': actionButtons
+        }
+      ]
     });
   });
   </script>
