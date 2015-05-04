@@ -9,8 +9,16 @@
           <h3 class="box-title"><i class="fa fa-camera"></i> Snapshots</h3>
 
           <div class="box-tools pull-right">
-            <a href="{% url "nasman:add-snap" %}"
-               class="btn btn-success btn-sm">Add snapshot</a>
+            <div class="btn-group">
+              <a href="{% url "nasman:snapshots-refresh" %}#content"
+                 class="btn btn-primary btn-sm">
+                <i class="fa fa-refresh"></i>
+              </a>
+              <a href="{% url "nasman:add-snap" %}"
+                 class="btn btn-success btn-sm">
+                <i class="fa fa-plus"></i>
+              </a>
+            </div>
           </div>
         </div>
         <div class="box-body table-responsive no-padding">
@@ -37,8 +45,12 @@
         <h3 class="box-title"><i class="fa fa-database"></i> Filesystems</h3>
 
         <div class="box-tools pull-right">
-          <a href="#"
-             class="btn btn-success btn-sm">Add filesystem</a>
+          <div class="btn-group">
+            <a href="#"
+               class="btn btn-success btn-sm">
+              <i class="fa fa-plus"></i>
+            </a>
+          </div>
         </div>
       </div>
         <div class="box-body table-responsive no-padding">
