@@ -7,6 +7,7 @@ import djorm_pgfulltext.fields
 import fontawesome.fields
 import django.db.models.deletion
 import sitetree.models
+import nasman.snapshots.fields
 
 import nasman.snapshots.models
 
@@ -24,7 +25,7 @@ class Migration(migrations.Migration):
             name='File',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, verbose_name='ID', serialize=False)),
-                ('full_path', nasman.snapshots.models.PathField(verbose_name='full path')),
+                ('full_path', nasman.snapshots.fields.PathField(verbose_name='full path')),
                 ('path_encoding', models.TextField(verbose_name='path encoding')),
                 ('dirname', models.TextField(verbose_name='dirname', db_index=True)),
                 ('name', models.TextField(verbose_name='name', db_index=True)),

@@ -1,6 +1,7 @@
+from pathlib import Path
 import floppyforms as forms
 
-from .formfields import FilesystemField, SnapshotField, PathField
+from nasman.snapshots.utils.zfs import ZFSUtil
 from .utils.zfs import ZFSUtil
 from .widgets import (
     SmallSelectWidget,
@@ -19,6 +20,24 @@ def filesystem_choices():
     filesystems = [x.name for x in ZFSUtil.get_filesystems()]
     choices = (('placeholder', 'Select filesystem'),)
     return choices + tuple(zip(filesystems, filesystems))
+
+
+class PathField(forms.Field):
+    def clean(self, value):
+        if value:
+            return Path(value)
+
+
+class FilesystemField(forms.ChoiceField):
+    def clean(self, value):
+        if value:
+            return ZFSUtil.get_filesystem(value)
+
+
+class SnapshotField(forms.ChoiceField):
+    def clean(self, value):
+        if value:
+            return ZFSUtil.get_snapshot(value)
 
 
 class SnapshotForm(forms.Form):
