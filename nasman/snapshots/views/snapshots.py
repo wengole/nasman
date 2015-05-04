@@ -1,16 +1,17 @@
 import logging
 from subprocess import CalledProcessError
+
 from braces.views import MessageMixin
 from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import redirect
 from django.views.generic import View
-from django.views.generic.list import MultipleObjectMixin
-from vanilla import FormView, TemplateView, ListView
+from vanilla import FormView, ListView
 
 from ..forms import SnapshotForm
 from .base import BaseView
-from nasman.snapshots import tasks
+from .. import tasks
 from ..utils.zfs import ZFSUtil
+
 
 logger = logging.getLogger(__name__)
 
