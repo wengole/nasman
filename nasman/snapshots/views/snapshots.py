@@ -50,12 +50,11 @@ class SnapshotList(JSONResponseMixin, AjaxResponseMixin, BaseView, ListView):
     context_object_name = 'snapshot_list'
 
     def get_ajax(self, request, *args, **kwargs):
-        draw = int(self.request.GET.get('draw')) + 1
+        draw = int(self.request.GET.get('draw', 0)) + 1
         records = [
-            [x.name,
-             naturaltime(x.timestamp),
-             x.timestamp,
-             ]
+            {'name': x.name,
+             'created': naturaltime(x.timestamp),
+             }
             for x in self.get_queryset()
             ]
         record_count = len(records)
@@ -78,7 +77,7 @@ class SnapshotReindex(MessageMixin, View):
     def get(self, request, name=None):
         res = tasks.index_snapshot.apply_async(args=(name, ))
         self.messages.info('Reindex of {0} started'.format(name))
-        return redirect('nasman:snapshots')
+        return redirect('nasman:dashboard')
 
 
 class SnapshotMount(MessageMixin, View):

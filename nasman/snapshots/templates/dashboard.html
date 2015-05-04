@@ -10,10 +10,10 @@
 
           <div class="box-tools pull-right">
             <div class="btn-group">
-              <a href="{% url "nasman:snapshots-refresh" %}#content"
-                 class="btn btn-primary btn-sm">
+              <button href="{% url "nasman:snapshots-refresh" %}#content"
+                      class="btn btn-primary btn-sm snap-refresh">
                 <i class="fa fa-refresh"></i>
-              </a>
+              </button>
               <a href="{% url "nasman:add-snap" %}"
                  class="btn btn-success btn-sm">
                 <i class="fa fa-plus"></i>
@@ -41,18 +41,18 @@
     <!-- Filesystem list -->
     <div class="col-md-6">
       <div class="box box-primary">
-      <div class="box-header with-border">
-        <h3 class="box-title"><i class="fa fa-database"></i> Filesystems</h3>
+        <div class="box-header with-border">
+          <h3 class="box-title"><i class="fa fa-database"></i> Filesystems</h3>
 
-        <div class="box-tools pull-right">
-          <div class="btn-group">
-            <a href="#"
-               class="btn btn-success btn-sm">
-              <i class="fa fa-plus"></i>
-            </a>
+          <div class="box-tools pull-right">
+            <div class="btn-group">
+              <a href="#"
+                 class="btn btn-success btn-sm">
+                <i class="fa fa-plus"></i>
+              </a>
+            </div>
           </div>
         </div>
-      </div>
         <div class="box-body table-responsive no-padding">
           <table class="table table-striped table-hover">
             <thead>
@@ -80,22 +80,49 @@
 {% block javascript %}
   {{ block.super }}
   <script type="text/javascript">
-  function actionButtons (data, row, type, meta) {
-
-  }
-  $(document).ready(function() {
-    $('#snapshot-list').dataTable({
-      'lengthChange': false,
-      'searching': false,
-      'serverSide': true,
-      'ajax': '{% url "nasman:snapshots" %}',
-      'columnDefs': [
-        {
-          'targets': -1,
-          'render': actionButtons
-        }
-      ]
+    var snapshot_list;
+    function actionButtons(data, type, row, meta) {
+      var reindex_url = '/snapshot/' + row.name + '/reindex';
+      var mount_url = '/snapshot/' + row.name + '/mount';
+      return '<div class="btn-group pull-right">' +
+          '<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">' +
+          '<i class="fa fa-cog"></i></button>' +
+          '<ul class="dropdown-menu">' +
+          '<li><a href="' + reindex_url + '">Reindex</a></li>' +
+          '<li><a href="' + mount_url + '">Mount</a></li></ul></div>';
+    }
+    $(document).ready(function () {
+      $('button.snap-refresh').click(function () {
+        $.get(
+            '/snapshots/refresh',
+            function () {
+              snapshot_list.api().ajax.reload();
+            }
+        );
+      });
+      snapshot_list = $('#snapshot-list').dataTable({
+        'lengthChange': false,
+        'searching': false,
+        'serverSide': true,
+        'ajax': '{% url "nasman:snapshots" %}',
+        'ordering': false,
+        'columnDefs': [
+          {
+            'targets': -1,
+            'render': actionButtons,
+            'sortable': false
+          },
+          {
+            'targets': 0,
+            'data': 'name'
+          },
+          {
+            'targets': 1,
+            'data': 'created',
+            'orderData': 2
+          }
+        ]
+      });
     });
-  });
   </script>
 {% endblock javascript %}
