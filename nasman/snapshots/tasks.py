@@ -46,10 +46,9 @@ def collect_files(path):
     dirs, files = build_file_list(path)
     seconds = (datetime.now() - start_time).total_seconds()
     logger.info(
-        'Found {0} files and directories in {1:.3}s'.format(
-            len(dirs) + len(files),
-            seconds
-        )
+        'Found %d files and directories in %.3fs',
+        (len(dirs) + len(files)),
+        seconds
     )
     return dirs, files
 
