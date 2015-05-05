@@ -25,6 +25,7 @@ def _parse_cmd_output(cmd):
         output = check_output(cmd, stderr=STDOUT)
     except CalledProcessError as e:
         logger.error('Failed to pass command %s', ' '.join(cmd))
+        logger.error('Output was %s', e.output)
         raise
     return [x.split() for x in output.decode('utf-8').splitlines()]
 
@@ -139,20 +140,20 @@ class ZFSFilesystem(BaseFilesystem):
         """
         Whether this filesystem is currently mounted
         """
-        parsed = _parse_cmd_output(
-            ['zfs', 'get', 'mounted', '-H', self.name]
-        )
-        return True if parsed[0][2] == 'yes' else False
+        return self.mount()
 
     def mount(self):
         """
         If this file system is not already mounted, mount it using ZFS
         """
-        if self.is_mounted:
-            return True
-        parsed = _parse_cmd_output(
-            ['zfs', 'mount', self.name]
-        )
+        try:
+            _parse_cmd_output(
+                ['zfs', 'mount', self.name]
+            )
+        except CalledProcessError as e:
+            if 'already mounted' in str(e.output):
+                return True
+            raise
         return True
 
     def unmount(self):
