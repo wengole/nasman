@@ -82,7 +82,7 @@ class FileBrowser(BaseView, FormView):
         # TODO: context relevant snapshot list
         context.update({
             'up_one': up_one,
-            'filesystem_list': object_list,
+            'files_list': object_list,
             'path': breadcrumbs,
             'browser_title': breadcrumbs[-1],
         })
