@@ -4,7 +4,7 @@
   <div class="row">
     <!-- Snapshot list -->
     <div class="col-md-6">
-      <div class="box box-primary">
+      <div class="box box-primary snapshot-box">
         <div class="box-header with-border">
           <h3 class="box-title"><i class="fa fa-camera"></i> Snapshots</h3>
 
@@ -81,6 +81,7 @@
   {{ block.super }}
   <script type="text/javascript">
     var snapshot_list;
+    var snapshot_box = $('div.snapshot-box');
     function actionButtons(data, type, row, meta) {
       var reindex_url = '/snapshot/' + row.name + '/reindex';
       var mount_url = '/snapshot/' + row.name + '/mount';
@@ -124,6 +125,12 @@
           }
         ]
       });
+      snapshot_list.on('preXhr', function (e, settings, data) {
+        snapshot_box.append('<div class="overlay snapshot-overlay"><i class="fa fa-refresh fa-spin"></i></div>');
+      });
+      snapshot_list.on('xhr', function (e, settings, data) {
+        snapshot_box.find('div.snapshot-overlay').remove();
+      })
     });
   </script>
 {% endblock javascript %}
