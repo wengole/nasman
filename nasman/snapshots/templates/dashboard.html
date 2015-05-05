@@ -125,10 +125,10 @@
           }
         ]
       });
-      snapshot_list.on('preXhr', function (e, settings, data) {
+      snapshot_list.on('preXhr.dt', function (e, settings, data) {
         snapshot_box.append('<div class="overlay snapshot-overlay"><i class="fa fa-refresh fa-spin"></i></div>');
       });
-      snapshot_list.on('xhr', function (e, settings, data) {
+      snapshot_list.on('xhr.dt', function (e, settings, data) {
         snapshot_box.find('div.snapshot-overlay').remove();
       })
     });
