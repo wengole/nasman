@@ -3,15 +3,14 @@ from django.utils.translation import ugettext_lazy as _
 from sitetree.admin import TreeItemAdmin, override_item_admin
 
 from .models import File, IconMapping
+from .forms import FileForm
 
 
 @admin.register(File)
 class FileAdmin(admin.ModelAdmin):
-    list_display = ('name', 'dirname', 'mime_type',
-                    'modified', 'size',)
-    list_display_links = ('name',)
-    search_fields = ['full_path', ]
-
+    list_display = ('original_path', 'snapshot_name',)
+    list_display_links = ('original_path',)
+    form = FileForm
 
 @admin.register(IconMapping)
 class IconMappingAdmin(admin.ModelAdmin):
