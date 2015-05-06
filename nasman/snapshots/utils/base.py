@@ -1,6 +1,35 @@
+import pathlib
 import abc
+import chardet
 
 from django.utils.timezone import get_default_timezone_name, now
+
+
+def decode_from_filesystem(path):
+    """
+    Decode a given Path object to unicode by detecting its encoding
+    :param path: The Path object to decode
+    :type path: pathlib.Path
+    :return: Tuple of the str representation of the path, and it's original
+        codec name
+    :rtype: tuple
+    """
+    value = str(path)
+    b = bytes(path)
+    codec = chardet.detect(b)['encoding']
+    return value.encode('utf-8', 'surrogateescape').decode(codec), codec
+
+def encode_to_filesystem(value, codec):
+    """
+    Encode the given value using the given codec back Path object
+    :param value: Unicode represented path
+    :type value: str
+    :param codec: Originally detected codec
+    :type codec: str
+    :return: Path object
+    :rtype: pathlib.Path
+    """
+    return pathlib.Path(value.encode(codec).decode('utf-8', 'surrogateescape'))
 
 
 class BaseFilesystem(metaclass=abc.ABCMeta):

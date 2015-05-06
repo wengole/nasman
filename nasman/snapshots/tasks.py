@@ -1,10 +1,11 @@
 from datetime import datetime
 import logging
-from celery import shared_task
 from pathlib import Path
-import chardet
+
+from celery import shared_task
 
 from .models import File
+from .utils.base import decode_from_filesystem
 from .utils.zfs import ZFSUtil
 
 logger = logging.getLogger(__name__)
@@ -65,14 +66,15 @@ def index_snapshot(snap_name):
     dirs, files = collect_files(snap.mountpoint)
     logger.info('Saving files to database')
     for x in dirs + files:
-        orig_path = fs_root.joinpath(x.relative_to(fs.mountpoint))
-        encoding = chardet.detect(bytes(x))['encoding']
+        orig_path, encoding = decode_from_filesystem(
+            fs_root.joinpath(x.relative_to(snap.mountpoint))
+        )
+        path, _ = decode_from_filesystem(x)
         obj = File(
-            snapshot_path=str(x).encode(
-                'utf-8',
-                'surrogateescape').decode(self.path_encoding),
-            original_path=str(orig_path),
-            snapshot_name=snap_name
+            snapshot_path=path,
+            original_path=orig_path,
+            snapshot_name=snap_name,
+            path_encoding=encoding
         )
         obj.save()
 
