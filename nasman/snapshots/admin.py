@@ -11,6 +11,7 @@ class FileAdmin(admin.ModelAdmin):
     list_display = ('original_path', 'snapshot_name',)
     list_display_links = ('original_path',)
     form = FileForm
+    readonly_fields = ('path_encoding',)
 
 @admin.register(IconMapping)
 class IconMappingAdmin(admin.ModelAdmin):

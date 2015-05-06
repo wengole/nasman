@@ -19,6 +19,16 @@ class File(models.Model):
         'snapshot name',
         help_text='Name of the snapshot'
     )
+    path_encoding = models.TextField(
+        'path encoding',
+        help_text='The filesystem encoding for this file',
+        blank=True
+    )
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        pass
+
 
     class Meta:
         app_label = 'snapshots'

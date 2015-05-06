@@ -39,7 +39,7 @@ class ZFSSnapshot(BaseSnapshot):
         """
         The filesystem this is a snapshot of
         """
-        return self.parent_name
+        return ZFSUtil.get_filesystem(self.parent_name)
 
     @property
     def timestamp(self):

@@ -1,8 +1,10 @@
 from datetime import datetime
 import logging
 from celery import shared_task
-from nasman.snapshots.models import File
+from pathlib import Path
+import chardet
 
+from .models import File
 from .utils.zfs import ZFSUtil
 
 logger = logging.getLogger(__name__)
@@ -56,13 +58,20 @@ def collect_files(path):
 @shared_task
 def index_snapshot(snap_name):
     snap = ZFSUtil.get_snapshot(snap_name)
+    fs = snap.filesystem
+    fs_root = Path(fs._mountpoint)
     if not snap.is_mounted:
         snap.mount()
     dirs, files = collect_files(snap.mountpoint)
     logger.info('Saving files to database')
     for x in dirs + files:
+        orig_path = fs_root.joinpath(x.relative_to(fs.mountpoint))
+        encoding = chardet.detect(bytes(x))['encoding']
         obj = File(
-            full_path=x,
+            snapshot_path=str(x).encode(
+                'utf-8',
+                'surrogateescape').decode(self.path_encoding),
+            original_path=str(orig_path),
             snapshot_name=snap_name
         )
         obj.save()
