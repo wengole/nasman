@@ -8,10 +8,10 @@ from .forms import FileForm
 
 @admin.register(File)
 class FileAdmin(admin.ModelAdmin):
-    list_display = ('original_path', 'snapshot_name',)
+    list_display = ('original_path', 'snapshot_name')
     list_display_links = ('original_path',)
     form = FileForm
-    readonly_fields = ('path_encoding',)
+    readonly_fields = ('path_encoding', 'search_index')
 
 @admin.register(IconMapping)
 class IconMappingAdmin(admin.ModelAdmin):

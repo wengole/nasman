@@ -1,4 +1,6 @@
 from django.db import models
+from djorm_pgfulltext.fields import VectorField
+from djorm_pgfulltext.models import SearchManager
 from fontawesome.fields import IconField
 from sitetree.models import TreeItemBase, TreeBase
 
@@ -24,11 +26,14 @@ class File(models.Model):
         help_text='The filesystem encoding for this file',
         blank=True
     )
+    search_index = VectorField()
 
-    def save(self, force_insert=False, force_update=False, using=None,
-             update_fields=None):
-        pass
-
+    objects = SearchManager(
+        fields=('snapshot_path', 'original_path'),
+        config='pg_catalog.english',
+        search_field='search_index',
+        auto_update_search_field=True
+    )
 
     class Meta:
         app_label = 'snapshots'

@@ -87,8 +87,13 @@ class FileForm(forms.ModelForm):
 
     class Meta:
         model = File
-        fields = ('snapshot_path', 'original_path', 'snapshot_name',)
+        fields = (
+            'snapshot_path',
+            'original_path',
+            'snapshot_name',
+        )
         widgets = {
             'snapshot_path': forms.TextInput(),
             'original_path': forms.TextInput(),
+            'search_index': forms.Textarea(),
         }
