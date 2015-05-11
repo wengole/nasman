@@ -17,6 +17,7 @@ python-dateutil
 python-magic
 pytz
 readline
+swampdragon
 uwsgi
 
 # Non pypi releases

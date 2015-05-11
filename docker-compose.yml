@@ -31,3 +31,14 @@ celery:
     - db
   privileged: true
   restart: always
+swampdragon:
+  image: nasman_web
+  command: python server.py
+  volumes_from:
+    - web
+  links:
+    - redis
+    - db
+  restart: always
+  ports:
+    - "9999:9999"

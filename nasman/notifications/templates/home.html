@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static i18n humanize swampdragon_tags %}
+
+{% block angular-app %}ng-app="NotificationApp"{% endblock %}
+
+{% block notifications %}
+{% verbatim %}
+  <!-- This is our list of notifications -->
+  <ul ng-controller="NotificationListCtrl"
+      id="notifications"
+      class="menu">
+      <li ng-repeat="notification in notifications">
+        <a href="#">{{ notification.message }}</a>
+      </li>
+  </ul>
+{% endverbatim %}
+{% endblock notifications %}
+
+
+{% block javascript %}
+  {{ block.super }}
+  <!-- SwampDragon -->
+  {% swampdragon_settings %}
+  <script type="text/javascript"
+          src="{% static "swampdragon/js/dist/swampdragon.js" %}"></script>
+  <script type="text/javascript"
+          src="{% static "swampdragon/js/dist/datamapper.js" %}"></script>
+  <script type="text/javascript"
+          src="{% static "swampdragon/js/angular/services.js" %}"></script>
+
+  <!-- Notifications -->
+  <script type="text/javascript"
+          src="{% static "js/app.js" %}"></script>
+  <script type="text/javascript"
+          src="{% static "js/controllers.js" %}"></script>
+{% endblock javascript %}

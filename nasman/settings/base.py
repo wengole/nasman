@@ -56,10 +56,12 @@ THIRD_PARTY_APPS = (
     'sitetree',
     'django_extensions',
     'fontawesome',
+    'swampdragon',
 )
 
 PROJECT_APPS = (
     'nasman.snapshots',
+    'nasman.notifications',
 )
 
 INSTALLED_APPS = PROJECT_APPS + DJANGO_APPS + THIRD_PARTY_APPS
@@ -200,6 +202,12 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 SESSION_CACHE_ALIAS = 'default'
 SITETREE_MODEL_TREE_ITEM = 'snapshots.NasmanTreeItem'
 
+SWAMP_DRAGON_CONNECTION = (
+    'swampdragon.connections.sockjs_connection.DjangoSubscriberConnection',
+    '/data')
+DRAGON_URL = 'http://localhost:9999/'
+SWAMP_DRAGON_HOST = '0.0.0.0'
+SWAMP_DRAGON_REDIS_HOST = 'redis'
 
 # .local.py overrides all the common settings.
 try:
