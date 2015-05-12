@@ -18,6 +18,8 @@ python-magic
 pytz
 readline
 swampdragon
+swampdragon_auth
+swampdragon_notifications
 uwsgi
 
 # Non pypi releases
