@@ -14,5 +14,8 @@ RUN mkdir /host_root
 ENV PYTHONUNBUFFERED 1
 COPY requirements.txt /root/
 WORKDIR /root/
+RUN pip install pip -U
+RUN pip install tornado uwsgi pyyaml psycopg2 pyzmq
+RUN pip install readline
 RUN pip install -r /root/requirements.txt
 WORKDIR /srv
