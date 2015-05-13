@@ -12,10 +12,12 @@ RUN mkdir /host_root
 
 # Install python packages
 ENV PYTHONUNBUFFERED 1
-COPY requirements.txt /root/
-WORKDIR /root/
+# Update pip and install some slow packages, to make updates to requirements faster to build
 RUN pip install pip -U
 RUN pip install tornado uwsgi pyyaml psycopg2 pyzmq
 RUN pip install readline
+
+COPY requirements.txt /root/
+WORKDIR /root/
 RUN pip install -r /root/requirements.txt
 WORKDIR /srv
