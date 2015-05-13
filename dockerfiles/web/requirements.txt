@@ -17,11 +17,10 @@ python-dateutil
 python-magic
 pytz
 readline
-swampdragon
 swampdragon_auth
-swampdragon_notifications
 uwsgi
 
 # Non pypi releases
 git+https://github.com/wengole/django-fontawesome.git@master#egg=django-fontawesome
 git+https://github.com/wengole/django-sitetree.git@master#egg=django-sitetree
+git+https://github.com/jonashagstedt/swampdragon.git@0.4.3#egg=swampdragon
