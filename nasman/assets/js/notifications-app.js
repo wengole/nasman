@@ -1,4 +1,4 @@
-var NotificationApp = angular.module('NotificationApp', [
+var NasManApp = angular.module('NasManApp', [
     'SwampDragonServices',
-    'NotificationControllers'
+    'NasManControllers'
 ]);

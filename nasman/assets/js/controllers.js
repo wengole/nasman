@@ -1,6 +1,6 @@
-var NotificationControllers = angular.module('NotificationControllers', []);
+var NasManControllers = angular.module('NasManControllers', []);
 
-NotificationControllers.controller(
+NasManControllers.controller(
     'NotificationListCtrl',
     ['$scope', '$dragon',
         function ($scope, $dragon) {
@@ -19,7 +19,16 @@ NotificationControllers.controller(
                     'notifications').then(
                     function (response) {
                         $scope.notifications = response.data;
+                        $scope.notification_count = response.data.length;
+                        $scope.plural = Boolean(response.data.length != 1);
                     });
+
+                $dragon.callRouter('get_count', 'notifications').then(
+                    function () {
+                        $scope.notification_count = response.data.length;
+                        $scope.plural = Boolean(response.data.length != 1);
+                    }
+                );
             });
 
             $dragon.onChannelMessage(

@@ -5,5 +5,5 @@ from .views import Notifications
 
 urlpatterns = patterns(
     '',
-    url(r'^$', Notifications.as_view(), name='home'),
+    url(r'^$', Notifications.as_view(), name='list'),
 )

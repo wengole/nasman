@@ -57,6 +57,7 @@ THIRD_PARTY_APPS = (
     'django_extensions',
     'fontawesome',
     'swampdragon',
+    'swampdragon_auth',
 )
 
 PROJECT_APPS = (
@@ -205,7 +206,7 @@ SITETREE_MODEL_TREE_ITEM = 'snapshots.NasmanTreeItem'
 SWAMP_DRAGON_CONNECTION = (
     'swampdragon.connections.sockjs_connection.DjangoSubscriberConnection',
     '/data')
-DRAGON_URL = 'http://localhost:9999/'
+DRAGON_URL = 'http://192.168.1.56:9999/'
 SWAMP_DRAGON_HOST = '0.0.0.0'
 SWAMP_DRAGON_REDIS_HOST = 'redis'
 

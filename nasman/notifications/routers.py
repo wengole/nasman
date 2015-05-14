@@ -1,7 +1,7 @@
 import logging
 
 from swampdragon import route_handler
-from swampdragon.route_handler import ModelPubRouter
+from swampdragon.route_handler import ModelRouter
 
 from .models import Notification
 from .serializers import NotificationSerializer
@@ -9,7 +9,7 @@ from .serializers import NotificationSerializer
 logger = logging.getLogger(__name__)
 
 
-class NotificationRouter(ModelPubRouter):
+class NotificationRouter(ModelRouter):
     route_name = 'notifications'
     model = Notification
     serializer_class = NotificationSerializer
@@ -23,6 +23,11 @@ class NotificationRouter(ModelPubRouter):
         qs = self.model.objects.all()
         logger.info('%s', qs)
         return qs
+
+    def get_count(self):
+        logger.info('Getting count for user: %s', self.connection.user)
+        return self.get_query_set().count()
+
 
 
 route_handler.register(NotificationRouter)
