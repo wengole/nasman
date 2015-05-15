@@ -1,12 +1,15 @@
-from vanilla import ListView
+from rest_framework import viewsets
+from rest_framework.pagination import LimitOffsetPagination
+
 from .models import Notification
-from nasman.snapshots.views.base import BaseView
+from .serializers import NotificationSerializer
 
 
-class Notifications(BaseView, ListView):
-    model = Notification
-    template_name = 'home.html'
-    headline = 'Notifications Demo'
+class NotificationPagination(LimitOffsetPagination):
+    default_limit = 10
 
-    def get_queryset(self):
-        return self.model.objects.order_by('-pk')[:5]
+
+class NotificationViewSet(viewsets.ModelViewSet):
+    queryset = Notification.objects.all()
+    serializer_class = NotificationSerializer
+    pagination_class = NotificationPagination

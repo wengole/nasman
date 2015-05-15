@@ -1,6 +1,5 @@
 chardet
 Celery[redis]
-dj_database_url
 django
 django-bootstrap-pagination
 django-braces
@@ -10,6 +9,7 @@ django-floppyforms
 django-model-utils
 django-redis
 django-vanilla-views
+djangorestframework
 djorm-ext-pgfulltext
 ipython[notebook]
 psycopg2
@@ -17,10 +17,8 @@ python-dateutil
 python-magic
 pytz
 readline
-swampdragon_auth
 uwsgi
 
 # Non pypi releases
 git+https://github.com/wengole/django-fontawesome.git@master#egg=django-fontawesome
 git+https://github.com/wengole/django-sitetree.git@master#egg=django-sitetree
-git+https://github.com/jonashagstedt/swampdragon.git@0.4.3#egg=swampdragon

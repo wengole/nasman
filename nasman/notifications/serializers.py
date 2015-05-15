@@ -1,7 +1,9 @@
-from swampdragon.serializers.model_serializer import ModelSerializer
+from rest_framework import serializers
+
+from .models import Notification
 
 
-class NotificationSerializer(ModelSerializer):
+class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
-        model = 'notifications.Notification'
-        publish_fields = ['message']
+        model = Notification
+        fields = ('message', )

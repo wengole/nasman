@@ -56,8 +56,7 @@ THIRD_PARTY_APPS = (
     'sitetree',
     'django_extensions',
     'fontawesome',
-    'swampdragon',
-    'swampdragon_auth',
+    'rest_framework',
 )
 
 PROJECT_APPS = (

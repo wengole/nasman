@@ -1,9 +1,8 @@
-from django.conf.urls import patterns, url
+from rest_framework.routers import DefaultRouter
 
-from .views import Notifications
+from . import views
 
+router = DefaultRouter()
+router.register(r'messages', views.NotificationViewSet)
 
-urlpatterns = patterns(
-    '',
-    url(r'^$', Notifications.as_view(), name='list'),
-)
+urlpatterns = router.urls
