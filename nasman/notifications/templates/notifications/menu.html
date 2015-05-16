@@ -1,0 +1,33 @@
+<!-- Notifications Menu -->
+<li class="dropdown notifications-menu"
+    ng-controller="NotificationCtrl">
+  {% verbatim %}
+  <!-- Menu toggle button -->
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+    <i class="fa fa-bell-o"></i>
+    <span class="label label-warning">{{ count }}</span>
+  </a>
+  <ul class="dropdown-menu">
+    <li class="header">You have {{ count }}
+      <ng-pluralize count="count"
+                    when="
+                    {'0': 'notifications',
+                     'one': 'notification',
+                     'other': 'notifications'}"></ng-pluralize>
+    </li>
+    <li>
+      <!-- Inner Menu: contains the notifications -->
+      <ul class="menu">
+        <li ng-repeat="n in notifications">
+          <!-- start notification -->
+          <a href="#">
+            <i class="fa fa-users text-aqua"></i>{{ n.message }}
+          </a>
+        </li>
+        <!-- end notification -->
+      </ul>
+    </li>
+    <li class="footer"><a href="#">View all</a></li>
+  </ul>
+  {% endverbatim %}
+</li>
