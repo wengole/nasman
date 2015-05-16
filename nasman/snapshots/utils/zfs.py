@@ -209,16 +209,12 @@ class ZFSUtil(BaseUtil):
         return filesystems
 
     @classmethod
-    def get_snapshots(cls, refresh=False):
+    def get_snapshots(cls):
         """
         Gets a list of snapshots
         :return: A list of `ZFSSnapshot`
         :rtype: list
         """
-        cached = cache.get('zfs-snapshots')
-        if not refresh and cached is not None:
-            logger.info('Returning cached list')
-            return cached
         parsed = _parse_cmd_output(
             ['zfs', 'list', '-Hp', '-tsnap', '-oname,creation']
         )
@@ -234,8 +230,6 @@ class ZFSUtil(BaseUtil):
                     ts
                 )
             )
-        cache.set('zfs-snapshots', snaps, 43200)
-        logger.info('Refreshed list of snapshots {}'.format(snaps))
         return snaps
 
     @classmethod
