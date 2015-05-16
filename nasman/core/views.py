@@ -6,13 +6,14 @@ from .models import Notification
 from .serializers import NotificationSerializer
 
 
-class NotificationPagination(LimitOffsetPagination):
+
+class NasManPagination(LimitOffsetPagination):
     default_limit = 10
 
 
 class NotificationViewSet(viewsets.ModelViewSet):
     serializer_class = NotificationSerializer
-    pagination_class = NotificationPagination
+    pagination_class = NasManPagination
     base_queryset = Notification.objects.all().order_by('-created')
 
     def get_queryset(self):
