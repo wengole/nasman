@@ -1,10 +1,16 @@
 import datetime
+import logging
+
 from rest_framework import viewsets
 from rest_framework.pagination import LimitOffsetPagination
 
 from .models import Notification
-from .serializers import NotificationSerializer
+from nasman.snapshots.models import ZFSFilesystem, ZFSSnapshot
+from .serializers import (NotificationSerializer,
+                          ZFSFilesystemSerializer,
+                          ZFSSnapshotSerializer)
 
+logger = logging.getLogger(__name__)
 
 
 class NasManPagination(LimitOffsetPagination):
@@ -36,3 +42,40 @@ class NotificationViewSet(viewsets.ModelViewSet):
             response.data['latest'] = (
                 latest_notification.created + datetime.timedelta(seconds=1))
         return response
+
+
+class ZFSBaseViewSet(viewsets.ModelViewSet):
+    pagination_class = NasManPagination
+    base_queryset = None
+
+    def refresh_objects(self):
+        raise NotImplementedError
+
+    def get_queryset(self):
+        qs = self.base_queryset
+        refresh = self.request.query_params.get('refresh', False)
+        logger.info('Refresh %s', refresh)
+        if refresh:
+            self.refresh_objects()
+        return qs
+
+
+class ZFSFilesystemViewSet(ZFSBaseViewSet):
+    """
+    Viewset for ZFSFilesystem
+    """
+    serializer_class = ZFSFilesystemSerializer
+    base_queryset = ZFSFilesystem.objects.all()
+
+    def refresh_objects(self):
+        ZFSFilesystem.objects.refresh_from_os()
+
+class ZFSSnapshotViewSet(ZFSBaseViewSet):
+    """
+    Viewset for ZFSSnapshot
+    """
+    serializer_class = ZFSSnapshotSerializer
+    base_queryset = ZFSSnapshot.objects.all()
+
+    def refresh_objects(self):
+        ZFSSnapshot.objects.refresh_from_os()
