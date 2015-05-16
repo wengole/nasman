@@ -43,6 +43,7 @@ class SnapshotCreate(MessageMixin, BaseView, FormView):
             )
         return super(SnapshotCreate, self).form_valid(form)
 
+
 class SnapshotList(JSONResponseMixin, AjaxResponseMixin, BaseView, ListView):
     headline = 'ZFS Snapshots'
     template_name = 'snapshot_list.html'
