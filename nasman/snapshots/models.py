@@ -1,8 +1,12 @@
+from datetime import datetime
+
 from django.db import models
 from djorm_pgfulltext.fields import VectorField
 from djorm_pgfulltext.models import SearchManager
 from fontawesome.fields import IconField
 from sitetree.models import TreeItemBase, TreeBase
+
+from .utils.zfs import ZFSUtil
 
 
 class File(models.Model):
@@ -45,13 +49,15 @@ class IconMapping(models.Model):
     """
     icon = IconField(
         'icon',
-        default='fa-file-o'
+        default='fa-file-o',
+        help_text='The FontAwesome icon for this mime type'
     )
     mime_type = models.CharField(
         'mime-type',
         max_length=255,
         primary_key=True,
-        db_index=True
+        db_index=True,
+        help_text='The mime type'
     )
 
     class Meta:
@@ -66,3 +72,53 @@ class NasmanTreeItem(TreeItemBase):
         'icon',
         default='circle-o'
     )
+
+
+class ZFSManager(models.Manager):
+    """
+    Manager for ZFSFilesystem model, providing utility methods
+    """
+    util = ZFSUtil()
+
+    @property
+    def datasets(self):
+        dataset_type = self.model.__name__.lower().replace('zfs', '')
+        fetcher = getattr(self.util, 'get_%ss' % dataset_type, None)
+        if callable(fetcher):
+            return fetcher()
+        return []
+
+    def refresh_from_os(self):
+        """
+        Get all ZFS datasets of the correct type and update the DB as required
+        """
+        for dataset in self.datasets:
+            self.get_or_create(**dict(dataset))
+
+
+class ZFSFilesystem(models.Model):
+    """
+    Model representing ZFS Filesystem
+    """
+    name = models.TextField(
+        'name',
+        unique=True,
+        help_text='Unique name of this filesystem'
+    )
+    mountpoint = models.TextField(
+        'mountpoint',
+        help_text='The set mountpoint of the filesystem'
+    )
+
+    objects = ZFSManager()
+    
+
+class ZFSSnapshot(models.Model):
+    name = models.TextField(
+        'name',
+        unique=True,
+        help_text='Unique name of this snapshot'
+    )
+    timestamp = models.DateTimeField(default=datetime.now)
+
+    objects = ZFSManager()
