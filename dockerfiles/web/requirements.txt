@@ -1,6 +1,7 @@
 chardet
 Celery[redis]
 django
+django-angular
 django-bootstrap-pagination
 django-braces
 django-debug-toolbar
