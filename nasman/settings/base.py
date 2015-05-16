@@ -57,6 +57,7 @@ THIRD_PARTY_APPS = (
     'django_extensions',
     'fontawesome',
     'rest_framework',
+    'djangular',
 )
 
 PROJECT_APPS = (
@@ -67,6 +68,7 @@ PROJECT_APPS = (
 INSTALLED_APPS = PROJECT_APPS + DJANGO_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE_CLASSES = (
+    'djangular.middleware.DjangularUrlMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
