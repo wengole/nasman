@@ -11,8 +11,8 @@ from vanilla import FormView, ListView
 from ..forms import SnapshotForm
 from .base import BaseView
 from .. import tasks
+from ..models import ZFSSnapshot
 from ..utils.zfs import ZFSUtil
-
 
 logger = logging.getLogger(__name__)
 
@@ -43,6 +43,7 @@ class SnapshotCreate(MessageMixin, BaseView, FormView):
             )
         return super(SnapshotCreate, self).form_valid(form)
 
+
 class SnapshotList(JSONResponseMixin, AjaxResponseMixin, BaseView, ListView):
     headline = 'ZFS Snapshots'
     template_name = 'snapshot_list.html'
@@ -69,8 +70,9 @@ class SnapshotList(JSONResponseMixin, AjaxResponseMixin, BaseView, ListView):
         return self.render_json_response(json_dict)
 
     def get_queryset(self):
-        logger.info('Getting snapshot list refresh: %s', self.refresh)
-        return ZFSUtil.get_snapshots(self.refresh)
+        if self.refresh:
+            ZFSSnapshot.objects.refresh_from_os()
+        return ZFSSnapshot.objects.all()
 
 
 class SnapshotReindex(MessageMixin, View):
