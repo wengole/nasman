@@ -1,5 +1,6 @@
 from django.db import models
+from model_utils.models import TimeStampedModel
 
 
-class Notification(models.Model):
+class Notification(TimeStampedModel):
     message = models.TextField()
