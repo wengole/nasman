@@ -17,10 +17,10 @@
         'djangoUrl',
         function ($http, $scope, Notification, poller, djangoUrl) {
             scope = $scope;
-            scope.count = -1;
+            scope.count = null;
             scope.notifications = [];
             var messageFetchUrl = djangoUrl.reverse(
-                'notifications:messages-list');
+                'api:notifications-list');
             var notificationPoller = poller.get(
                 messageFetchUrl,
                 {
@@ -42,7 +42,7 @@
                         scope.notifications,
                         data.results);
                     notificationPoller.argumentsArray[0].params.since = data.latest;
-                    if (scope.count > -1 && data.results.length > 0) {
+                    if (scope.count != null && data.results.length > 0) {
                         $(data.results).each(function (i, val) {
                             Notification(
                                 {
@@ -52,6 +52,9 @@
                                 'info'
                             );
                         });
+                    }
+                    if (scope.count === null) {
+                        scope.count = 0;
                     }
                     scope.count += data.count;
                 }

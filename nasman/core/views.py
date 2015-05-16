@@ -27,6 +27,11 @@ class NotificationViewSet(viewsets.ModelViewSet):
             request,
             *args,
             **kwargs)
-        response.data['latest'] = self.base_queryset.latest(
-            'created').created + datetime.timedelta(seconds=1)
+        try:
+            latest_notification = self.base_queryset.latest('created')
+        except Notification.DoesNotExist:
+            response.data['latest'] = datetime.datetime(1970, 1, 1)
+        else:
+            response.data['latest'] = (
+                latest_notification.created + datetime.timedelta(seconds=1))
         return response

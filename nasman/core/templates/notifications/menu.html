@@ -20,8 +20,9 @@
       <ul class="menu">
         <li ng-repeat="n in notifications">
           <!-- start notification -->
-          <a href="#">
-            <i class="fa fa-users text-aqua"></i>{{ n.message }}
+          <a ng-click="$event.preventDefault; console.log($event)">
+            <i ng-class="['fa', 'fa-users', 'text-aqua']"></i>{{ n.message }}
+            <i class="fa fa-times pull-right" ng-click="console.log($event)"></i>
           </a>
         </li>
         <!-- end notification -->

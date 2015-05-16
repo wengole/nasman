@@ -7,7 +7,7 @@ urlpatterns = patterns(
     '',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^', include('nasman.snapshots.urls', namespace='nasman')),
-    url(r'^notifications/', include('nasman.notifications.urls',
-                                    namespace='notifications'))
+    url(r'^api/', include(
+        'nasman.core.urls',
+        namespace='api'))
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-

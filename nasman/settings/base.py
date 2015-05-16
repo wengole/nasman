@@ -62,7 +62,7 @@ THIRD_PARTY_APPS = (
 
 PROJECT_APPS = (
     'nasman.snapshots',
-    'nasman.notifications',
+    'nasman.core',
 )
 
 INSTALLED_APPS = PROJECT_APPS + DJANGO_APPS + THIRD_PARTY_APPS
