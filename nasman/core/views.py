@@ -18,11 +18,20 @@ class NasManPagination(LimitOffsetPagination):
 
 
 class NotificationViewSet(viewsets.ModelViewSet):
+    """
+    Viewset for the Notification model
+    """
     serializer_class = NotificationSerializer
     pagination_class = NasManPagination
     base_queryset = Notification.objects.all().order_by('-created')
 
     def get_queryset(self):
+        """
+        If `since` query parameter exists, only return notifications created
+        since the timestamp provided
+        :return: The potentially filtered queryset
+        :rtype: `QuerySet`
+        """
         qs = self.base_queryset
         since = self.request.query_params.get('since', None)
         if since is None:
@@ -30,6 +39,9 @@ class NotificationViewSet(viewsets.ModelViewSet):
         return qs.filter(created__gt=since)
 
     def list(self, request, *args, **kwargs):
+        """
+        Get the list of Notifications and add the `latest` property
+        """
         response = super(NotificationViewSet, self).list(
             request,
             *args,
