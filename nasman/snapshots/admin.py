@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 from sitetree.admin import TreeItemAdmin, override_item_admin
 
-from .models import File, IconMapping
+from .models import File, IconMapping, ZFSFilesystem, ZFSSnapshot
 from .forms import FileForm
 
 
@@ -12,6 +12,17 @@ class FileAdmin(admin.ModelAdmin):
     list_display_links = ('original_path',)
     form = FileForm
     readonly_fields = ('path_encoding', 'search_index')
+
+
+@admin.register(ZFSFilesystem)
+class ZFSFilesystemAdmin(admin.ModelAdmin):
+    list_display = ('name', 'mountpoint')
+
+
+@admin.register(ZFSSnapshot)
+class ZFSSnapshotAdmin(admin.ModelAdmin):
+    list_display = ('name', 'timestamp')
+
 
 @admin.register(IconMapping)
 class IconMappingAdmin(admin.ModelAdmin):
