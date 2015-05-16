@@ -116,6 +116,11 @@ class ZFSSnapshot(BaseSnapshot):
     def __repr__(self):
         return self.name
 
+    def __iter__(self):
+        d = {'name': self.name, 'timestamp': self.timestamp}
+        for key, value in d.items():
+            yield (key, value)
+
 
 class ZFSFilesystem(BaseFilesystem):
     """
@@ -169,6 +174,11 @@ class ZFSFilesystem(BaseFilesystem):
 
     def __repr__(self):
         return self.name
+
+    def __iter__(self):
+        d = {'name': self.name, 'mountpoint': self.mountpoint}
+        for key, value in d.items():
+            yield (key, value)
 
 
 class ZFSUtil(BaseUtil):
