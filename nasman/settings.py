@@ -1,14 +1,10 @@
 import sys
 import os
-from os.path import join, abspath, dirname
+from pathlib import Path
 
-# PATH vars
-
-here = lambda *x: join(abspath(dirname(__file__)), *x)
-PROJECT_ROOT = here("..")
-root = lambda *x: join(abspath(PROJECT_ROOT), *x)
+PROJ_DIR = Path(__file__).parent
+ROOT_DIR = PROJ_DIR.parent
 show_if_debug = lambda *x: DEBUG
-
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY', 'CHANGE THIS!!!')
@@ -110,19 +106,13 @@ DATABASES = {
 LANGUAGE_CODE = 'en-gb'
 
 TIME_ZONE = 'Europe/London'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.7/howto/static-files/
+STATIC_ROOT = str(PROJ_DIR.joinpath('static'))
 
 STATIC_URL = '/static/'
-STATIC_ROOT = root('static')
 MEDIA_URL = '/media/'
 
 TEMPLATES = [
@@ -141,11 +131,11 @@ TEMPLATES = [
                 'django.core.context_processors.request',
             )
         },
-        'DIRS': [root('templates'),],
+        'DIRS': [str(PROJ_DIR.joinpath('templates')),],
     },
 ]
 TEMPLATE_DIRS = (
-    root('templates'),
+    str(PROJ_DIR.joinpath('templates')),
 )
 BROKER_URL = 'redis://redis:6379/0'
 CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
@@ -158,7 +148,7 @@ LOGGING = {
         'logfile': {
             'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': root('log', 'nasman.log'),
+            'filename': str(ROOT_DIR.joinpath('log', 'nasman.log')),
             'maxBytes': 10 * 1024 * 104,  # 10MB
             'backupCount': 5,
             'formatter': 'default',
@@ -197,21 +187,3 @@ CACHES = {
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 SESSION_CACHE_ALIAS = 'default'
 SITETREE_MODEL_TREE_ITEM = 'snapshots.NasmanTreeItem'
-
-SWAMP_DRAGON_CONNECTION = (
-    'swampdragon.connections.sockjs_connection.DjangoSubscriberConnection',
-    '/data')
-DRAGON_URL = 'http://192.168.1.56:9999/'
-SWAMP_DRAGON_HOST = '0.0.0.0'
-SWAMP_DRAGON_REDIS_HOST = 'redis'
-
-# .local.py overrides all the common settings.
-try:
-    from .local import *
-except ImportError:
-    pass
-
-
-# importing test settings file if necessary
-if len(sys.argv) > 1 and 'test' in sys.argv[1]:
-    from .testing import *
