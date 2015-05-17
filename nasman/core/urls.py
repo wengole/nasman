@@ -1,6 +1,8 @@
+from django.conf.urls import url, include
 from rest_framework.routers import DefaultRouter
 
 from . import views
+from nasman.core.views import DashboardView
 
 router = DefaultRouter()
 router.register(
@@ -19,4 +21,7 @@ router.register(
     base_name='zfs-snapshots'
 )
 
-urlpatterns = router.urls
+urlpatterns = (
+    url(r'^api/', include(router.urls, namespace='api')),
+    url(r'^$', DashboardView.as_view(), name='dashboard'),
+)

@@ -2,6 +2,7 @@ from collections import defaultdict
 from datetime import datetime
 import logging
 from pathlib import Path
+from braces.views import SetHeadlineMixin
 
 from django.core.urlresolvers import reverse_lazy
 import magic
@@ -10,12 +11,11 @@ from vanilla import TemplateView, FormView
 from ..models import IconMapping
 from ..forms import FileBrowserForm
 from ..utils.zfs import ZFSUtil
-from ..views.base import BaseView
 
 logger = logging.getLogger(__name__)
 
 
-class FileBrowser(BaseView, FormView):
+class FileBrowser(FormView, SetHeadlineMixin):
     """
     Browse live filesystem using python os stdlib
     """
@@ -92,7 +92,7 @@ class FileBrowser(BaseView, FormView):
         return self.form_invalid(form)
 
 
-class FilesystemList(BaseView, TemplateView):
+class FilesystemList(TemplateView, SetHeadlineMixin):
     template_name = 'filesystem_list.html'
     headline = 'ZFS Filesystems'
 

@@ -1,8 +1,11 @@
 import datetime
 import logging
 
+from braces.views import SetHeadlineMixin
 from rest_framework import viewsets
+
 from rest_framework.pagination import LimitOffsetPagination
+from vanilla import TemplateView
 
 from .models import Notification
 from nasman.snapshots.models import ZFSFilesystem, ZFSSnapshot
@@ -91,3 +94,12 @@ class ZFSSnapshotViewSet(ZFSBaseViewSet):
 
     def refresh_objects(self):
         ZFSSnapshot.objects.refresh_from_os()
+
+
+class DashboardView(TemplateView, SetHeadlineMixin):
+    """
+    View for the homepage
+    """
+    http_method_names = ['get']
+    template_name = 'base_new.html'
+    headline = 'NASMan Dashboard'

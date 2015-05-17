@@ -1,7 +1,8 @@
 import logging
 from subprocess import CalledProcessError
 
-from braces.views import MessageMixin, JSONResponseMixin, AjaxResponseMixin
+from braces.views import MessageMixin, JSONResponseMixin, AjaxResponseMixin, \
+    SetHeadlineMixin
 from django.contrib.humanize.templatetags.humanize import naturaltime
 from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import redirect
@@ -9,7 +10,6 @@ from django.views.generic import View
 from vanilla import FormView, ListView
 
 from ..forms import SnapshotForm
-from .base import BaseView
 from .. import tasks
 from ..models import ZFSSnapshot
 from ..utils.zfs import ZFSUtil
@@ -17,7 +17,7 @@ from ..utils.zfs import ZFSUtil
 logger = logging.getLogger(__name__)
 
 
-class SnapshotCreate(MessageMixin, BaseView, FormView):
+class SnapshotCreate(MessageMixin, FormView, SetHeadlineMixin):
     headline = 'Create new snapshot'
     form_class = SnapshotForm
     template_name = 'snapshot_form.html'
@@ -44,7 +44,8 @@ class SnapshotCreate(MessageMixin, BaseView, FormView):
         return super(SnapshotCreate, self).form_valid(form)
 
 
-class SnapshotList(JSONResponseMixin, AjaxResponseMixin, BaseView, ListView):
+class SnapshotList(JSONResponseMixin, AjaxResponseMixin, ListView,
+                   SetHeadlineMixin):
     headline = 'ZFS Snapshots'
     template_name = 'snapshot_list.html'
     refresh = False
