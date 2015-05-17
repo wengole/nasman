@@ -123,14 +123,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = root('static')
-MEDIA_ROOT = root('assets', 'uploads')
 MEDIA_URL = '/media/'
 
-# Additional locations of static files
-
-STATICFILES_DIRS = (
-    root('assets'),
-)
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

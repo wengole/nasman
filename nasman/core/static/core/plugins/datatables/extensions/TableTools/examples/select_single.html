@@ -5,7 +5,7 @@
 	<link rel="shortcut icon" type="image/ico" href="http://www.datatables.net/favicon.ico">
 	<meta name="viewport" content="initial-scale=1.0, maximum-scale=2.0">
 
-	<title>TableTools example - Button arrangement</title>
+	<title>TableTools example - Row selection - single row select</title>
 	<link rel="stylesheet" type="text/css" href="../../../media/css/jquery.dataTables.css">
 	<link rel="stylesheet" type="text/css" href="../css/dataTables.tableTools.css">
 	<link rel="stylesheet" type="text/css" href="../../../examples/resources/syntax/shCore.css">
@@ -21,11 +21,12 @@
 	<script type="text/javascript" language="javascript" class="init">
 
 
+
 $(document).ready(function() {
 	$('#example').DataTable( {
 		dom: 'T<"clear">lfrtip',
 		tableTools: {
-			"aButtons": [ "copy", "print" ]
+			"sRowSelect": "single"
 		}
 	} );
 } );
@@ -37,13 +38,21 @@ $(document).ready(function() {
 <body class="dt-example">
 	<div class="container">
 		<section>
-			<h1>TableTools example <span>Button arrangement</span></h1>
+			<h1>TableTools example <span>Row selection - single row select</span></h1>
 
 			<div class="info">
-				<p>TableTools makes it very simple to arrange the buttons in the toolbar as you see fit. Using the <code>aButtons</code> parameter you can use any of the <a href=
-				"http://datatables.net/extensions/tabletools/buttons">predefined buttons</a> or <a href="http://datatables.net/extensions/tabletools/button_options">customised
-				buttons</a>. The example below shows how TableTools can be initialised to provide only the 'copy-to-clipboard' and 'print view' options (i.e. no save to local file
-				option is available).</p>
+				<p>As well as providing a button toolbar, TableTools provides everything needed to have selectable rows in the table. TableTools has four row selection modes of
+				operation:</p>
+
+				<ul class="markdown">
+					<li><code>none</code> - Default, where no user row selection options are available</li>
+					<li><code>single</code> - A single row can be selected</li>
+					<li><code>multi</code> - Multiple rows can be selected simply by clicking on the rows</li>
+					<li><code>os</code> - Operating System like selection where you can use the shift and ctrl / cmd keys on your keyboard to add / remove rows from the
+					selection.</li>
+				</ul>
+
+				<p>This example shows the <code>single</code> select option.</p>
 			</div>
 
 			<table id="example" class="display" cellspacing="0" width="100%">
@@ -543,7 +552,7 @@ $(document).ready(function() {
 	$('#example').DataTable( {
 		dom: 'T&lt;&quot;clear&quot;&gt;lfrtip',
 		tableTools: {
-			&quot;aButtons&quot;: [ &quot;copy&quot;, &quot;print&quot; ]
+			&quot;sRowSelect&quot;: &quot;single&quot;
 		}
 	} );
 } );</code>
@@ -598,26 +607,26 @@ $(document).ready(function() {
 
 				<div class="toc">
 					<div class="toc-group">
-						<h3><a href="./index.html">Examples</a></h3>
+						<h3><a href="index.html">Examples</a></h3>
 						<ul class="toc active">
-							<li><a href="./simple.html">Basic initialisation</a></li>
-							<li><a href="./swf_path.html">Setting the SWF path</a></li>
-							<li><a href="./new_init.html">Initialisation with `new`</a></li>
-							<li><a href="./defaults.html">Defaults</a></li>
-							<li><a href="./select_single.html">Row selection - single row select</a></li>
-							<li><a href="./select_multi.html">Row selection - multi-row select</a></li>
-							<li><a href="./select_os.html">Row selection - operating system style</a></li>
-							<li><a href="./select_column.html">Row selection - row selector on specific cells</a></li>
-							<li><a href="./multiple_tables.html">Multiple tables</a></li>
-							<li><a href="./multi_instance.html">Multiple toolbars</a></li>
-							<li><a href="./collection.html">Button collections</a></li>
-							<li><a href="./plug-in.html">Plug-in button types</a></li>
-							<li><a href="./button_text.html">Custom button text</a></li>
-							<li class="active"><a href="./alter_buttons.html">Button arrangement</a></li>
-							<li><a href="./ajax.html">Ajax loaded data</a></li>
-							<li><a href="./pdf_message.html">PDF message</a></li>
-							<li><a href="./bootstrap.html">Bootstrap styling</a></li>
-							<li><a href="./jqueryui.html">jQuery UI styling</a></li>
+							<li><a href="simple.html">Basic initialisation</a></li>
+							<li><a href="swf_path.html">Setting the SWF path</a></li>
+							<li><a href="new_init.html">Initialisation with `new`</a></li>
+							<li><a href="defaults.html">Defaults</a></li>
+							<li class="active"><a href="./select_single.html">Row selection - single row select</a></li>
+							<li><a href="select_multi.html">Row selection - multi-row select</a></li>
+							<li><a href="select_os.html">Row selection - operating system style</a></li>
+							<li><a href="select_column.html">Row selection - row selector on specific cells</a></li>
+							<li><a href="multiple_tables.html">Multiple tables</a></li>
+							<li><a href="multi_instance.html">Multiple toolbars</a></li>
+							<li><a href="collection.html">Button collections</a></li>
+							<li><a href="plug-in.html">Plug-in button types</a></li>
+							<li><a href="button_text.html">Custom button text</a></li>
+							<li><a href="alter_buttons.html">Button arrangement</a></li>
+							<li><a href="ajax.html">Ajax loaded data</a></li>
+							<li><a href="pdf_message.html">PDF message</a></li>
+							<li><a href="bootstrap.html">Bootstrap styling</a></li>
+							<li><a href="jqueryui.html">jQuery UI styling</a></li>
 						</ul>
 					</div>
 				</div>
