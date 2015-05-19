@@ -16,14 +16,16 @@
           ng-controller="NotificationCtrl as notifications">
         <a class="dropdown-toggle count-info" href dropdown-toggle>
           <i class="fa fa-bell"></i> <span
-            class="label label-warning">{{ notifications.count }}</span>
+            class="label label-warning">{{ count }}</span>
         </a>
         <ul class="dropdown-menu dropdown-alerts">
-          <li>
+          <li ng-repeat="message in messages">
             <a ui-sref="inbox">
               <div>
-                <i class="fa fa-envelope fa-fw"></i> You have 16 messages
-                <span class="pull-right text-muted small">4 minutes ago</span>
+                <i class="fa fa-envelope fa-fw"></i> {{ message.text }}
+                <span class="pull-right text-muted small">
+                  <span am-time-ago="message.created"></span>
+                </span>
               </div>
             </a>
           </li>

@@ -5,10 +5,11 @@ from nasman.snapshots.models import ZFSFilesystem, ZFSSnapshot
 
 
 class NotificationSerializer(serializers.ModelSerializer):
+    text = serializers.CharField(source='message')
+
     class Meta:
         model = Notification
-        fields = ('message', 'created', )
-
+        exclude = ('message',)
 
 class ZFSFilesystemSerializer(serializers.ModelSerializer):
     class Meta:

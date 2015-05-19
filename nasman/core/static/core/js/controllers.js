@@ -10,10 +10,23 @@ function MainCtrl() {
 }
 
 
-function NotificationCtrl() {
-    this.count = 5;
-
+function NotificationCtrl($scope, poller) {
+    scope = $scope;
+    scope.count = null;
+    scope.messages = [];
+    var notificationPoller = poller.get(
+        '/api/notifications/');
+    notificationPoller.promise.then(
+        null,
+        null,
+        function (response) {
+            var data = response.data;
+            scope.messages = data.results;
+            scope.latest = data.latest;
+            scope.count = data.count;
+        });
 }
+
 angular
     .module('inspinia')
     .controller('MainCtrl', MainCtrl)
