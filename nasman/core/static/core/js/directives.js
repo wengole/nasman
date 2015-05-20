@@ -105,7 +105,7 @@ function minimalizaSidebar($timeout) {
 function notificationList() {
     return {
         restrict: 'E',
-        templateUrl: '/static/views/notifications.html',
+        templateUrl: '/static/core/views/common/notifications.html',
         controller: function ($scope, poller) {
             scope = $scope;
             scope.count = null;
@@ -134,4 +134,5 @@ angular
     .directive('pageTitle', pageTitle)
     .directive('sideNavigation', sideNavigation)
     .directive('iboxTools', iboxTools)
-    .directive('minimalizaSidebar', minimalizaSidebar);
+    .directive('minimalizaSidebar', minimalizaSidebar)
+    .directive('notificationList', notificationList);

@@ -11,5 +11,4 @@ function MainCtrl() {
 
 angular
     .module('inspinia')
-    .controller('MainCtrl', MainCtrl)
-    .controller('NotificationCtrl', NotificationCtrl);
+    .controller('MainCtrl', MainCtrl);
