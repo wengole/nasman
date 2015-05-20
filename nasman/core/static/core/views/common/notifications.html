@@ -1,45 +1,43 @@
-<li class="dropdown" dropdown>
-  <a class="dropdown-toggle count-info" href dropdown-toggle>
-    <i class="fa fa-bell"></i> <span
-      class="label label-warning">{{ count }}</span>
-  </a>
-  <ul class="dropdown-menu dropdown-alerts">
-    <li ng-repeat="message in messages">
-      <a ui-sref="inbox">
-        <div>
-          <i class="fa fa-envelope fa-fw"></i> {{ message.text }}
+<a class="dropdown-toggle count-info" href dropdown-toggle>
+  <i class="fa fa-bell"></i> <span
+    class="label label-warning">{{ count }}</span>
+</a>
+<ul class="dropdown-menu dropdown-alerts">
+  <li ng-repeat="message in messages">
+    <a ui-sref="inbox">
+      <div>
+        <i class="fa fa-envelope fa-fw"></i> {{ message.text }}
                 <span class="pull-right text-muted small">
                   <span am-time-ago="message.created"></span>
                 </span>
-        </div>
-      </a>
-    </li>
-    <li class="divider"></li>
-    <li>
-      <a ui-sref="profile">
-        <div>
-          <i class="fa fa-twitter fa-fw"></i> 3 New Followers
-          <span class="pull-right text-muted small">12 minutes ago</span>
-        </div>
-      </a>
-    </li>
-    <li class="divider"></li>
-    <li>
-      <a ui-sref="grid_options">
-        <div>
-          <i class="fa fa-upload fa-fw"></i> Server Rebooted
-          <span class="pull-right text-muted small">4 minutes ago</span>
-        </div>
-      </a>
-    </li>
-    <li class="divider"></li>
-    <li>
-      <div class="text-center link-block">
-        <a ui-sref="notifications_tooltips">
-          <strong>See All Alerts</strong>
-          <i class="fa fa-angle-right"></i>
-        </a>
       </div>
-    </li>
-  </ul>
-</li>
+    </a>
+  </li>
+  <li class="divider"></li>
+  <li>
+    <a ui-sref="profile">
+      <div>
+        <i class="fa fa-twitter fa-fw"></i> 3 New Followers
+        <span class="pull-right text-muted small">12 minutes ago</span>
+      </div>
+    </a>
+  </li>
+  <li class="divider"></li>
+  <li>
+    <a ui-sref="grid_options">
+      <div>
+        <i class="fa fa-upload fa-fw"></i> Server Rebooted
+        <span class="pull-right text-muted small">4 minutes ago</span>
+      </div>
+    </a>
+  </li>
+  <li class="divider"></li>
+  <li>
+    <div class="text-center link-block">
+      <a ui-sref="notifications_tooltips">
+        <strong>See All Alerts</strong>
+        <i class="fa fa-angle-right"></i>
+      </a>
+    </div>
+  </li>
+</ul>
