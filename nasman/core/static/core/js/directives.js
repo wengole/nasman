@@ -101,6 +101,30 @@ function minimalizaSidebar($timeout) {
         }
     };
 }
+
+function notificationList() {
+    return {
+        restrict: 'E',
+        templateUrl: '/static/views/notifications.html',
+        controller: function ($scope, poller) {
+            scope = $scope;
+            scope.count = null;
+            scope.messages = [];
+            var notificationPoller = poller.get(
+                '/api/notifications/');
+            notificationPoller.promise.then(
+                null,
+                null,
+                function (response) {
+                    var data = response.data;
+                    scope.messages = data.results;
+                    scope.latest = data.latest;
+                    scope.count = data.count;
+                });
+        },
+        controllerAs: 'notifications'
+    }
+}
 /**
  *
  * Pass all functions into module
