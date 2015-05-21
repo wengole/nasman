@@ -104,15 +104,16 @@ function minimalizaSidebar($timeout) {
 
 function notificationList() {
     return {
+        scope: true,
         restrict: 'A',
         templateUrl: '/static/core/views/common/notifications.html',
         controller: function ($scope, poller) {
             scope = $scope;
             scope.count = null;
             scope.messages = [];
-            var notificationPoller = poller.get(
+            scope.notificationPoller = poller.get(
                 '/api/notifications/');
-            notificationPoller.promise.then(
+            scope.notificationPoller.promise.then(
                 null,
                 null,
                 function (response) {
@@ -125,6 +126,14 @@ function notificationList() {
         controllerAs: 'notifications'
     }
 }
+
+function notificationItem() {
+    return {
+        scope: true,
+        restrict: 'E',
+        templateUrl: '/static/core/views/common/notification.html',
+    }
+}
 /**
  *
  * Pass all functions into module
@@ -135,4 +144,5 @@ angular
     .directive('sideNavigation', sideNavigation)
     .directive('iboxTools', iboxTools)
     .directive('minimalizaSidebar', minimalizaSidebar)
-    .directive('notificationList', notificationList);
+    .directive('notificationList', notificationList)
+    .directive('notificationItem', notificationItem);

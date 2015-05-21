@@ -4,14 +4,7 @@
 </a>
 <ul class="dropdown-menu dropdown-alerts">
   <li ng-repeat="message in messages">
-    <a ui-sref="inbox">
-      <div>
-        <i class="fa fa-envelope fa-fw"></i> {{ message.text }}
-                <span class="pull-right text-muted small">
-                  <span am-time-ago="message.created"></span>
-                </span>
-      </div>
-    </a>
+    <a ui-sref="inbox" notification-item></a>
   </li>
   <li class="divider"></li>
   <li>
