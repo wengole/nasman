@@ -105,10 +105,10 @@ function minimalizaSidebar($timeout) {
 function notificationList() {
     return {
         scope: true,
-        restrict: 'A',
+        restrict: 'E',
         templateUrl: '/static/core/views/common/notifications.html',
         controller: function ($scope, poller) {
-            scope = $scope;
+            var scope = $scope;
             scope.count = null;
             scope.messages = [];
             scope.notificationPoller = poller.get(

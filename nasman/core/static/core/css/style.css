@@ -52,7 +52,8 @@ h5 {
     padding: 14px 20px 14px 25px;
 }
 
-.nav.navbar-right > li > a {
+.nav.navbar-right > li > a,
+.nav.navbar-right > notification-list > li > a {
     color: #999c9e;
 }
 
@@ -258,8 +259,8 @@ h5 {
     line-height: 12px;
     padding: 2px 5px;
     position: absolute;
-    right: 6px;
-    top: 12px;
+    right: 0px;
+    top: -9px;
 }
 
 .arrow {
