@@ -122,6 +122,7 @@ h5 {
 
 .dropdown-menu > li > a,
 .dropdown-menu > notification-item > li > a {
+    display: block;
     border-radius: 3px;
     color: inherit;
     line-height: 25px;
@@ -2724,7 +2725,7 @@ label.error {
     height: 300px;
 }
 
-.ngH eaderCell {
+.ngHeaderCell {
     border-right: none;
     border-bottom: 1px solid #e7eaec;
 }
@@ -7332,6 +7333,7 @@ body.skin-2 {
 }
 
 .skin-2 .nav > li > a,
+.skin-2 .nav > notification-list > li > a,
 .skin-2 .welcome-message {
     color: #edf6ff;
 }
