@@ -120,7 +120,8 @@ h5 {
     z-index: 1000;
 }
 
-.dropdown-menu > li > a {
+.dropdown-menu > li > a,
+.dropdown-menu > notification-item > li > a {
     border-radius: 3px;
     color: inherit;
     line-height: 25px;
@@ -129,7 +130,8 @@ h5 {
     font-weight: normal;
 }
 
-.dropdown-menu > li > a.font-bold {
+.dropdown-menu > li > a.font-bold,
+.dropdown-menu > notification-item > li > a.font-bold {
     font-weight: 600;
 }
 
