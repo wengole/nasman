@@ -32,6 +32,10 @@ function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider) {
             templateUrl: "static/core/views/minor.html",
             data: {pageTitle: 'Example view'}
         })
+        .state('index.file-browser', {
+            url: "/file-browser",
+            templateUrl: "/snapshots/file-browser"
+        })
 }
 angular
     .module('inspinia')

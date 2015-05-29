@@ -1,90 +1,143 @@
-{% extends "base.html" %}
 {% load staticfiles i18n humanize %}
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="col-lg-10">
+    <h2>File Browser</h2>
+    <ol class="breadcrumb">
+      {% for directory in path %}
+        {% if forloop.first %}
+          <li{% if foorloop.last %} class="active"{% endif %}>
+            <a class="breadcrumb-link" data-target="{{ directory }}"><i
+                    class="fa fa-folder"></i></a>
+          </li>
+        {% else %}
+          <li{% if forloop.last %} class="active"{% endif %}>
+            {% if not forloop.last %}
+              <a class="breadcrumb-link" data-target="{{ directory }}">
+            {% endif %}
+            {{ directory.name }}
+            {% if not forloop.last %}
+              </a>
+            {% endif %}
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ol>
+  </div>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5>Custom responsive table </h5>
 
-{% block title %}File Browser{% endblock %}
+          <div ibox-tools></div>
+        </div>
+        <div class="ibox-content">
+          <div class="row">
+            <div class="col-sm-5 m-b-xs"><select
+                    class="input-sm form-control input-s-sm inline">
+              <option value="0">Option 1</option>
+              <option value="1">Option 2</option>
+              <option value="2">Option 3</option>
+              <option value="3">Option 4</option>
+            </select>
+            </div>
+            <div class="col-sm-4 m-b-xs">
+              <div data-toggle="buttons" class="btn-group">
+                <label class="btn btn-sm btn-white"> <input type="radio"
+                                                            id="option1"
+                                                            name="options"> Day
+                </label>
+                <label class="btn btn-sm btn-white active"> <input type="radio"
+                                                                   id="option2"
+                                                                   name="options">
+                  Week </label>
+                <label class="btn btn-sm btn-white"> <input type="radio"
+                                                            id="option3"
+                                                            name="options">
+                  Month </label>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="input-group"><input type="text" placeholder="Search"
+                                              class="input-sm form-control"> <span
+                      class="input-group-btn">
+                                        <button type="button"
+                                                class="btn btn-sm btn-primary">
+                                          Go!
+                                        </button> </span></div>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+              <tr>
 
-{% block page-title %}File Browser{% endblock %}
+                <th></th>
+                <th>Project</th>
+                <th>Completed</th>
+                <th>Task</th>
+                <th>Date</th>
+                <th>Action</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td><input icheck type="checkbox" ng-model="main.checkOne">
+                </td>
+                <td>Project
+                  <small>This is example of project</small>
+                </td>
+                <td>
+                  <pie-chart data="main.PieChart4.data"
+                             options="main.PieChart4.options"></pie-chart>
+                </td>
+                <td>20%</td>
+                <td>Jul 14, 2013</td>
+                <td><a href=""><i class="fa fa-check text-navy"></i></a></td>
+              </tr>
+              <tr>
+                <td><input icheck type="checkbox" ng-model="main.unCheck1">
+                </td>
+                <td>Alpha project</td>
+                <td>
+                  <pie-chart data="main.PieChart3.data"
+                             options="main.PieChart3.options"></pie-chart>
+                </td>
+                <td>40%</td>
+                <td>Jul 16, 2013</td>
+                <td><a href=""><i class="fa fa-check text-navy"></i></a></td>
+              </tr>
+              <tr>
+                <td><input icheck type="checkbox" ng-model="main.unCheck2">
+                </td>
+                <td>Betha project</td>
+                <td>
+                  <pie-chart data="main.PieChart2.data"
+                             options="main.PieChart2.options"></pie-chart>
+                </td>
+                <td>75%</td>
+                <td>Jul 18, 2013</td>
+                <td><a href=""><i class="fa fa-check text-navy"></i></a></td>
+              </tr>
+              <tr>
+                <td><input icheck type="checkbox" ng-model="main.unCheck3">
+                </td>
+                <td>Gamma project</td>
+                <td>
+                  <pie-chart data="main.PieChart5.data"
+                             options="main.PieChart5.options"></pie-chart>
+                </td>
+                <td>18%</td>
+                <td>Jul 22, 2013</td>
+                <td><a href=""><i class="fa fa-check text-navy"></i></a></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
 
-{% block content-header %}
-  {{ block.super }}
-  <ol class="breadcrumb">
-    {% for directory in path %}
-      {% if forloop.first %}
-        <li{% if foorloop.last %} class="active"{% endif %}>
-          <a class="breadcrumb-link" data-target="{{ directory }}"><i
-              class="fa fa-folder"></i></a>
-        </li>
-      {% else %}
-        <li{% if forloop.last %} class="active"{% endif %}>
-          {% if not forloop.last %}
-            <a class="breadcrumb-link" data-target="{{ directory }}">
-          {% endif %}
-          {{ directory.name }}
-          {% if not forloop.last %}
-            </a>
-          {% endif %}
-        </li>
-      {% endif %}
-    {% endfor %}
-  </ol>
-{% endblock %}
-{% block content %}
-  <form method="post" id="filebrowser-form">
-    {% csrf_token %}
-    <div class="box box-primary">
-      <div class="box-header with-border">
-          <h3 class="box-title"><i class="fa fa-files-o"></i> : {{ browser_title }}</h3>
-        <div class="box-tools pull-right">
-          {{ form.filesystem }}
         </div>
       </div>
-      <div class="box-body table-responsive no-padding">
-        <table class="table table-striped table-hover">
-          <thead>
-          <tr>
-            <th class="col-md-1"></th>
-            <th>Filename</th>
-            <th>Type</th>
-            <th>Size</th>
-            <th>Modified</th>
-          </tr>
-          </thead>
-          <tbody>
-          {% if up_one %}
-            <tr>
-              <td><i class="fa fa-folder-open-o"></i></td>
-              <td>
-                <a class="file-link" data-target="{{ up_one }}">..</a>
-              </td>
-              <td colspan="3"></td>
-            </tr>
-          {% endif %}
-          {% for file in files_list %}
-            <tr>
-              <td><i class="fa {{ file.icon }}"></i></td>
-              <td>
-                {% if file.directory %}
-                  <a class="file-link"
-                     data-target="{{ file.full_path }}">{{ file.name }}</a>
-                {% else %}
-                  {{ file.name }}
-                {% endif %}
-              </td>
-              <td>{{ file.mime_type }}</td>
-              <td>{{ file.size|filesizeformat }}</td>
-              <td>{{ file.modified|naturaltime }}</td>
-            </tr>
-          {% endfor %}
-          </tbody>
-        </table>
-      </div>
     </div>
-    {{ form.path }}
-    {{ form.snapshot }}
-  </form>
-{% endblock content %}
 
-{% block javascript %}
-  {{ block.super }}
-  {% include "file_list_js.html" %}
-{% endblock javascript %}
+  </div>
+</div>

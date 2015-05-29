@@ -6,6 +6,7 @@ from django.contrib import admin
 urlpatterns = patterns(
     '',
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^snapshots/', include('nasman.snapshots.urls', namespace='nasman')),
+    url(r'^snapshots/', include('nasman.snapshots.urls',
+                                namespace='snapshots')),
     url(r'^', include('nasman.core.urls', namespace='core'))
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
