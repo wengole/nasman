@@ -16,7 +16,7 @@ Django ZFS NAS management system.
 Primarily for browsing snapshots for file restoration
 
 Installation
-============
+------------
 
 NASMan is a `Docker <https://www.docker.com>`_ application.
 To install it you will need to have docker and docker-compose installed on your host system
@@ -28,14 +28,14 @@ This allows the container and the app to access the ZFS filesystems on the host
 .. _privileged: https://docs.docker.com/reference/run/#runtime-privilege-linux-capabilities-and-lxc-configuration
 
 Prerequisites
--------------
+^^^^^^^^^^^^^
 
- * Docker
- * Docker compose
- * ZFS (for now, will make this optional later)
+* Docker
+* Docker compose
+* ZFS (for now, will make this optional later)
 
 Installation
-------------
+^^^^^^^^^^^^
 
 Clone the project, then from inside the project directory
 
